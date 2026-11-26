@@ -97,4 +97,23 @@ public sealed class DutchsDozenTest : GameTest
             SEntMan.DeleteEntity(map);
         });
     }
+
+    [Test]
+    public async Task PredatorRoundInitializationIsIdempotent()
+    {
+        await Server.WaitAssertion(() =>
+        {
+            // Dutch's Dozen winning the survivor vote calls exactly this entry point.
+            var predators = SEntMan.System<Content.Server.CMU14.Yautja.YautjaPredatorRoundSystem>();
+
+            Assert.That(predators.TryInitializePredatorRound(out var first), Is.True, first);
+            var rules = SEntMan.Count<Content.Server.CMU14.Yautja.YautjaPredatorRoundComponent>();
+            Assert.That(rules, Is.GreaterThan(0), "a Predator rule exists after initialising");
+
+            Assert.That(predators.TryInitializePredatorRound(out var second), Is.True,
+                "asking again must not fail");
+            Assert.That(SEntMan.Count<Content.Server.CMU14.Yautja.YautjaPredatorRoundComponent>(), Is.EqualTo(rules),
+                $"the Predator setup runs exactly once ({second})");
+        });
+    }
 }

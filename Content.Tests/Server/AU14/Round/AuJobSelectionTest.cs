@@ -394,11 +394,6 @@ public sealed class AuJobSelectionTest : ContentUnitTest
         Assert.That(additional, Is.EqualTo(new[] { delayedSurvivor, unrelatedRoundStart }));
         Assert.That(lockedBodies, Is.EqualTo(3));
         Assert.That(additionalBodies, Is.EqualTo(3));
-        Assert.That(
-            AuRoundSystem.CalculateAnnouncedSurvivorCount(
-                new[] { lockedSurvivor }.Concat(additional),
-                party => bodyCounts[party]),
-            Is.EqualTo(3));
         return;
 
         static ThirdPartyPrototype PickFirst(IReadOnlyList<ThirdPartyPrototype> candidates)
@@ -421,23 +416,21 @@ public sealed class AuJobSelectionTest : ContentUnitTest
     }
 
     [Test]
-    public void SurvivorCountIncludesOnlyApprovedPartyFamilies()
+    public void SurvivorCountScalesWithTheLobbyInsideItsLimits()
     {
-        var approvedRoundStart = CreateThirdPartyPrototype(roundStart: true, announceAsSurvivors: true);
-        var approvedDelayed = CreateThirdPartyPrototype(announceAsSurvivors: true);
-        var unrelated = CreateThirdPartyPrototype(roundStart: true);
-        var bodyCounts = new Dictionary<ThirdPartyPrototype, int>
+        // The survivor cap is lobby-derived (players * ratio, clamped 2-10), so it no longer sums the bodies of
+        // whichever third-party parties a round happened to draw.
+        Assert.Multiple(() =>
         {
-            [approvedRoundStart] = 3,
-            [approvedDelayed] = 2,
-            [unrelated] = 8,
-        };
-
-        var count = AuRoundSystem.CalculateAnnouncedSurvivorCount(
-            [approvedRoundStart, approvedDelayed, unrelated],
-            party => bodyCounts[party]);
-
-        Assert.That(count, Is.EqualTo(3));
+            Assert.That(SurvivorCountLimits.FromLobby(0, 0.15f), Is.EqualTo(2),
+                "an empty lobby still schedules the minimum");
+            Assert.That(SurvivorCountLimits.FromLobby(20, 0.15f), Is.EqualTo(3));
+            Assert.That(SurvivorCountLimits.FromLobby(40, 0.15f), Is.EqualTo(6));
+            Assert.That(SurvivorCountLimits.FromLobby(200, 0.15f), Is.EqualTo(10),
+                "and never more than the ceiling");
+            Assert.That(SurvivorCountLimits.FromLobby(40, 0f), Is.EqualTo(2),
+                "an unusable ratio falls back to the minimum");
+        });
     }
 
     [Test]

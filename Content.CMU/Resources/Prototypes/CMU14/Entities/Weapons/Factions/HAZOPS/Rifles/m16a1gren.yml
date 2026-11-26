@@ -70,7 +70,7 @@
         whitelist:
           tags:
           - CMUM203GL
-          
+
 - type: entity
   parent: AU14AttachmentM203A4GrenadeLauncher
   id: CMUM203GL
@@ -83,7 +83,9 @@
     cycleable: false
     whitelist:
       tags:
+      - LauncherCompatibleGrenade
       - RMCAirburstGrenade
+      - CMU40mmGrenadeHEDP
     capacity: 1
     soundInsert:
       path: /Audio/_RMC14/Weapons/Guns/Reload/grenade_insert.ogg
@@ -215,12 +217,12 @@
     - range: 2
       falloff: 9999
   - type: VehicleDamageMultiplier
-    multiplier: 7                   
-    # just enough so that the nades will do decent damage against vics like the humvee but not enough to destroy it. 
-    # 3-4 good hits with the nade will, at most during testing, chunk out 60-75% of one module 
+    multiplier: 7
+    # just enough so that the nades will do decent damage against vics like the humvee but not enough to destroy it.
+    # 3-4 good hits with the nade will, at most during testing, chunk out 60-75% of one module
     # (managed to break turret traverse on one, gun on second, and took 6-7 hits to cause tire blowout 312/500 hp)
     # tested against cheetah and longstreet, it does miniscule/barely any damage
-    
+
 - type: Tag
   id: CMUM203GL
 

@@ -89,7 +89,7 @@
     name: au14-job-name-civiliancorporateliaison
     description: au14-wysurv-description
     reregister: false
-    job: AU14JobCivilianCorporateLiaisonSurv
+    job: CMUSurvivorJobWYSurvLiaison
     raffle:
       settings: short
     rules: au14-wysurv-description

@@ -3,15 +3,20 @@ using System.Numerics;
 using Content.Server.Access.Systems;
 using Content.Server.CMU14.Diagnostics.Performance;
 using Content.Server.CMU14.Round;
+using Content.Server.CMU14.Survivors.Setup;
 using Content.Server.CMU14.Threats;
 using Content.Server.CMU14.VendorMarker;
 using Content.Server.Chat.Systems;
 using Content.Shared.Chat;
 using Content.Server.GameTicking;
 using Content.Server.GameTicking.Presets;
+using Content.Server.Spawners.Components;
 using Content.Server.CMU14.Roles; // CMU14
 using Content.Server.Preferences.Managers;
 using Content.Shared.CMU14.ForceOnForce;
+using Content.Shared.CMU14.Preferences;
+using Content.Shared.CMU14.Survivors;
+using Content.Shared._RMC14.EntityPreset;
 using Content.Shared.CMU14.Threats;
 using Content.Shared._RMC14.Construction;
 using Content.Shared._RMC14.CrashLand;
@@ -40,6 +45,11 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using ParachuteMarkerComponent = Content.Shared.CMU14.Threats.ParachuteMarkerComponent;
+using Content.Shared.Body; // CMU14
+using Content.Server.Ghost.Roles.Components;
+using Content.Server._RMC14.Ghost;
+using Content.Shared._RMC14.Roles;
+using Content.Shared._RMC14.Marines.Roles.Ranks;
 
 namespace Content.Server.CMU14.Ops.ThirdParty;
 
@@ -53,6 +63,7 @@ public sealed partial class ThirdPartySystem : EntitySystem
     [Dependency] private MapLoaderSystem _mapLoader = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private AuRoundSystem _auRoundSystem = default!;
+    [Dependency] private Content.Server._RMC14.Marines.Roles.Ranks.RankSystem _rank = default!;
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private Content.Server.Chat.Managers.IChatManager _chatManager = default!;
     [Dependency] private SharedDropshipSystem _sharedDropshipSystem = default!;
@@ -65,14 +76,34 @@ public sealed partial class ThirdPartySystem : EntitySystem
     [Dependency] private RMCMapSystem _rmcMap = default!;
     [Dependency] private PlatoonSpawnRuleSystem _platoons = default!;
     [Dependency] private SurvivorSupplementSystem _survivorSupplement = default!; // CMU14
+    [Dependency] private HumanoidProfileSystem _humanoidProfile = default!; // CMU14
+    [Dependency] private SharedVisualBodySystem _visualBody = default!; // CMU14
+    [Dependency] private SurvivorLoadoutSystem _survivorLoadout = default!; // CMU14
     private static readonly ProtoId<JobPrototype> ThirdPartyLeaderJobId = new("AU14JobThirdPartyLeader");
     private static readonly ProtoId<JobPrototype> ThirdPartyMemberJobId = new("AU14JobThirdPartyMember");
+    private static readonly ProtoId<JobPrototype> StrandedMemberJobId = new("AU14JobStrandedThirdPartyMember"); // CMU14: survivor rollers
     private static readonly ThreatMarkerType[] ThreatMarkerTypes = Enum.GetValues<ThreatMarkerType>();
     private readonly ISawmill _sawmill = Logger.GetSawmill("thirdparty");
+
+    /// <summary>CMU14: one survivor's choices, handed over by the survivor setup vote.</summary>
+    public readonly record struct SurvivorAssignment(
+        NetUserId Player,
+        string Body,
+        bool Leader,
+        HumanoidCharacterProfile Profile,
+        SurvivorLoadoutSelection Loadout,
+        SurvivorLoadoutPrototype? LoadoutConfig);
 
     // --- State for round third party spawning ---
     private ThreatPrototype? _currentThreat;
     private int _nextThirdPartyIndex;
+    private bool _survivorsSpawned; // CMU14
+
+    /// <summary>
+    ///     Markers already handed to a survivor group this round. Faction survivors and civilian survivors are
+    ///     separate groups spawned at separate times, so without this both could spawn on the same marker.
+    /// </summary>
+    private readonly HashSet<EntityUid> _consumedSurvivorMarkers = new();
 
     // --- Signal modifier applied by Ambassador / AI Core consoles ---
     private float _signalIntervalMultiplier = 1f;
@@ -102,6 +133,8 @@ public sealed partial class ThirdPartySystem : EntitySystem
         _scheduledForces.Clear();
         _queuedParties.Clear();
         _automaticForces.Clear();
+        _survivorsSpawned = false; // CMU14
+        _consumedSurvivorMarkers.Clear(); // CMU14: survivor ground is claimed per round
     }
 
     public override void Update(float frameTime)
@@ -167,7 +200,7 @@ public sealed partial class ThirdPartySystem : EntitySystem
         {
             if (job == ThirdPartyLeaderJobId)
                 leaders++;
-            else if (job == ThirdPartyMemberJobId)
+            else if (job == ThirdPartyMemberJobId || job == StrandedMemberJobId)
                 members++;
         }
 
@@ -179,6 +212,23 @@ public sealed partial class ThirdPartySystem : EntitySystem
         return bodies.Count == 0
             ? "none"
             : string.Join(", ", bodies.Select(pair => $"{pair.Key}={pair.Value}"));
+    }
+
+    // CMU14: caps a party's body list to the number of players who rolled it
+    internal static Dictionary<string, int> TrimBodiesTo(IReadOnlyDictionary<string, int> bodies, int limit)
+    {
+        var trimmed = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach ((string proto, int count) in bodies)
+        {
+            var take = Math.Min(count, limit);
+            if (take <= 0)
+                continue;
+
+            trimmed[proto] = take;
+            limit -= take;
+        }
+
+        return trimmed;
     }
 
     /// <summary>
@@ -223,7 +273,9 @@ public sealed partial class ThirdPartySystem : EntitySystem
         var bodies = spawnProto.LeadersToSpawn.Concat(spawnProto.GruntsToSpawn).Concat(spawnProto.EntitiesToSpawn)
             .GroupBy(pair => pair.Key).ToDictionary(group => group.Key, group => group.Sum(pair => Math.Max(0, pair.Value)));
         var assignments = roundStart && assignedJobs != null
-            ? assignedJobs.Where(pair => pair.Value.Item1 == ThirdPartyLeaderJobId || pair.Value.Item1 == ThirdPartyMemberJobId).ToDictionary()
+            ? assignedJobs.Where(pair => pair.Value.Item1 == ThirdPartyLeaderJobId
+                                        || pair.Value.Item1 == ThirdPartyMemberJobId
+                                        || pair.Value.Item1 == StrandedMemberJobId).ToDictionary()
             : new Dictionary<NetUserId, (ProtoId<JobPrototype>?, EntityUid)>();
         var id = _forceInterest.QueueDeployment(party.DisplayName ?? party.ID,
             _forceInterest.GetPlayableBodies(bodies),
@@ -249,7 +301,7 @@ public sealed partial class ThirdPartySystem : EntitySystem
 
     private IEnumerable<ForceDeploymentStep> SpawnThirdPartySteps(ThirdPartyPrototype party, PartySpawnPrototype spawnProto, bool roundStart,
         Dictionary<NetUserId, (ProtoId<JobPrototype>?, EntityUid)>? assignedJobs, bool? overrideDropship,
-        string? summoningFaction = null)
+        string? summoningFaction = null, IReadOnlyList<SurvivorAssignment>? chosen = null) // CMU14
     {
         const float SpawnTogetherRadius = 8f;
         using var preparation = new ShuttlePreparation(_mapLoader);
@@ -260,18 +312,52 @@ public sealed partial class ThirdPartySystem : EntitySystem
             yield break;
         }
 
+        // CMU14: a roundstart survivor group needs at least one rolled player, otherwise it would spawn empty bodies
+        if (roundStart && party.AnnounceAsSurvivors && chosen == null)
+        {
+            var rolled = ThirdPartySystem.CountThirdPartyAssignments(assignedJobs);
+            if (rolled.Leaders + rolled.Members == 0)
+            {
+                _sawmill.Debug($"[ThirdPartySystem] No players rolled survivors ({party.ID}); skipping spawn.");
+                yield break;
+            }
+        }
+
         // Determine entry method. If overrideDropship is provided, it takes precedence (true => shuttle, false =>
         // ground).
         string? entryMethod = overrideDropship.HasValue
             ? overrideDropship.Value ? "shuttle" : "ground"
             : string.IsNullOrWhiteSpace(party.EntryMethod) ? "ground" : party.EntryMethod;
         // Presets can force shuttle entry; ground spawn puts parties inside enemy lines unprepared.
-        // Admin overrides keep precedence.
-        var groundEntryForbidden = _auRoundSystem.SelectedPreset is { ThirdPartyForceShuttle: true };
+        // Admin overrides keep precedence. Survivors are the exception: they are colony inhabitants, so they
+        // always start on the ground even in a preset that shuttles its ERT call-ins in.
+        var groundEntryForbidden = party.AnnounceAsSurvivors != true
+            && _auRoundSystem.SelectedPreset is { ThirdPartyForceShuttle: true };
         if (groundEntryForbidden
             && !overrideDropship.HasValue
             && string.Equals(entryMethod, "ground", StringComparison.OrdinalIgnoreCase))
             entryMethod = "shuttle";
+
+        // A ground insertion needs marker entities to place bodies on.
+        var survivorParty = party.AnnounceAsSurvivors == true;
+        var hasColonyGround = HasGroundInsertMarkers(survivorParty);
+        if (!hasColonyGround
+            && string.Equals(entryMethod, "ground", StringComparison.OrdinalIgnoreCase))
+        {
+            // A survivor group always spawns. The colony is the intended location, so a map with no insert
+            // ground is reported as a content gap - but the group still arrives, by dropship, rather than
+            // leaving everyone waiting in the lobby.
+            if (survivorParty && SurvivorSpawnMarkers.FallsBackToDropship(SurvivorSpawnMarkers.CanInsertOnColony(0)))
+            {
+                _sawmill.Error($"[ThirdPartySystem] Survivor party {party.ID} has no colony insert ground on the selected planet: add thirdpartyleaderspawnmarker / thirdpartymemberspawnmarker or survivor spawn points. Inserting by dropship instead.");
+            }
+            else
+            {
+                _sawmill.Warning($"[ThirdPartySystem] No ground insert markers for {party.ID}; falling back to shuttle entry.");
+            }
+
+            entryMethod = "shuttle";
+        }
         _sawmill.Debug($"[ThirdPartySystem] Entry method: {entryMethod} (overrideDropship={overrideDropship})");
         if (_sawmill.Level <= LogLevel.Debug)
         {
@@ -443,6 +529,28 @@ public sealed partial class ThirdPartySystem : EntitySystem
                 AddMarkerEntity(uid);
             }
 
+            // Survivors are colony inhabitants: they insert on the colony's third-party insert markers, exactly
+            // like any other ground party, plus the colony's own survivor spawn points. Generic threat markers
+            // belong to the xenomorph threat and ship-side markers are not the colony - neither may place a
+            // survivor.
+            if (party.AnnounceAsSurvivors)
+            {
+                var planetMap = PlanetMapId();
+                markerEntities.RemoveAll(marker => !IsColonyGround(marker, planetMap));
+                markerEntitySet.RemoveWhere(marker => !IsColonyGround(marker, planetMap));
+
+                foreach (var spawnPoint in SurvivorSpawnPoints(planetMap))
+                    AddMarkerEntity(spawnPoint);
+
+                if (markerEntities.Count == 0)
+                {
+                    _sawmill.Error($"[ThirdPartySystem] Survivor party {party.ID} resolved no colony insert ground on planet map {planetMap?.ToString() ?? "any"}; the group should have been routed to a dropship.");
+                }
+
+                _sawmill.Debug(
+                    $"[ThirdPartySystem] Survivor colony markers for {party.ID}: {markerEntities.Count} on planet map {planetMap?.ToString() ?? "any"}.");
+            }
+
             _sawmill.Debug($"[ThirdPartySystem] Main map third-party markers collected: {markerEntities.Count}");
         }
 
@@ -472,6 +580,19 @@ public sealed partial class ThirdPartySystem : EntitySystem
         IReadOnlyDictionary<string, int> gruntBodies = ThirdPartySystem.GetSpawnBodies(
             ThreatMarkerType.Member,
             spawnProto.GruntsToSpawn);
+        // CMU14 Survivors Begin: chosen survivors decide the bodies; otherwise one body per rolled player
+        if (chosen != null)
+        {
+            leaderBodies = ThirdPartySystem.CountChosenBodies(chosen, true);
+            gruntBodies = ThirdPartySystem.CountChosenBodies(chosen, false);
+        }
+        else if (roundStart && party.AnnounceAsSurvivors)
+        {
+            var rolled = ThirdPartySystem.CountThirdPartyAssignments(assignedJobs);
+            leaderBodies = ThirdPartySystem.TrimBodiesTo(leaderBodies, rolled.Leaders);
+            gruntBodies = ThirdPartySystem.TrimBodiesTo(gruntBodies, rolled.Members);
+        }
+        // CMU14 End
         IReadOnlyDictionary<string, int> entityBodies = ThirdPartySystem.GetSpawnBodies(
             ThreatMarkerType.Entity,
             spawnProto.EntitiesToSpawn);
@@ -508,6 +629,8 @@ public sealed partial class ThirdPartySystem : EntitySystem
             string markerId = spawnProto.Markers.TryGetValue(markerType, out string? id) ? id : string.Empty;
             var legacyMarkers = new List<EntityUid>();
             var legacyCooldownMarkers = new List<EntityUid>();
+            // Ground another survivor group already claimed this round; used only if nothing else is left.
+            var reservedGround = new List<EntityUid>();
             EntityQueryEnumerator<ThreatSpawnMarkerComponent> query = _entityManager
                 .EntityQueryEnumerator<ThreatSpawnMarkerComponent>();
             while (query.MoveNext(out EntityUid uid, out ThreatSpawnMarkerComponent? comp))
@@ -518,6 +641,13 @@ public sealed partial class ThirdPartySystem : EntitySystem
                     || !(comp.ID == markerId || (comp.ID == string.Empty && markerId == string.Empty))
                     || !comp.ThirdParty)
                     continue;
+
+                // CMU14: another survivor group already claimed this ground this round.
+                if (party.AnnounceAsSurvivors && !SurvivorSpawnMarkers.MarkerIsAvailable(IsSurvivorMarkerReserved(uid)))
+                {
+                    reservedGround.Add(uid);
+                    continue;
+                }
 
                 if (IsMarkerBlockedByWalls(uid))
                     continue;
@@ -541,6 +671,46 @@ public sealed partial class ThirdPartySystem : EntitySystem
                     legacyCooldownMarkers.Add(uid);
                 else
                     legacyMarkers.Add(uid);
+            }
+
+            // CMU14: a survivor party spawns on the colony itself. Planet maps place survivor job spawn
+            // points (CMSpawnPointSurvivor and friends) rather than third-party threat markers, which only
+            // exist on the ERT dropship maps, so fall back to those positions.
+            if (!useDropship && party.AnnounceAsSurvivors && legacyMarkers.Count < GetRequiredBodyCount(markerType))
+            {
+                foreach (var point in SurvivorSpawnPoints(mapId))
+                {
+                    if (legacyMarkers.Contains(point))
+                        continue;
+
+                    if (party.AnnounceAsSurvivors && !SurvivorSpawnMarkers.MarkerIsAvailable(IsSurvivorMarkerReserved(point)))
+                    {
+                        reservedGround.Add(point);
+                        continue;
+                    }
+
+                    legacyMarkers.Add(point);
+                }
+            }
+
+            // Every colony marker is already claimed by the other survivor group this round. Two groups on one
+            // colony is normal, but riding a dropship is not: share the ground rather than spawn on the ship.
+            if (!useDropship
+                && party.AnnounceAsSurvivors
+                && legacyMarkers.Count < GetRequiredBodyCount(markerType)
+                && reservedGround.Count > 0)
+            {
+                foreach (var point in reservedGround)
+                {
+                    if (legacyMarkers.Count >= GetRequiredBodyCount(markerType))
+                        break;
+
+                    if (!legacyMarkers.Contains(point))
+                        legacyMarkers.Add(point);
+                }
+
+                _sawmill.Warning(
+                    $"[ThirdPartySystem] Survivor party ({party.ID}) shares colony ground another group claimed; {legacyMarkers.Count} marker(s) for {GetRequiredBodyCount(markerType)} body/bodies.");
             }
 
             int legacyRequiredBodyCount = GetRequiredBodyCount(markerType);
@@ -679,6 +849,14 @@ public sealed partial class ThirdPartySystem : EntitySystem
             PreferMarkersAwayFromPlayers(ref gruntMarkers, unsafeGruntMarkers);
             PreferMarkersAwayFromPlayers(ref entityMarkers, unsafeEntityMarkers);
         }
+
+        // Claim this group's ground before any body is placed, so the other survivor group cannot be handed it.
+        ReserveSurvivorMarkers(party, leaderMarkers);
+        ReserveSurvivorMarkers(party, unsafeLeaderMarkers);
+        ReserveSurvivorMarkers(party, gruntMarkers);
+        ReserveSurvivorMarkers(party, unsafeGruntMarkers);
+        ReserveSurvivorMarkers(party, entityMarkers);
+        ReserveSurvivorMarkers(party, unsafeEntityMarkers);
 
         bool ValidateMarkerPool(string bucket,
             int required,
@@ -839,6 +1017,9 @@ public sealed partial class ThirdPartySystem : EntitySystem
                 _survivorSupplement.ApplyToSurvivor(survivor);
         }
 
+        if (chosen != null) // CMU14
+            AssignChosenSurvivors(party, chosen, spawnedLeaders.Concat(spawnedGrunts));
+
         if (roundStart && assignedJobs != null)
         {
             var leaderPlayers = new List<NetUserId>();
@@ -856,7 +1037,13 @@ public sealed partial class ThirdPartySystem : EntitySystem
             AssignMinds(memberPlayers, spawnedGrunts, ThirdPartyMemberJobId.Id, "member");
         }
 
-        if (!string.IsNullOrWhiteSpace(party.AnnounceArrival) && party.AnnounceArrivalTitle is { } arrivalTitle)
+        // Survivors are colony inhabitants, not a responding force: they never "make their entrance", so the
+        // arrival announcement must not fire for them (it reached the whole lobby on every survivor spawn).
+        if (party.AnnounceAsSurvivors)
+        {
+            // no-op
+        }
+        else if (!string.IsNullOrWhiteSpace(party.AnnounceArrival) && party.AnnounceArrivalTitle is { } arrivalTitle)
         {
             var arrival = LocalizeAnnouncement(party.AnnounceArrival);
             var wrapped = Loc.GetString("cmu-third-party-titled-arrival",
@@ -946,12 +1133,174 @@ public sealed partial class ThirdPartySystem : EntitySystem
         return fallback;
     }
 
+    /// <summary>True when the map offers anywhere to put a ground-inserted party.</summary>
+    /// <summary>
+    ///     The colony's survivor spawn points: the positions planet maps give their own survivors.
+    /// </summary>
+    private List<EntityUid> SurvivorSpawnPoints(MapId? mapFilter)
+    {
+        var points = new List<EntityUid>();
+        var query = _entityManager.EntityQueryEnumerator<SpawnPointComponent>();
+        while (query.MoveNext(out var uid, out var spawnPoint))
+        {
+            if (!TryComp(uid, out TransformComponent? xform))
+                continue;
+
+            if (mapFilter != null && xform.MapID != mapFilter.Value)
+                continue;
+
+            if (spawnPoint.Job is not { } job
+                || job.Id.IndexOf("survivor", StringComparison.OrdinalIgnoreCase) < 0)
+                continue;
+
+            if (IsMarkerBlockedByWalls(uid))
+                continue;
+
+            points.Add(uid);
+        }
+
+        return points;
+    }
+
+    /// <summary>The map the round's colony was loaded on, if a planet has been picked yet.</summary>
+    private MapId? PlanetMapId()
+    {
+        var planet = _auRoundSystem.ActivePlanet;
+        if (planet == null || !_entityManager.TryGetComponent(planet.Owner, out TransformComponent? planetXform))
+            return null;
+
+        return planetXform.MapID;
+    }
+
+    /// <summary>
+    ///     Whether anything on the loaded maps can host a ground insertion. Survivors are limited to the colony
+    ///     and to the marker categories that are colony insert ground (see <see cref="SurvivorSpawnMarkers"/>).
+    /// </summary>
+    private bool HasGroundInsertMarkers(bool survivorParty = false)
+    {
+        var planetMap = survivorParty ? PlanetMapId() : null;
+
+        if (survivorParty && SurvivorSpawnPoints(planetMap).Count > 0)
+            return true;
+
+        var insertMarkers = _entityManager.EntityQueryEnumerator<AuInsertMarkerComponent>();
+        while (insertMarkers.MoveNext(out var uid, out _))
+        {
+            if (!survivorParty || IsOnAllowedMap(uid, planetMap))
+                return true;
+        }
+
+        var thirdPartyMarkers = _entityManager.EntityQueryEnumerator<ThreatSpawnMarkerComponent>();
+        while (thirdPartyMarkers.MoveNext(out var uid, out _))
+        {
+            // Any third-party insert marker is colony ground - the same set every other ground party uses.
+            if (!survivorParty || IsOnAllowedMap(uid, planetMap))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>Whether another survivor group already claimed this marker this round.</summary>
+    private bool IsSurvivorMarkerReserved(EntityUid marker) => _consumedSurvivorMarkers.Contains(marker);
+
+    /// <summary>Claims a survivor party's ground so the other population cannot spawn on it.</summary>
+    private void ReserveSurvivorMarkers(ThirdPartyPrototype party, IEnumerable<EntityUid> markers)
+    {
+        if (party.AnnounceAsSurvivors != true)
+            return;
+
+        foreach (var marker in markers)
+            _consumedSurvivorMarkers.Add(marker);
+    }
+
+    /// <summary>Whether a marker sits on the colony map (every map counts before a planet is picked).</summary>
+    private bool IsOnAllowedMap(EntityUid marker, MapId? planetMap)
+    {
+        if (planetMap == null)
+            return true;
+
+        return TryComp(marker, out TransformComponent? xform)
+               && SurvivorSpawnMarkers.IsAllowedMap(true, xform.MapID == planetMap.Value);
+    }
+
+    /// <summary>
+    ///     Colony insert ground: any insert marker, any third-party insert marker, or a survivor spawn point, on the
+    ///     colony map. Deliberately the same set every other ground party uses - narrowing it left colonies with no
+    ///     valid marker, so the survivor group never arrived.
+    /// </summary>
+    private bool IsColonyGround(EntityUid marker, MapId? planetMap)
+    {
+        if (!IsOnAllowedMap(marker, planetMap))
+            return false;
+
+        return HasComp<AuInsertMarkerComponent>(marker)
+               || HasComp<ThreatSpawnMarkerComponent>(marker)
+               || HasComp<SpawnPointComponent>(marker);
+    }
+
+
+    /// <summary>
+    ///     Whether a marker is colony insert ground: an insert marker, a third-party marker or a survivor spawn
+    ///     point on the colony map.
+    /// </summary>
+    private bool IsColonyInsertGround(EntityUid marker, MapId? planetMap)
+    {
+        if (!IsOnAllowedMap(marker, planetMap))
+            return false;
+
+        var isSurvivorSpawnPoint = HasComp<SpawnPointComponent>(marker)
+                                   && SurvivorSpawnPoints(planetMap).Contains(marker);
+        return SurvivorSpawnMarkers.IsColonyInsertGround(
+            HasComp<AuInsertMarkerComponent>(marker),
+            TryComp<ThreatSpawnMarkerComponent>(marker, out var threat) && threat.ThirdParty,
+            isSurvivorSpawnPoint);
+    }
+
+    /// <summary>The first rank a survivor job declares, or null.</summary>
+    private ProtoId<RankPrototype>? _prototypesRank(ProtoId<JobPrototype> job)
+    {
+        if (!_prototypeManager.TryIndex(job, out JobPrototype? proto) || proto.Ranks is not { } ranks)
+            return null;
+
+        foreach (var (rank, entries) in ranks)
+        {
+            if (entries is not { Count: > 0 })
+                return rank;
+        }
+
+        return null;
+    }
+
+    /// <summary>True when the role body is a specific named person rather than a role.</summary>
+    private bool KeepBodyName(string bodyProto)
+        => _prototypeManager.TryIndex<SurvivorRolePrototype>(bodyProto, out var role) && role.KeepBodyName;
+
+    /// <summary>
+    ///     Removes the call-in squad identity from a survivor: the ghost role they were spawned with and the
+    ///     original job that would otherwise re-apply that squad's briefing to a survivor.
+    /// </summary>
+    private void StripCallInIdentity(EntityUid body)
+    {
+        RemCompDeferred<GhostRoleComponent>(body);
+        RemCompDeferred<GhostTakeoverAvailableComponent>(body);
+        RemCompDeferred<GhostRoleApplySpecialComponent>(body);
+
+        if (HasComp<OriginalRoleComponent>(body))
+            RemCompDeferred<OriginalRoleComponent>(body);
+    }
+
     private void ApplyPlayerCharacterName(EntityUid mob, string characterName)
     {
         if (!HasComp<HumanoidProfileComponent>(mob))
             return;
 
         if (string.IsNullOrWhiteSpace(characterName))
+            return;
+
+        // A synthetic body already carries the name it generated for itself. Renaming it to the player's saved
+        // human character would hand a synth a human identity, so the body keeps the name it spawned with.
+        if (CMUCharacterName.HasRequiredParts(MetaData(mob).EntityName, synthetic: true))
             return;
 
         _metaData.SetEntityName(mob, characterName);
@@ -1017,19 +1366,7 @@ public sealed partial class ThirdPartySystem : EntitySystem
 
             if (party.RoundStart)
             {
-                if (_automaticForces.ContainsKey(party.ID))
-                    continue;
-
-                _automaticForces.Add(party.ID, 0);
-                try
-                {
-                    SpawnThirdPartyNow(party, spawn, true, assignedJobs, null);
-                }
-                catch (Exception ex)
-                {
-                    _sawmill.Error($"[ThirdPartySystem] Exception spawning roundstart third party ({party.ID}): {ex}");
-                }
-
+                SpawnRoundStartParty(party, spawn, assignedJobs); // CMU14
                 continue;
             }
 
@@ -1281,4 +1618,230 @@ public sealed partial class ThirdPartySystem : EntitySystem
     }
 
     private readonly record struct ThirdPartyAssignmentCounts(int Leaders, int Members);
+
+    // CMU14: roundstart parties are spawned either at round start (non-survivors) or reserved until the
+    // survivor setup vote picks a faction.
+    private void SpawnRoundStartParty(ThirdPartyPrototype party, PartySpawnPrototype spawn,
+        Dictionary<NetUserId, (ProtoId<JobPrototype>?, EntityUid)>? assignedJobs)
+    {
+        if (_automaticForces.ContainsKey(party.ID))
+            return;
+
+        if (party.AnnounceAsSurvivors && _survivorsSpawned) // rolled players fill one survivor group
+            return;
+
+        _automaticForces.Add(party.ID, 0);
+        try
+        {
+            if (SpawnThirdPartyNow(party, spawn, true, assignedJobs, null) && party.AnnounceAsSurvivors)
+                _survivorsSpawned = true;
+        }
+        catch (Exception ex)
+        {
+            _sawmill.Error($"[ThirdPartySystem] Exception spawning roundstart third party ({party.ID}): {ex}");
+        }
+    }
+
+    /// <summary>
+    ///     CMU14: stops <see cref="StartThirdPartySpawning(ThreatPrototype, Dictionary{NetUserId, (ProtoId{JobPrototype}?, EntityUid)}?)"/>
+    ///     from spawning survivor parties while the held players are still choosing one.
+    /// </summary>
+    public void ReserveSurvivorParties()
+    {
+        foreach (var party in _auRoundSystem.SelectedThirdParties)
+        {
+            if (party.RoundStart && party.AnnounceAsSurvivors)
+                _automaticForces.TryAdd(party.ID, 0);
+        }
+    }
+
+    /// <summary>CMU14: spawns the survivor group the players voted for and puts each player in the body they picked.</summary>
+    public bool SpawnChosenSurvivors(ThirdPartyPrototype party, IReadOnlyList<SurvivorAssignment> chosen)
+    {
+        if (!_prototypeManager.TryIndex(party.PartySpawn, out var spawn))
+            return false;
+
+        foreach (var step in SpawnThirdPartySteps(party, spawn, true, null, null, null, chosen))
+        {
+            if (step != ForceDeploymentStep.Completed)
+                continue;
+
+            _survivorsSpawned = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    // CMU14: one body per chosen role, so the group only ever spawns what the players picked
+    internal static Dictionary<string, int> CountChosenBodies(IReadOnlyList<SurvivorAssignment> chosen, bool leaders)
+    {
+        var bodies = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var assignment in chosen)
+        {
+            if (assignment.Leader == leaders)
+                bodies[assignment.Body] = bodies.GetValueOrDefault(assignment.Body) + 1;
+        }
+
+        return bodies;
+    }
+
+    // CMU14: each body goes to the player who chose its role
+    private void AssignChosenSurvivors(ThirdPartyPrototype party, IReadOnlyList<SurvivorAssignment> chosen,
+        IEnumerable<EntityUid> bodies)
+    {
+        var pending = chosen.ToList();
+        foreach (var body in bodies)
+        {
+            var protoId = Prototype(body)?.ID;
+            var index = pending.FindIndex(assignment => string.Equals(assignment.Body, protoId, StringComparison.OrdinalIgnoreCase));
+            if (index < 0)
+                continue;
+
+            var assignment = pending[index];
+            pending.RemoveAt(index);
+            try
+            {
+                AssignSurvivorMind(party, assignment, body);
+            }
+            catch (Exception ex)
+            {
+                _sawmill.Error($"[ThirdPartySystem] Failed to assign survivor {assignment.Player} to {ToPrettyString(body)}: {ex}");
+            }
+        }
+    }
+
+    // CMU14: the body keeps its role gear; the chosen character supplies appearance and name
+    /// <summary>
+    ///     Applies a role body's <see cref="EquipEntityPresetComponent"/> immediately instead of leaving it to
+    ///     MapInit, so the survivor loadout always runs against a fully equipped body and the gear's default
+    ///     weapon is replaced rather than duplicated.
+    /// </summary>
+    private void ApplyRolePresetNow(EntityUid body)
+    {
+        if (!TryComp<EquipEntityPresetComponent>(body, out var preset))
+            return;
+
+        RemComp<EquipEntityPresetComponent>(body);
+        _entityManager.System<EntityPresetSystem>().ApplyPreset(body, preset.Preset);
+        _sawmill.Debug($"[ThirdPartySystem] Applied role preset {preset.Preset} to {ToPrettyString(body)} before the survivor loadout.");
+    }
+
+    private void AssignSurvivorMind(ThirdPartyPrototype party, SurvivorAssignment assignment, EntityUid body)
+    {
+        if (!_playerManager.TryGetSessionById(assignment.Player, out ICommonSession? session))
+            return;
+
+        // A survivor is not the ERT squad their role body inherits from: mark the body so the job greeting
+        // (the "you are a part of ... party" block) is skipped for them.
+        EnsureComp<CMUSurvivorSpawnedComponent>(body);
+
+        // The role body names the job it belongs to in its ghost role, and with it come the faction, rank, job
+        // icon and skills. Read it before the call-in identity is stripped: without it every survivor fell back
+        // to the generic stranded job, which is W-Y contractor derived, so a CLF medic spawned with the W-Y
+        // faction, a PMC rank, the W-Y job icon and no medical skills.
+        var roleJob = TryComp<GhostRoleComponent>(body, out var ghostRole) ? ghostRole.JobProto : null;
+
+        // Role gear can carry an EquipEntityPreset that equips its own - often randomly chosen - faction weapon.
+        // EquipEntityPreset only fires on MapInit and removes itself there, so this is a no-op when the preset has
+        // already run; it exists for bodies whose preset never saw MapInit. Either way the gear lands before the
+        // loadout, which replaces the primary like any other starting weapon.
+        ApplyRolePresetNow(body);
+
+        var mindSystem = _entityManager.System<SharedMindSystem>();
+        var roleSystem = _entityManager.System<SharedRoleSystem>();
+        _entityManager.System<GameTicker>().PlayerJoinGame(session, true);
+
+        // Named characters keep their own identity and their own look; everyone else spawns as the player's
+        // character. Applying the player's profile to a named body put the player's face under that name.
+        var keepBodyIdentity = KeepBodyName(assignment.Body);
+        if (!keepBodyIdentity)
+        {
+            var profile = TryComp(body, out HumanoidProfileComponent? humanoid)
+                ? assignment.Profile.WithSpecies(humanoid.Species)
+                : assignment.Profile;
+            _visualBody.ApplyProfileTo(body, profile);
+            _humanoidProfile.ApplyProfileTo(body, profile);
+        }
+
+        if (!keepBodyIdentity)
+            ApplyPlayerCharacterName(body, assignment.Profile.Name);
+
+        // A survivor is not the call-in squad the role body came from: drop the ghost role and the original
+        // job so nothing downstream (greetings, Dutch's Dozen hunting orders) treats them as that squad.
+        StripCallInIdentity(body);
+
+        EntityUid? mind = mindSystem.GetMind(assignment.Player);
+        mind ??= mindSystem.CreateMind(assignment.Player, assignment.Profile.Name);
+        mindSystem.SetUserId(mind.Value, assignment.Player);
+        mindSystem.TransferTo(mind.Value, body);
+        // The role's own job carries the faction, rank, job icon and skills; a body that is itself a job
+        // prototype is used directly, and only a body that names neither falls back to the stranded job.
+        var jobProto = roleJob
+            ?? (_prototypeManager.HasIndex<JobPrototype>(assignment.Body)
+                ? new ProtoId<JobPrototype>(assignment.Body)
+                : StrandedMemberJobId);
+
+        roleSystem.MindAddJobRole(mind.Value, silent: true, jobPrototype: jobProto.Id);
+
+        // CMU14: swap the survivor's armor/helmet/firearm for their faction loadout choice. Queued only now,
+        // after the job has been added: adding the job re-applies the role's gear preset, and a loadout applied
+        // before that was overwritten by it - which left the survivor holding a second primary and, when the
+        // uniform was re-equipped, wearing one whose webbing had been dropped.
+        if (assignment.LoadoutConfig is { } loadout)
+            _survivorLoadout.ApplyWhenDressed(body, loadout, assignment.Loadout, assignment.Body, roleJob);
+
+        // The rank normally comes from GhostRoleApplySpecial, which survivor spawns strip, so apply the
+        // job's rank here: it is what the inspect window reads.
+        if (_prototypesRank(jobProto) is { } rank)
+            _rank.SetRank(body, rank);
+
+        // Show that job on the ID card, so inspecting the survivor does not report an empty job title.
+        if (_prototypeManager.TryIndex(jobProto, out JobPrototype? job) &&
+            _idCard.TryFindIdCard(body, out Entity<IdCardComponent> idCard))
+        {
+            idCard.Comp.JobTitle = job.Name;
+            Dirty(idCard.Owner, idCard.Comp);
+        }
+
+        SendSurvivorBriefing(party, session);
+    }
+
+    /// <summary>
+    ///     Tells the player who they are and where they are. The party's default intro/story are overridden by
+    ///     the text for the map this round actually landed on, so the same faction reads differently on
+    ///     Trijent than it does on Solaris Ridge.
+    /// </summary>
+    private void SendSurvivorBriefing(ThirdPartyPrototype party, ICommonSession session)
+    {
+        // Only survivor factions have a survivor briefing. A call-in party must never receive one, even if it
+        // is spawned through the chosen-survivor path by an admin or a future caller.
+        if (!party.AnnounceAsSurvivors)
+            return;
+
+        var planet = _auRoundSystem.ActivePlanet;
+        var colonyName = string.IsNullOrWhiteSpace(planet?.VoteName) ? planet?.MapId : planet?.VoteName;
+
+        var briefing = SurvivorBriefingRules.Resolve(
+            planet?.SurvivorScenario,
+            new SurvivorBriefingText(party.Intro, party.Story),
+            SurvivorBriefingRules.Project(party.Scenario),
+            colonyName);
+
+        // The faction's own briefing tint, gold by default. Markup inside the locale text is rendered on top of
+        // it, so a faction can highlight a line without giving up its base colour.
+        var briefingColor = party.BriefingColor;
+
+        if (briefing.Intro is { } intro)
+        {
+            _chatManager.ChatMessageToOne(ChatChannel.Server, intro, intro, EntityUid.Invalid, false,
+                session.Channel, briefingColor);
+        }
+
+        if (briefing.Story is { } story)
+        {
+            _chatManager.ChatMessageToOne(ChatChannel.Server, story, story, EntityUid.Invalid, false,
+                session.Channel, briefingColor);
+        }
+    }
 }

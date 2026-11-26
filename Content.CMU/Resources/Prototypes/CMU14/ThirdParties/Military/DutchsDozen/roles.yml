@@ -48,6 +48,23 @@
 - type: job
   parent: CMUJobDutchsDozenRifleman
   id: CMUJobDutchsDozenGrenadier
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillCqc: 1
+      RMCSkillEngineer: 2
+      RMCSkillConstruction: 2
+      RMCSkillFirearms: 2
+      RMCSkillMedical: 1
+      RMCSkillFireman: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSpecialistWeapons: 2
+      RMCSkillJtac: 1
+      RMCSkillEndurance: 4
   name: cmu-dutchs-dozen-name-grenadier
   startingGear: CMUGearDutchsDozenGrenadier
 
@@ -91,6 +108,26 @@
   parent: CMUJobDutchsDozenRifleman
   id: CMUJobDutchsDozenFlamer
   roundRole: DutchsDozenFlamer
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillCqc: 1
+      RMCSkillEngineer: 2
+      RMCSkillConstruction: 2
+      RMCSkillFirearms: 2
+      RMCSkillMedical: 1
+      RMCSkillFireman: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSpecialistWeapons: 2
+      RMCSkillJtac: 1
+      RMCSkillEndurance: 4
+  # cmss13's /datum/skills/dutchmerc gives the Dozen specialist weapons and fireman training; without the
+  # PyroWhitelist component the M240A2's GunUserWhitelist refuses to let the flamer fire his own weapon.
+  - type: PyroWhitelist
   name: cmu-dutchs-dozen-name-flamer
   playTimeTracker: CMUJobDutchsDozenFlamer
   startingGear: CMUGearDutchsDozenFlamer
@@ -290,8 +327,20 @@
   id: CMUMobDutchsDozenArnold
   name: Arnold 'Dutch' Schäfer
   components:
+  # cmss13 /datum/equipment_preset/dutch/arnie/load_name: male, 38, "Mulder" hair, "5 O'clock Shadow"
+  # facial hair, hair 15/15/25 (near-black blue), eyes 139/62/19 (amber).
   - type: RandomHumanoidAppearance
     randomizeName: false
+    sex: Male
+    age: 38
+    hair: RMCHumanHairMulder
+    facialHair: HumanFacialHairFiveoclock
+    hairColor: "#0f0f19"
+    eyeColor: "#8b3e13"
+    # cmss13 never sets a skin tone for Arnold (load_name covers gender, name, hair style/colour, eyes and age
+    # only), so the tone fell through to human.dm's 0,0,0 fallback and read as black. Pinned to a mid tan instead,
+    # matching the character, so it is also identical every round.
+    skinColor: "#B69B78"
   - type: GhostRole
     makeSentient: true
     allowSpeech: true
@@ -311,7 +360,7 @@
   equipment:
     head: RMCArmorHelmetDutch
     ears: CMUHeadsetDutchsDozen
-    jumpsuit: RMCJumpsuitDutch
+    jumpsuit: CMUJumpsuitDutch
     outerClothing: CMArmorDutchVest
     gloves: RMCHandsVeteran
     shoes: CMBootsJungleFilled
@@ -324,7 +373,7 @@
   id: CMUGearDutchsDozenRifleman
   equipment:
     back: RMCSatchelLightpack
-    suitstorage: AU14WeaponRifleM16A1
+    suitstorage: CMUWeaponRifleXM177Dutch
     belt: CMUBeltMarineFilledM16APDutch
     pocket1: CMUPouchMagazineLargeFilledM16AP
   storage:
@@ -350,6 +399,8 @@
   equipment:
     suitstorage: CMUWeaponRifleM16A1UGL
     belt: RMCBeltGrenadeLargeFilled
+    # cmss13 pairs the grenade belt with an AP magazine pouch.
+    pocket1: CMUPouchMagazineLargeFilledM16AP
 
 # 10% in cmss13: the M60
 - type: startingGear
@@ -377,8 +428,9 @@
   parent: CMUGearDutchsDozenBase
   id: CMUGearDutchsDozenMinigunner
   equipment:
-    back: AU14HAZOPSBatteryMinigunGAU19Backpack
-    suitstorage: AU14SmartGunMinigunHAZOPS
+    # cmss13: a plain lightpack of rotating ammo drums, with the sidearm on the belt rig.
+    back: RMCSatchelLightpack
+    suitstorage: CMUWeaponMinigunOlPainless
     belt: AU14BeltHolsterPistolCultistMK45
     pocket1: CMUPouchExplosiveFilledDutchEMP
     id: CMUIDCardDutchsDozenMinigunner
@@ -387,16 +439,23 @@
     - CMUGrenadeEMPDutch
     - CMUGrenadeEMPDutch
     back:
-    - AU14MagazineMinigunHAZOPS
-    - AU14MagazineMinigunHAZOPS
+    - CMUMagazineMinigunOlPainless
+    - CMUMagazineMinigunOlPainless
+    - CMUMagazineMinigunOlPainless
+    - CMUMagazineMinigunOlPainless
+    - CMUMagazineMinigunOlPainless
+    - CMUMagazineMinigunOlPainless
 
 # the M240A2 stands in for the M240 spec flamer, the M16A1 for the XM177
 - type: startingGear
   parent: CMUGearDutchsDozenBase
   id: CMUGearDutchsDozenFlamer
   equipment:
-    back: RMCBackpackFlamer
-    suitstorage: AU14WeaponFlamerM240A2HAZOPS
+    # cmss13: the M240-T rides in the Broiler-T harness on the back, with the fuel-tank strap pouch in a pocket
+    # and an XM177 as the primary. The harness carries the incinerator in its own slot (it has no Storage at all),
+    # which is why CMUBackpackBroilerFlamer overrides that slot's starting item.
+    back: CMUBackpackBroilerFlamer
+    suitstorage: CMUWeaponRifleXM177Dutch
     belt: CMUBeltMarineFilledM16APDutch
     pocket1: CMUPouchFuelTankFilledDutch
     id: CMUIDCardDutchsDozenFlamer
@@ -404,8 +463,9 @@
     outerClothing:
     - CMUGrenadeEMPDutch
     - CMUGrenadeEMPDutch
-  inhand:
-  - AU14WeaponRifleM16A1
+    # The harness fills its own tank slots; only the loose kit goes in pockets.
+  # No in-hand rifle: the survivor loadout already equips the rifle the player picks, and a second one in his
+  # hands would never be converted or cleaned up (the loadout only looks at suit storage, back and belt).
 
 - type: startingGear
   parent: CMUGearDutchsDozenBase
@@ -413,8 +473,9 @@
   equipment:
     eyes: RMCGlassesMedicalHUDGlasses
     back: RMCSatchelLightpack
-    suitstorage: AU14WeaponRifleM16A1
+    suitstorage: CMUWeaponRifleXM177Dutch
     belt: RMCBeltMedicBagERTFilled
+    # The call-in/ERT squad draws AP only; survivors carry standard magazines and upgrade a few to AP.
     pocket1: CMUPouchMagazineLargeFilledM16AP
     pocket2: RMCPouchMedkitFillAdvanced
     id: CMUIDCardDutchsDozenMedic
@@ -439,14 +500,38 @@
     - RMCZippo
 
 # Arnold wears a Yautja clan mask, a tech item, so every bracer's gear tracker points the hunters straight at him
+# Arnold's machete is the M2100 "Ngájhe" (cmss13 /obj/item/weapon/sword/machete/arnold), not the issue M2132.
+# The scabbard's slot whitelist takes the `Machete` tag, and RMCM2100Machete only carries its own id tag - so
+# the blade could be drawn but never put back. This subtype adds the tag the scabbard asks for.
+- type: entity
+  parent: RMCM2100Machete
+  id: CMUM2100MacheteArnold
+  components:
+  - type: Tag
+    tags:
+    - RMCM2100Machete
+    - Machete
+
+- type: entity
+  parent: RMCScabbardMachete
+  id: CMUScabbardMacheteArnoldFilled
+  suffix: Filled, Arnold
+  components:
+  - type: ContainerFill
+    containers:
+      item:
+      - CMUM2100MacheteArnold
+
 - type: startingGear
   parent: CMUGearDutchsDozenBase
   id: CMUGearDutchsDozenArnold
   equipment:
     head: RMCArmorHelmetDutchCap
+    # cmss13 gives Arnold clothing/glasses/thermal/empproof.
+    eyes: CMUOpticalThermalScanner
     mask: CMUYautjaMask
-    back: RMCScabbardMacheteFilled
-    suitstorage: AU14WeaponRifleM16A1
+    back: CMUScabbardMacheteArnoldFilled
+    suitstorage: CMUWeaponRifleXM177Dutch
     belt: CMUBeltMarineFilledM16APDutch
     pocket1: CMUPouchExplosiveFilledDutchEMP
     pocket2: RMCPouchMedicalSocDutchFill
@@ -455,3 +540,104 @@
     outerClothing:
     - CMUMagazineRifleM16AP
     - CMUMagazineRifleM16AP
+
+# cmss13's /obj/item/clothing/glasses/thermal/empproof, which Arnold's preset wears.
+#
+# Upstream ClothingEyesGlassesThermal does nothing in CMU: it depends on the SS14 thermal shader, which this fork
+# does not run (the Yautja mask's thermal vision is a Yautja-only component, replaced there by x-ray). These are
+# therefore built on the working RMC night-vision item - CMGlassesM42ScoutSight carries NightVisionItem with a
+# toggle action - with the non-green palette so the result reads as thermal imaging. Art, name and description
+# are cmss13's own.
+# Toggle action owned by the thermal goggles.
+- type: entity
+  parent: ActionMarineBase
+  id: CMUActionToggleThermalGoggles
+  name: Toggle thermal goggles
+  description: Switch the thermal imaging goggles on or off.
+  components:
+  - type: Action
+    itemIconStyle: BigItem
+  - type: InstantAction
+    event: !type:ToggleActionEvent
+
+- type: entity
+  parent: CMGlassesM42ScoutSight
+  id: CMUOpticalThermalScanner
+  name: Optical Thermal Scanner
+  description: Thermals in the shape of glasses. This one is EMP proof.
+  components:
+  - type: Sprite
+    sprite: CMU14/Clothing/Dutch/thermal_scanner.rsi
+    layers:
+    - state: icon
+      map: [ "icon" ]
+  - type: Clothing
+    sprite: CMU14/Clothing/Dutch/thermal_scanner.rsi
+  - type: NightVisionItem
+    actionId: CMUActionToggleThermalGoggles
+    enableOnEquip: false
+    green: false
+    defaultState: Full
+    blockScopes: true
+  - type: GenericVisualizer
+    visuals:
+      enum.NightVisionItemVisuals.Active:
+        icon:
+          True: { state: icon_on }
+          False: { state: icon }
+
+# The Broiler-T with an incinerator already fitted. cmss13's /obj/item/storage/large_holster/broiler ships as a
+# harness you sheath the flamer into; the slot below is that sheath, pre-filled for the Dozen's flamethrower.
+- type: entity
+  parent: RMCBackpackBroiler
+  id: CMUBackpackBroilerFlamer
+  suffix: Filled
+  components:
+  - type: ItemSlots
+    slots:
+      item:
+        name: Incinerator
+        startingItem: RMCWeaponFlamerSpec
+        insertVerbText: sheath-insert-verb
+        ejectVerbText: sheath-eject-verb
+        insertSound: /Audio/_RMC14/Weapons/Guns/gun_rifle_draw.ogg
+        ejectSound: /Audio/_RMC14/Weapons/Guns/gun_rifle_draw.ogg
+        whitelist:
+          tags:
+          - RMCWeaponIncineratorM34T
+
+# cmss13's Dutch's Dozen uniform has no sleeve folding: /obj/item/clothing/under/marine/veteran/dutch just sets
+# worn_state = "dutch_jumpsuit". RMC14's version inherits RMCFoldableUniformBase, which starts folded and draws
+# rolled sleeves with an arm colour baked into the sprite. Same sprites, no Foldable component.
+- type: entity
+  parent: RMCMarineUniformBase
+  id: CMUJumpsuitDutch
+  name: Dutch's Dozen uniform
+  description: A comfortable uniform worn by the Dutch's Dozen mercenaries. It's seen some definite wear and tear,
+    but is still in good condition.
+  components:
+  # Ported verbatim from cmss13: misc_ert_colony.dmi state dutch_jumpsuit (worn) and its obj counterpart (icon),
+  # replacing RMC14's foldable copy. The sleeves are part of the uniform art upstream.
+  - type: Sprite
+    sprite: CMU14/Clothing/Dutch/jumpsuit.rsi
+  - type: Clothing
+    sprite: CMU14/Clothing/Dutch/jumpsuit.rsi
+
+# Survivor-only machine gunner. The call-in squad keeps CMUMobDutchsDozenMachineGunner; this body exists so the
+# survivor role does not have to borrow the ERT mob (and its ghost role and job).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenMachineGunner
+  name: Dutch's Dozen Machine Gunner (Survivor)
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-machine-gunner
+    description: cmu-dutchs-dozen-ghost-description
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenMachineGunner
+    raffle:
+      settings: short

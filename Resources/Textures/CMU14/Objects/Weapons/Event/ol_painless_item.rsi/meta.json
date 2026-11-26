@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from cmss13 icons/obj/items/weapons/guns/guns_by_faction/event.dmi (state `painless`, cell 128,96). The sheet pads the state to a 64x32 cell; the artwork fits one 32px cell, and keeping only that cell makes the sprite one tile wide so the entity anchor is the artwork centre.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "base"
+    },
+    {
+      "name": "icon"
+    }
+  ]
+}

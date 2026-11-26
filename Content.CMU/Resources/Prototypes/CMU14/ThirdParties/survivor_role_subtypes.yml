@@ -1,0 +1,282 @@
+# Survivor-only role subtypes and spawn templates.
+#
+# Each supported survivor faction gets its own role prototypes, inheriting the shared role they replace so
+# equipment, appearance, faction, skills and other configuration stay identical. Survivor spawn templates
+# reference only these prototypes, so changing survivor roles can never leak into ERTs, insurgency call-ins
+# or other third-party deployments.
+#
+# Naming: CMUSurvivor<Faction><Role>. The parent role is the shared prototype the survivor variant replaces.
+
+# =====================================================================================================
+# U.S. ARMY
+# =====================================================================================================
+- type: entity
+  parent: AU14JobUSArmyCommander
+  id: CMUSurvivorUSArmyCommander
+  components:
+  # The survivor commander carries high-impact Mateba loaders (see USArmySurvivorSidearm.yml).
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-commander
+    description: cm-job-description-commanding-officer
+    reregister: false
+    job: CMUJobUSArmySurvCommander
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+- type: entity
+  parent: AU14JobUSArmySquadleader
+  id: CMUSurvivorUSArmySquadLeader
+
+- type: entity
+  parent: AU14JobUSArmyCMT
+  id: CMUSurvivorUSArmyMedic
+
+- type: entity
+  parent: AU14JobUSArmyCET
+  id: CMUSurvivorUSArmyTechnician
+
+- type: entity
+  parent: AU14JobUSArmyHeavyGunner
+  id: CMUSurvivorUSArmyHeavyGunner
+
+- type: entity
+  parent: AU14JobUSArmyMarksman
+  id: CMUSurvivorUSArmyMarksman
+
+- type: entity
+  parent: AU14JobUSArmySynth
+  id: CMUSurvivorUSArmySynth
+
+- type: entity
+  parent: AU14JobUSArmyTrooper
+  id: CMUSurvivorUSArmyRifleman
+
+# =====================================================================================================
+# FORECON
+# =====================================================================================================
+- type: entity
+  parent: AU14JobFORECONCommander
+  id: CMUSurvivorForeconCommander
+
+- type: entity
+  parent: AU14JobFORECONSquadleader
+  id: CMUSurvivorForeconSquadLeader
+
+- type: entity
+  parent: AU14JobFORECONFirstReconCorpsman
+  id: CMUSurvivorForeconMedic
+
+- type: entity
+  parent: AU14JobFORECONSupportTech
+  id: CMUSurvivorForeconTechnician
+
+- type: entity
+  parent: AU14JobFORECONSmartGunOperator
+  id: CMUSurvivorForeconSmartGunner
+
+- type: entity
+  parent: AU14JobFORECONMarksman
+  id: CMUSurvivorForeconMarksman
+
+- type: entity
+  parent: AU14JobFORECONSynth
+  id: CMUSurvivorForeconSynth
+
+- type: entity
+  parent: AU14JobFORECONRifleman
+  id: CMUSurvivorForeconRifleman
+
+# =====================================================================================================
+# CLF COMMANDOS (the intel call-in keeps its AU14IntelThirdPartyCLFCommando* roles)
+# =====================================================================================================
+# CLF Spec Ops (Wet Ops)
+- type: entity
+  parent: [ AU14BaseMobSpeciesOrganicCLF, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvivorClfSpecOpsLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-clf-specops-leader
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobClfSpecOpsLeader
+    raffle:
+      settings: short
+    rules: cmu-clf-specops-rules
+
+- type: entity
+  parent: [ AU14BaseMobSpeciesOrganicCLF, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvivorClfSpecOpsOperative
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-clf-specops-operative
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobClfSpecOpsOperative
+    raffle:
+      settings: short
+    rules: cmu-clf-specops-rules
+
+- type: entity
+  parent: [ AU14BaseMobSpeciesOrganicCLF, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvivorClfSpecOpsMedic
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-clf-specops-medic
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobClfSpecOpsMedic
+    raffle:
+      settings: short
+    rules: cmu-clf-specops-rules
+
+- type: entity
+  parent: [ AU14BaseMobSpeciesOrganicCLF, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvivorClfSpecOpsTechnician
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-clf-specops-technician
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobClfSpecOpsTechnician
+    raffle:
+      settings: short
+    rules: cmu-clf-specops-rules
+
+- type: entity
+  parent: [ AU14BaseMobSpeciesOrganicCLF, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvivorClfSpecOpsHeavy
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-clf-specops-heavy
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobClfSpecOpsHeavy
+    raffle:
+      settings: short
+    rules: cmu-clf-specops-rules
+
+# =====================================================================================================
+# FREE COMPANY RAIDERS (the shuttle call-in keeps CMUJobRaider*)
+# =====================================================================================================
+- type: entity
+  parent: CMUJobRaiderLeader
+  id: CMUSurvivorFreeCompanyLeader
+
+- type: entity
+  parent: CMUJobRaider
+  id: CMUSurvivorFreeCompanyRaider
+
+# =====================================================================================================
+# UNISC SQUAD (the UNISC call-in keeps AU14JobUNISC*)
+# =====================================================================================================
+- type: entity
+  parent: AU14JobUNISCPltOpsOff
+  id: CMUSurvivorUniscPlatoonOps
+
+- type: entity
+  parent: AU14JobUNISCSquadleader
+  id: CMUSurvivorUniscSquadLeader
+
+- type: entity
+  parent: AU14JobUNISCCorpsman
+  id: CMUSurvivorUniscCorpsman
+
+- type: entity
+  parent: AU14JobUNISCAutomaticRifleman
+  id: CMUSurvivorUniscAutomaticRifleman
+
+- type: entity
+  parent: AU14JobUNISCEnforcer
+  id: CMUSurvivorUniscEnforcer
+
+- type: entity
+  parent: AU14JobUNISCEnforcerLeader
+  id: CMUSurvivorUniscEnforcerLeader
+
+- type: entity
+  parent: AU14JobUNISCRifleman
+  id: CMUSurvivorUniscRifleman
+
+# Note: AU14JobInvestigationCMBRightsObserver resolves to the role's ID *card* entity, so the survivor
+# subtype inherits the observer's mob prototype instead.
+- type: entity
+  parent: CMBInvestigationPartyJobRightsObserver
+  id: CMUSurvivorUniscObserver
+
+# =====================================================================================================
+# Survivor spawn templates for factions whose shared spawn is also used by a non-survivor party.
+# The U.S. Army and FORECON survivor parties reuse their existing spawn templates, updated in place to
+# the survivor role prototypes above.
+# =====================================================================================================
+
+- type: partySpawn
+  id: CMUSurvivorSpawnWyPmc
+  # The W-Y PMC survivor group is the Solaris Ridge crash-landing detachment: exactly one body per
+  # position (commander, squad leader, medic, technician, liaison, synthetic support, rifleman). The
+  # corporate squad party (WYPMCParty) and its roles are a separate call-in and are not mixed in here.
+  leadersToSpawn:
+    CMUSurvivorWyPmcFieldOpsLeader: 1 # commander position
+    CMUSurvivorWyPmcLeader: 1 # squad leader
+  gruntsToSpawn:
+    CMUSurvivorWyPmcMedic: 1
+    CMUSurvivorWyPmcEngineer: 1
+    CMUSurvivorWyPmcSupervisor: 1
+    CMUSurvivorWyPmcSynth: 1
+    CMUSurvivorWyPmcStandard: 1
+  scalewithpop: false
+  spawnTogether: true
+
+- type: partySpawn
+  id: CMUSurvivorSpawnClfCommando
+  leadersToSpawn:
+    CMUSurvivorClfSpecOpsLeader: 1
+  gruntsToSpawn:
+    CMUSurvivorClfSpecOpsOperative: 3
+    CMUSurvivorClfSpecOpsMedic: 1
+    CMUSurvivorClfSpecOpsTechnician: 1
+    CMUSurvivorClfSpecOpsHeavy: 1
+  scalewithpop: false
+  spawnTogether: true
+
+- type: partySpawn
+  id: CMUSurvivorSpawnFreeCompany
+  leadersToSpawn:
+    CMUSurvFreeCompanyLeader: 1
+  gruntsToSpawn:
+    CMUSurvFreeCompanyRaider: 2
+  scalewithpop: false
+  spawnTogether: true
+
+- type: partySpawn
+  id: CMUSurvivorSpawnUnisc
+  leadersToSpawn:
+    CMUSurvUniscPlatoonOps: 1
+    CMUSurvUniscSquadLeader: 1
+  gruntsToSpawn:
+    CMUSurvUniscRifleman: 1
+    CMUSurvUniscAutomaticRifleman: 1
+    CMUSurvUniscCorpsman: 1
+    CMUSurvUniscEnforcer: 2
+    CMUSurvUniscEnforcerLeader: 1
+    CMUSurvUniscObserver: 1
+  scalewithpop: false
+  spawnTogether: true

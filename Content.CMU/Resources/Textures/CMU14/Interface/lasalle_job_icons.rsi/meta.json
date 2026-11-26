@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from cmss13 PR #12741 at https://github.com/cmss13-devs/cmss13/blob/b63737b4215c842557d8ea969974d7bd8ff12f04/icons/mob/hud/factions/lasalle_bionational.dmi",
+  "size": {
+    "x": 16,
+    "y": 16
+  },
+  "states": [
+    {
+      "name": "commander"
+    },
+    {
+      "name": "squadleader"
+    },
+    {
+      "name": "medic"
+    },
+    {
+      "name": "technician"
+    },
+    {
+      "name": "specialist"
+    },
+    {
+      "name": "rifleman"
+    },
+    {
+      "name": "synth"
+    }
+  ]
+}

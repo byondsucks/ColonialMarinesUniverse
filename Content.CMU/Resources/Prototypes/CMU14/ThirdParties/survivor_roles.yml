@@ -1,0 +1,349 @@
+# Which composition position each survivor role body fills.
+#
+# A faction's party spawn (thirdParty -> partyspawn) decides which survivor roles exist and how many.
+# This table classifies those role bodies so the survivor group can be composed in priority order:
+#   Commander -> Squad Leader -> Medic -> Technician -> Weapon Specialist -> Liaison -> Riflemen
+#
+# Every position is filled at most once and never with the same role body twice. A faction without a
+# position simply skips it; nobody is given an invented role. Everyone left over becomes a Rifleman,
+# repeating the faction's primary rifleman body when the group is larger than the original template.
+#
+# Categories:
+#   Commander / SquadLeader - explicit leadership positions (a faction can have both)
+#   Leader                  - generic leadership: fills Commander first, then SquadLeader if there is a
+#                             second leader body (used by factions whose leader is just "Leader")
+#   Medic / Technician      - support positions
+#   WeaponSpecialist        - the faction's smartgunner / heavy gunner / marksman / pilot equivalent
+#   Liaison                 - faction-specific non-combat VIP
+#   Rifleman                - fills the rest of the group; the first one in template order is the overflow body
+#   Support                 - template body that is not part of the survivor composition (synth, scientist)
+#
+# Roles without an entry default to generic leadership in a party spawn's leadersToSpawn and Rifleman in
+# gruntsToSpawn, so adding a survivor faction needs no code.
+
+# --- Weyland-Yutani ---
+- type: survivorRole
+  id: AU14JobWYSurvPMC
+  category: Commander
+- type: survivorRole
+  id: AU14JobWYSurvLiaison
+  category: Liaison
+- type: survivorRole
+  id: AU14JobWYSurvEngineer
+  category: Technician
+- type: survivorRole
+  id: AU14JobWYSurvScientist
+  category: Support
+- type: survivorRole
+  id: AU14JobWYSurvGoon
+  category: Rifleman
+- type: survivorRole
+  id: AU14JobWYSurvGoonShotgun
+  category: Rifleman
+
+# --- Colonial Liberation Front ---
+- type: survivorRole
+  id: AU14CLFSurvLeader
+  category: Leader
+- type: survivorRole
+  id: AU14JCLFSurvSurgeon
+  category: Medic
+- type: survivorRole
+  id: AU14CLFSurvFighter
+  category: Rifleman
+
+# --- CLF Spec Ops survivors (wet work detachment)
+- type: survivorRole
+  id: CMUSurvivorClfSpecOpsLeader
+  category: SquadLeader
+  party: CMUCLFCommandoSurvivors
+  name: "CLF Spec Ops Unit Leader"
+- type: survivorRole
+  id: CMUSurvivorClfSpecOpsOperative
+  category: Rifleman
+  party: CMUCLFCommandoSurvivors
+  name: "CLF Spec Ops Operative"
+- type: survivorRole
+  id: CMUSurvivorClfSpecOpsMedic
+  category: Medic
+  party: CMUCLFCommandoSurvivors
+  name: "CLF Spec Ops Medic"
+- type: survivorRole
+  id: CMUSurvivorClfSpecOpsTechnician
+  category: Technician
+  party: CMUCLFCommandoSurvivors
+  name: "CLF Spec Ops Technician"
+- type: survivorRole
+  id: CMUSurvivorClfSpecOpsHeavy
+  category: WeaponSpecialist
+  party: CMUCLFCommandoSurvivors
+  name: "CLF Spec Ops Heavy Weapons"
+
+# --- Prodigy ---
+- type: survivorRole
+  id: CMUSurvProdigyGuardLeader
+  category: Leader
+  party: CMUProdigySurvivors
+  name: "Prodigy PMC Team Leader"
+- type: survivorRole
+  id: CMUSurvProdigyGuardMedic
+  category: Medic
+  party: CMUProdigySurvivors
+  name: "Prodigy PMC Combat Medic"
+- type: survivorRole
+  id: CMUSurvProdigyLiaison
+  category: Liaison
+  party: CMUProdigySurvivors
+  name: "Prodigy PMC Liaison"
+- type: survivorRole
+  id: CMUSurvProdigyGuard
+  category: Rifleman
+
+# --- FORECON ---
+  party: CMUProdigySurvivors
+  name: "Prodigy PMC Operator"
+- type: survivorRole
+  id: CMUSurvForeconCommander
+  category: Commander
+  party: CMUFORECONSurvivors
+  name: "FORECON Commander"
+- type: survivorRole
+  id: CMUSurvForeconSquadLeader
+  category: SquadLeader
+  party: CMUFORECONSurvivors
+  name: "FORECON Squad Leader"
+- type: survivorRole
+  id: CMUSurvForeconMedic
+  category: Medic
+  party: CMUFORECONSurvivors
+  name: "FORECON Corpsman"
+- type: survivorRole
+  id: CMUSurvForeconTechnician
+  category: Technician
+  party: CMUFORECONSurvivors
+  name: "FORECON Technician"
+- type: survivorRole
+  id: CMUSurvForeconSmartGunner
+  category: WeaponSpecialist
+  party: CMUFORECONSurvivors
+  name: "FORECON Smartgunner"
+- type: survivorRole
+  id: CMUSurvForeconMarksman
+  category: WeaponSpecialist
+  party: CMUFORECONSurvivors
+  name: "FORECON Marksman"
+- type: survivorRole
+  id: CMUSurvForeconSniper
+  category: WeaponSpecialist
+  party: CMUFORECONSurvivors
+  name: "FORECON Sniper"
+- type: survivorRole
+  id: CMUSurvForeconSynth
+  requiresSynthetic: true
+  category: Support
+  party: CMUFORECONSurvivors
+  name: "FORECON Synthetic"
+- type: survivorRole
+  id: CMUSurvForeconRifleman
+  category: Rifleman
+
+# --- IASF ---
+  party: CMUFORECONSurvivors
+  name: "FORECON Rifleman"
+- type: survivorRole
+  id: AU14IASFSurvCommander
+  category: Commander
+- type: survivorRole
+  id: AU14IASFSurvTeamLead
+  category: SquadLeader
+- type: survivorRole
+  id: AU14IASFsurvMedicalTechnician
+  category: Medic
+- type: survivorRole
+  id: AU14IASFSurvCombatEngineer
+  category: Technician
+- type: survivorRole
+  id: AU14IASFSurvPilot
+  category: WeaponSpecialist
+- type: survivorRole
+  id: AU14IASFSurvRifleman
+  category: Rifleman
+- type: survivorRole
+  id: AU14IASFSurvRiflemanAmmo
+  category: Rifleman
+
+# --- US Army ---
+- type: survivorRole
+  id: CMUSurvUSArmyCommander
+  category: Commander
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Commander"
+- type: survivorRole
+  id: CMUSurvUSArmySquadLeader
+  category: SquadLeader
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Squad Leader"
+- type: survivorRole
+  id: CMUSurvUSArmyMedic
+  category: Medic
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Corpsman"
+- type: survivorRole
+  id: CMUSurvUSArmyTechnician
+  category: Technician
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Technician"
+- type: survivorRole
+  id: CMUSurvUSArmyHeavyGunner
+  category: WeaponSpecialist
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Heavy Gunner"
+- type: survivorRole
+  id: CMUSurvUSArmyMarksman
+  category: WeaponSpecialist
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Marksman"
+- type: survivorRole
+  id: CMUSurvUSArmySynth
+  requiresSynthetic: true
+  category: Support
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Synthetic"
+- type: survivorRole
+  id: CMUSurvUSArmyRifleman
+  category: Rifleman
+  party: CMUUSArmySurvivors
+  name: "U.S. Army Rifleman"
+
+# --- FREE COMPANY RAIDERS (survivor subtypes) ---
+- type: survivorRole
+  id: CMUSurvFreeCompanyLeader
+  category: Leader
+  party: FreeCompanyRaidersSurv
+  name: "Free Company Leader"
+- type: survivorRole
+  id: CMUSurvFreeCompanyRaider
+  category: Rifleman
+
+# --- UNISC SQUAD (survivor subtypes) ---
+  party: FreeCompanyRaidersSurv
+  name: "Free Company Raider"
+- type: survivorRole
+  id: CMUSurvUniscPlatoonOps
+  category: Commander
+  party: CMUUNISCSurvivors
+  name: "UNISC Platoon Operations"
+- type: survivorRole
+  id: CMUSurvUniscSquadLeader
+  category: SquadLeader
+  party: CMUUNISCSurvivors
+  name: "UNISC Squad Leader"
+- type: survivorRole
+  id: CMUSurvUniscCorpsman
+  category: Medic
+  party: CMUUNISCSurvivors
+  name: "UNISC Corpsman"
+- type: survivorRole
+  id: CMUSurvUniscAutomaticRifleman
+  category: WeaponSpecialist
+  party: CMUUNISCSurvivors
+  name: "UNISC Automatic Rifleman"
+- type: survivorRole
+  id: CMUSurvUniscEnforcer
+  category: Rifleman
+  party: CMUUNISCSurvivors
+  name: "UNISC Enforcer"
+- type: survivorRole
+  id: CMUSurvUniscEnforcerLeader
+  category: Rifleman
+  party: CMUUNISCSurvivors
+  name: "UNISC Enforcer Leader"
+- type: survivorRole
+  id: CMUSurvUniscRifleman
+  category: Rifleman
+  party: CMUUNISCSurvivors
+  name: "UNISC Rifleman"
+- type: survivorRole
+  # A human observer, not a synthetic: it must not use the Support slot.
+  id: CMUSurvUniscObserver
+  category: Rifleman
+  party: CMUUNISCSurvivors
+  name: "UNISC Observer"
+
+# --- DUTCH'S DOZEN ---
+- type: survivorRole
+  id: CMUSurvDutchsDozenArnold
+  category: Leader
+  party: CMUDutchsDozenSurvivors
+  name: "Arnold 'Dutch' Schäfer"
+  keepBodyName: true
+- type: survivorRole
+  id: CMUSurvDutchsDozenMedic
+  category: Medic
+  party: CMUDutchsDozenSurvivors
+  name: "Dutch's Dozen Medic"
+- type: survivorRole
+  id: CMUSurvDutchsDozenGrenadier
+  category: WeaponSpecialist
+  party: CMUDutchsDozenSurvivors
+  name: "Dutch's Dozen Grenadier"
+- type: survivorRole
+  id: CMUSurvDutchsDozenMinigunner
+  category: WeaponSpecialist
+  party: CMUDutchsDozenSurvivors
+  name: "Dutch's Dozen Minigunner"
+- type: survivorRole
+  id: CMUSurvDutchsDozenFlamer
+  category: WeaponSpecialist
+  party: CMUDutchsDozenSurvivors
+  name: "Dutch's Dozen Flamer"
+- type: survivorRole
+  id: CMUSurvDutchsDozenMachineGunner
+  category: WeaponSpecialist
+- type: survivorRole
+  id: CMUSurvDutchsDozenRifleman
+  category: Rifleman
+  party: CMUDutchsDozenSurvivors
+  name: "Dutch's Dozen Rifleman"
+
+# --- W-Y PMC crash-landing survivors (Solaris Ridge "crashlanding offices") ---
+# These roles join the W-Y PMC survivor faction. Their insert (briefing/story, planet lists, survivor icons
+# for the crash-landing story) is not ported; the faction's existing party and loadout carry them.
+- type: survivorRole
+  id: CMUSurvivorWyPmcFieldOpsLeader
+  category: Commander
+  party: CMUWYPMCSurvivors
+  name: "W-Y PMC Field Operations Leader (FOL)"
+- type: survivorRole
+  id: CMUSurvivorWyPmcLeader
+  category: Leader
+  party: CMUWYPMCSurvivors
+  name: "W-Y PMC Team Leader (SL)"
+- type: survivorRole
+  id: CMUSurvivorWyPmcMedic
+  category: Medic
+  party: CMUWYPMCSurvivors
+  name: "W-Y PMC Medic (CM)"
+- type: survivorRole
+  id: CMUSurvivorWyPmcEngineer
+  category: Technician
+  party: CMUWYPMCSurvivors
+  name: "W-Y PMC Engineer (TEC)"
+- type: survivorRole
+  id: CMUSurvivorWyPmcSupervisor
+  category: Liaison
+  party: CMUWYPMCSurvivors
+  name: "W-Y Corporate Supervisor"
+- type: survivorRole
+  id: CMUSurvivorWyPmcSynth
+  requiresSynthetic: true
+  category: Support
+  party: CMUWYPMCSurvivors
+  name: "W-Y PMC Support Synthetic (WY Syn)"
+- type: survivorRole
+  id: CMUSurvivorWyPmcStandard
+  category: Rifleman
+  party: CMUWYPMCSurvivors
+  name: "W-Y PMC Operator"
+
+# --- Civilian survivors (their own population: never a faction, never in the faction vote) ---

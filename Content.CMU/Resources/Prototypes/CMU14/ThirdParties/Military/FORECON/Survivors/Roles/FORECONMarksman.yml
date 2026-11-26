@@ -106,6 +106,11 @@
     - RMCMagazineRifleM4SPRA19
     - RMCMagazineRifleM4SPRA19
     - RMCMagazineRifleM4SPRA19
+    # cmss13's FORECON survivor baseline: flask, facepaint, an MRE and a pry tool, on top of each role's kit.
+    - CMMarineFlask
+    # Facepaint: cmss13's sniper facepaint has no CMU prototype yet (RMCFacepaint is still a TODO upstream).
+    - CMMRE
+    - CMCrowbar
 
 - type: playTimeTracker
   id: AU14JobFORECONMarksman

@@ -1,0 +1,112 @@
+# XM177E2 carbine - the weapon Dutch's Dozen carry.
+#
+# Source: local cmss13 checkout, code/modules/projectiles/guns/rifles.dm
+#   /obj/item/weapon/gun/rifle/xm177        "XM177E2 carbine"
+#   /obj/item/weapon/gun/rifle/xm177/dutch  "Dutch's XM177E2 Carbine" (CLOAKER KILLER label, AP magazine)
+# Art: icons/obj/items/weapons/guns/guns_by_faction/colony/assault_rifles.dmi, state "xm177" (64x32).
+# The source reuses item_state "m16" for the in-hand/suit/back states, so this inherits CMU's M16A1
+# clothing sprite rather than inventing carry art.
+#
+# Fidelity notes:
+#  - The source's collapsible XM177 stock attachment does not exist in CMU, so no stock is fitted.
+#  - The barrel moderator blocks all muzzle devices and the short barrel blocks most underbarrel ones, so
+#    this has no barrel slot and only a narrow underbarrel whitelist.
+
+- type: entity
+  parent: AU14WeaponRifleM16A1
+  id: CMUWeaponRifleXM177E2
+  name: XM177E2 carbine
+  description: An old design, essentially a shortened M16A1 with a collapsible stock. It is chambered in 5.56x45mm. The short length inhibits the attachment of most underbarrel attachments, and the barrel moderator prohibits the attachment of all muzzle devices.
+  components:
+  - type: Sprite
+    sprite: CMU14/Objects/Weapons/Event/xm177.rsi
+    layers:
+    - state: base
+    # cmss13's XM177 uses item_state "m16", so its worn and magazine art is the M16's - mag-0 is the same STANAG.
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Clothing
+    sprite: CMU14/Objects/Weapons/Event/xm177.rsi
+  - type: MagazineVisuals
+    magState: mag
+    steps: 1
+    zeroVisible: true
+  - type: Gun
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    soundGunshot:
+      path: /Audio/_RMC14/Weapons/Guns/Gunshots/gun_m16.ogg
+  - type: RMCSelectiveFire
+    baseFireModes:
+    - SemiAuto
+    recoilWielded: 1
+    recoilUnwielded: 3
+    scatterWielded: 2
+    scatterUnwielded: 12
+    baseFireRate: 8
+    burstScatterMult: 1.5
+  - type: RMCWeaponAccuracy
+    accuracyMultiplier: 1.5
+    accuracyMultiplierUnwielded: 0.85
+  - type: AttachableHolderVisuals
+    offsets:
+      # Same offset the M16 family uses, so the collapsible M16 stock seats against the receiver instead of
+      # floating behind it (an off-by-a-cell offset disconnected the stock on the XM17 only).
+      rmc-aslot-stock: -0.5, 0
+  - type: AttachableHolder
+    slots:
+      rmc-aslot-stock:
+        startingAttachable: RMCAttachmentM16StockCollapsible
+        whitelist:
+          tags:
+          - RMCAttachmentStock
+      rmc-aslot-rail:
+        whitelist:
+          tags:
+          - RMCAttachmentS5RedDotSight
+          - RMCAttachmentS6ReflexSight
+          - RMCAttachmentS42xTelescopicMiniscope
+          - RMCAttachmentRailFlashlight
+          - RMCAttachmentMagneticHarness
+      rmc-aslot-underbarrel:
+        whitelist:
+          tags:
+          - RMCAttachmentVerticalGrip
+          - RMCAttachmentFlashlightGrip
+          - RMCAttachmentLaserSight
+
+- type: entity
+  parent: CMUWeaponRifleXM177E2
+  id: CMUWeaponRifleXM177Dutch
+  name: Dutch's XM177E2 Carbine
+  description: A modified XM177 employed by Dutch's Dozen mercenaries. It has 'CLOAKER KILLER' printed on a label on the side. It is chambered in 5.56x45mm. The short length inhibits the attachment of most underbarrel attachments, and the barrel moderator prohibits the attachment of all muzzle devices.
+  components:
+  - type: RMCWeaponAccuracy
+    accuracyMultiplier: 1.5
+    accuracyMultiplierUnwielded: 0.9
+  - type: RMCSelectiveFire
+    baseFireModes:
+    - SemiAuto
+    recoilWielded: 1
+    recoilUnwielded: 3
+    scatterWielded: 1
+    scatterUnwielded: 10
+    baseFireRate: 8
+    burstScatterMult: 1.2
+  # cmss13's Dutch variant loads an AP magazine (current_mag = ammo_magazine/rifle/m16/ap).
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: CMUMagazineRifleM16AP
+        insertSound: /Audio/_RMC14/Weapons/Guns/Reload/m41_reload.ogg
+        ejectSound: /Audio/_RMC14/Weapons/Guns/Reload/m41_unload.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - CMUMagazineRifleM16APExt
+          - CMUMagazineRifleM16AP
+          - RMCMagazineRifleM16
+          - CMUMagazineRifleM16Extended
+

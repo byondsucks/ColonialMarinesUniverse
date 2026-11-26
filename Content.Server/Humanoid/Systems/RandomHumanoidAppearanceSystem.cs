@@ -33,8 +33,21 @@ public sealed partial class RandomHumanoidAppearanceSystem : EntitySystem
 
         var profile = HumanoidCharacterProfile.RandomWithSpecies(humanoid.Species);
 
+        // CMU14: a named character keeps its own sex (a hand-authored male leader must not roll female).
+        if (ent.Comp.Sex is { } fixedSex)
+            profile = profile.WithSex(fixedSex);
+
+        if (ent.Comp.Age is { } age)
+            profile = profile.WithAge(age);
+
         if (ent.Comp.Hair is { } hair)
-            profile = WithMarking(profile, HumanoidVisualLayers.Hair, hair);
+            profile = WithMarking(profile, HumanoidVisualLayers.Hair, hair, ent.Comp.HairColor);
+
+        if (ent.Comp.FacialHair is { } facialHair)
+            profile = WithMarking(profile, HumanoidVisualLayers.FacialHair, facialHair, ent.Comp.HairColor);
+
+        if (ent.Comp.EyeColor is { } eyeColor)
+            profile.Appearance.EyeColor = eyeColor;
 
         if (TryComp<RandomHumanoidAppearanceWhitelistedComponent>(ent, out var whitelist))
             profile = ApplyWhitelist(profile, whitelist);
@@ -43,6 +56,10 @@ public sealed partial class RandomHumanoidAppearanceSystem : EntitySystem
             profile = WithoutMarkings(profile, HumanoidVisualLayers.FacialHair);
 
         var appearance = HumanoidCharacterAppearance.EnsureValid(profile.Appearance, profile.Species, profile.Sex);
+
+        // cmss13 keeps a named character's look fixed; inheriting a random skin tone is what made Dutch vary.
+        if (ent.Comp.SkinColor is { } skin)
+            appearance = appearance.WithSkinColor(skin);
         profile = profile.WithCharacterAppearance(appearance);
 
         _visualBody.ApplyProfileTo(ent.Owner, profile);
@@ -120,6 +137,44 @@ public sealed partial class RandomHumanoidAppearanceSystem : EntitySystem
         //     Color.Black);
         return WithoutMarkings(profile, HumanoidVisualLayers.FacialHair);
         // cmu edit end
+    }
+
+    /// <summary>
+    ///     The look this component would give a humanoid, without spawning one. Lets a UI preview a named character
+    ///     (Dutch, for instance) instead of the player's own profile.
+    /// </summary>
+    public HumanoidCharacterProfile BuildAppearance(HumanoidCharacterProfile profile,
+        RandomHumanoidAppearanceComponent comp)
+    {
+        if (comp.Hair is { } hair)
+            profile = WithMarking(profile, HumanoidVisualLayers.Hair, hair);
+
+        if (comp.HairColor is { } hairColor)
+            profile = WithMarkingColor(profile, HumanoidVisualLayers.Hair, hairColor);
+
+        if (comp.FacialHair is { } facialHair)
+            profile = WithMarking(profile, HumanoidVisualLayers.FacialHair, facialHair);
+
+        if (comp.EyeColor is { } eyeColor)
+            profile = WithMarkingColor(profile, HumanoidVisualLayers.Eyes, eyeColor);
+
+        var appearance = HumanoidCharacterAppearance.EnsureValid(profile.Appearance, profile.Species, profile.Sex);
+        if (comp.SkinColor is { } skin)
+            appearance = appearance.WithSkinColor(skin);
+
+        profile = profile.WithCharacterAppearance(appearance);
+
+        if (comp.Sex is { } sex)
+        {
+            profile = profile.WithSex(sex);
+            if (sex == Sex.Female)
+                profile = WithoutMarkings(profile, HumanoidVisualLayers.FacialHair);
+        }
+
+        if (comp.Age is { } age)
+            profile = profile.WithAge(age);
+
+        return profile;
     }
 
     private HumanoidCharacterProfile WithMarking(

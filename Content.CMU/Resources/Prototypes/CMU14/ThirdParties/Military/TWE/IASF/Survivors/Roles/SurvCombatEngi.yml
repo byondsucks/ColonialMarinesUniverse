@@ -23,7 +23,7 @@
     allowMovement: true
     name: au14-job-name-tweiasf-paratrooper
     description: au14-job-description-IASFsurv
-    job: AU14IASFSurvCombatEngineer
+    job: CMUSurvivorJobIASFSurvCombatEngineer
     rules: au14-job-rules-IASFsurv
     raffle:
       settings: short

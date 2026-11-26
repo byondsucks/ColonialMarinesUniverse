@@ -64,7 +64,7 @@
     name: au14-job-name-wypmc-contractor
     description: au14-wysurv-description
     reregister: false
-    job: AU14JobWYSurvPMC
+    job: CMUSurvivorJobWYSurvPMC
     raffle:
       settings: short
     rules: au14-wysurv-description

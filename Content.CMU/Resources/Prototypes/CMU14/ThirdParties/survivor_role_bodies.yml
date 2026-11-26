@@ -1,0 +1,1026 @@
+# Survivor-only role bodies.
+#
+# Every survivor faction owns its role bodies outright: none of them is shared with the faction's ERT or
+# third-party call-in counterpart, so survivor gear, skills and names can never leak into an ERT deployment
+# (and vice versa). Each entry is a body wrapping its call-in counterpart's body, a job wrapping that job and a
+# gear preset wrapping that gear - inheritance only, so behaviour matches until a survivor-specific override is
+# added here.
+
+# CMU14JobProdigySurvGoonLeader -> survivor-only body (ERT/call-in role stays CMU14JobCivilianProdigyGuardLeaderSurv).
+- type: entity
+  parent: CMU14JobProdigySurvGoonLeader
+  id: CMUSurvProdigyGuardLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: Prodigy Team Leader (survivor)
+    description: au14-job-description-wyguard
+    reregister: false
+    job: CMUSurvivorJobProdigyGuardLeader
+    raffle:
+      settings: short
+
+- type: job
+  parent: CMU14JobCivilianProdigyGuardLeaderSurv
+  id: CMUJobSurvProdigyGuardLeader
+  startingGear: CMUGearSurvProdigyGuardLeader
+
+- type: startingGear
+  parent: AU14GearCivilianProdigyGuardLeaderSurv
+  id: CMUGearSurvProdigyGuardLeader
+
+# CMU14JobProdigySurvMedic -> survivor-only body (ERT/call-in role stays CMU14JobCivilianProdigyGuardMedicSurv).
+- type: entity
+  parent: CMU14JobProdigySurvMedic
+  id: CMUSurvProdigyGuardMedic
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: Prodigy Combat Medic (survivor)
+    description: au14-job-description-wyguard
+    reregister: false
+    job: CMUSurvivorJobProdigyGuardMedic
+    raffle:
+      settings: short
+
+- type: job
+  parent: CMU14JobCivilianProdigyGuardMedicSurv
+  id: CMUJobSurvProdigyGuardMedic
+  startingGear: CMUGearSurvProdigyGuardMedic
+
+- type: startingGear
+  parent: AU14GearCivilianProdigyGuardMedicSurv
+  id: CMUGearSurvProdigyGuardMedic
+
+# CMU14JobProdigySurvGoon -> survivor-only body (ERT/call-in role stays CMU14JobCivilianProdigyGuardSurv).
+- type: entity
+  parent: CMU14JobProdigySurvGoon
+  id: CMUSurvProdigyGuard
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: Prodigy Goon (survivor)
+    description: au14-job-description-wyguard
+    reregister: false
+    job: CMUSurvivorJobProdigyGuard
+    raffle:
+      settings: short
+
+- type: job
+  parent: CMU14JobCivilianProdigyGuardSurv
+  id: CMUJobSurvProdigyGuard
+  startingGear: CMUGearSurvProdigyGuard
+
+- type: startingGear
+  parent: AU14GearCivilianProdigyGuardSurv
+  id: CMUGearSurvProdigyGuard
+
+# CMU14JobProdigySurvLiaison -> survivor-only body (ERT/call-in role stays CMU14JobCivilianProdigyLiaisonSurv).
+- type: entity
+  parent: CMU14JobProdigySurvLiaison
+  id: CMUSurvProdigyLiaison
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: Prodigy Liaison (survivor)
+    description: au14-job-description-civiliancorporateliaison
+    reregister: false
+    job: CMUSurvivorJobProdigyLiaison
+    raffle:
+      settings: short
+
+- type: job
+  parent: CMU14JobCivilianProdigyLiaisonSurv
+  id: CMUJobSurvProdigyLiaison
+  startingGear: CMUGearSurvProdigyLiaison
+
+- type: startingGear
+  parent: CMU14GearCivilianProdigyLiaisonSurv
+  id: CMUGearSurvProdigyLiaison
+
+# CMUSurvivorUSArmyCommander -> survivor-only body (ERT/call-in role stays CMUJobUSArmySurvCommander).
+- type: entity
+  parent: CMUSurvivorUSArmyCommander
+  id: CMUSurvUSArmyCommander
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-commander
+    description: cm-job-description-commanding-officer
+    reregister: false
+    job: CMUSurvivorJobUSArmyCommander
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: CMUJobUSArmySurvCommander
+  id: CMUJobSurvUSArmyCommander
+  startingGear: CMUGearSurvUSArmyCommander
+
+- type: startingGear
+  parent: CMUGearUSArmySurvCommander
+  id: CMUGearSurvUSArmyCommander
+
+# CMUSurvivorUSArmySquadLeader -> survivor-only body (ERT/call-in role stays AU14USArmySquadLeader).
+- type: entity
+  parent: CMUSurvivorUSArmySquadLeader
+  id: CMUSurvUSArmySquadLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cm-job-name-squad-leader
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmySquadLeader
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmySquadLeader
+  id: CMUJobSurvUSArmySquadLeader
+  startingGear: CMUGearSurvUSArmySquadLeader
+
+- type: startingGear
+  parent: AU14GearUSArmySquadleader
+  id: CMUGearSurvUSArmySquadLeader
+
+# CMUSurvivorUSArmySynth -> survivor-only body (ERT/call-in role stays AU14USArmySynth).
+- type: entity
+  parent: CMUSurvivorUSArmySynth
+  id: CMUSurvUSArmySynth
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-synth
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmySynth
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmySynth
+  id: CMUJobSurvUSArmySynth
+  startingGear: CMUGearSurvUSArmySynth
+
+- type: startingGear
+  parent: AU14GearUSArmySynth
+  id: CMUGearSurvUSArmySynth
+
+# CMUSurvivorUSArmyTechnician -> survivor-only body (ERT/call-in role stays AU14USArmyCET).
+- type: entity
+  parent: CMUSurvivorUSArmyTechnician
+  id: CMUSurvUSArmyTechnician
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: au14-job-name-usarmy-cet
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmyTechnician
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmyCET
+  id: CMUJobSurvUSArmyTechnician
+  startingGear: CMUGearSurvUSArmyTechnician
+
+- type: startingGear
+  parent: AU14GearUSArmyCET
+  id: CMUGearSurvUSArmyTechnician
+
+# CMUSurvivorUSArmyMedic -> survivor-only body (ERT/call-in role stays AU14USArmyCMT).
+- type: entity
+  parent: CMUSurvivorUSArmyMedic
+  id: CMUSurvUSArmyMedic
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: au14-job-name-usarmy-cmt
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmyMedic
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmyCMT
+  id: CMUJobSurvUSArmyMedic
+  startingGear: CMUGearSurvUSArmyMedic
+
+- type: startingGear
+  parent: AU14GearUSArmyCMT
+  id: CMUGearSurvUSArmyMedic
+
+# CMUSurvivorUSArmyHeavyGunner -> survivor-only body (ERT/call-in role stays AU14USArmyHeavyGunner).
+- type: entity
+  parent: CMUSurvivorUSArmyHeavyGunner
+  id: CMUSurvUSArmyHeavyGunner
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: au14-job-name-usarmy-hg
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmyHeavyGunner
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmyHeavyGunner
+  id: CMUJobSurvUSArmyHeavyGunner
+  startingGear: CMUGearSurvUSArmyHeavyGunner
+
+- type: startingGear
+  parent: AU14GearUSArmyHeavyGunner
+  id: CMUGearSurvUSArmyHeavyGunner
+
+# CMUSurvivorUSArmyMarksman -> survivor-only body (ERT/call-in role stays AU14USArmyMarksman).
+- type: entity
+  parent: CMUSurvivorUSArmyMarksman
+  id: CMUSurvUSArmyMarksman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-marksman
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmyMarksman
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmyMarksman
+  id: CMUJobSurvUSArmyMarksman
+  startingGear: CMUGearSurvUSArmyMarksman
+
+- type: startingGear
+  parent: AU14GearUSArmyMarksman
+  id: CMUGearSurvUSArmyMarksman
+
+# CMUSurvivorUSArmyRifleman -> survivor-only body (ERT/call-in role stays AU14USArmyTrooper).
+- type: entity
+  parent: CMUSurvivorUSArmyRifleman
+  id: CMUSurvUSArmyRifleman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: au14-job-name-usarmy-trooper
+    description: au14-job-description-usarmy
+    reregister: false
+    job: CMUSurvivorJobUSArmyRifleman
+    raffle:
+      settings: short
+    rules: au14-usarmy-rules
+
+
+- type: job
+  parent: AU14USArmyTrooper
+  id: CMUJobSurvUSArmyRifleman
+  startingGear: CMUGearSurvUSArmyRifleman
+
+- type: startingGear
+  parent: AU14GearUSArmyTrooper
+  id: CMUGearSurvUSArmyRifleman
+
+# CMUSurvivorForeconCommander -> survivor-only body (ERT/call-in role stays AU14FORECONCommander).
+- type: entity
+  parent: CMUSurvivorForeconCommander
+  id: CMUSurvForeconCommander
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-commander
+    description: cm-job-description-commanding-officer
+    reregister: false
+    job: CMUSurvivorJobForeconCommander
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONCommander
+  id: CMUJobSurvForeconCommander
+  startingGear: CMUGearSurvForeconCommander
+
+- type: startingGear
+  parent: AU14GearFORECONCommander
+  id: CMUGearSurvForeconCommander
+
+# CMUSurvivorForeconSquadLeader -> survivor-only body (ERT/call-in role stays AU14FORECONSquadleader).
+- type: entity
+  parent: CMUSurvivorForeconSquadLeader
+  id: CMUSurvForeconSquadLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cm-job-name-squad-leader
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconSquadLeader
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONSquadleader
+  id: CMUJobSurvForeconSquadLeader
+  startingGear: CMUGearSurvForeconSquadLeader
+
+- type: startingGear
+  parent: AU14GearFORECONSquadleader
+  id: CMUGearSurvForeconSquadLeader
+
+# CMUSurvForeconSniper -> survivor-only body (the call-in role stays AU14FORECONSniper).
+- type: entity
+  parent: AU14JobFORECONSniper
+  id: CMUSurvForeconSniper
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-sniper
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconSniper
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+- type: job
+  parent: AU14FORECONSniper
+  id: CMUJobSurvForeconSniper
+  startingGear: CMUGearSurvForeconSniper
+
+- type: startingGear
+  parent: AU14GearFORECONSniper
+  id: CMUGearSurvForeconSniper
+
+# CMUSurvivorForeconMedic -> survivor-only body (ERT/call-in role stays AU14FORECONFirstReconCorpsman).
+- type: entity
+  parent: CMUSurvivorForeconMedic
+  id: CMUSurvForeconMedic
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: au14-job-name-forecon-corpsman
+    description: au14-job-description-forecon-firstrecon
+    reregister: false
+    job: CMUSurvivorJobForeconMedic
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONFirstReconCorpsman
+  id: CMUJobSurvForeconMedic
+  startingGear: CMUGearSurvForeconMedic
+
+- type: startingGear
+  parent: AU14GearFORECONFirstReconCorpsman
+  id: CMUGearSurvForeconMedic
+
+# CMUSurvivorForeconSynth -> survivor-only body (ERT/call-in role stays AU14FORECONSynth).
+- type: entity
+  parent: CMUSurvivorForeconSynth
+  id: CMUSurvForeconSynth
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-synth
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconSynth
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONSynth
+  id: CMUJobSurvForeconSynth
+  startingGear: CMUGearSurvForeconSynth
+
+- type: startingGear
+  parent: AU14GearFORECONSynth
+  id: CMUGearSurvForeconSynth
+
+# CMUSurvivorForeconTechnician -> survivor-only body (ERT/call-in role stays AU14FORECONSupportTech).
+- type: entity
+  parent: CMUSurvivorForeconTechnician
+  id: CMUSurvForeconTechnician
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-support-tech
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconTechnician
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONSupportTech
+  id: CMUJobSurvForeconTechnician
+  startingGear: CMUGearSurvForeconTechnician
+
+- type: startingGear
+  parent: AU14GearFORECONSupportTech
+  id: CMUGearSurvForeconTechnician
+
+# CMUSurvivorForeconSmartGunner -> survivor-only body (ERT/call-in role stays AU14FORECONSmartGunOperator).
+- type: entity
+  parent: CMUSurvivorForeconSmartGunner
+  id: CMUSurvForeconSmartGunner
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cm-job-name-smart-gun-operator
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconSmartGunner
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONSmartGunOperator
+  id: CMUJobSurvForeconSmartGunner
+  startingGear: CMUGearSurvForeconSmartGunner
+
+- type: startingGear
+  parent: AU14GearFORECONSmartGunOperator
+  id: CMUGearSurvForeconSmartGunner
+
+# CMUSurvivorForeconMarksman -> survivor-only body (ERT/call-in role stays AU14FORECONMarksman).
+- type: entity
+  parent: CMUSurvivorForeconMarksman
+  id: CMUSurvForeconMarksman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-forecon-marksman
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconMarksman
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONMarksman
+  id: CMUJobSurvForeconMarksman
+  startingGear: CMUGearSurvForeconMarksman
+
+- type: startingGear
+  parent: AU14GearFORECONMarksman
+  id: CMUGearSurvForeconMarksman
+
+# CMUSurvivorForeconRifleman -> survivor-only body (ERT/call-in role stays AU14FORECONRifleman).
+- type: entity
+  parent: CMUSurvivorForeconRifleman
+  id: CMUSurvForeconRifleman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cm-job-name-rifleman
+    description: rmc-job-description-forecon
+    reregister: false
+    job: CMUSurvivorJobForeconRifleman
+    raffle:
+      settings: short
+    rules: au14-forecon-rules
+
+
+- type: job
+  parent: AU14FORECONRifleman
+  id: CMUJobSurvForeconRifleman
+  startingGear: CMUGearSurvForeconRifleman
+
+- type: startingGear
+  parent: AU14GearFORECONRifleman
+  id: CMUGearSurvForeconRifleman
+
+# CMUSurvivorFreeCompanyLeader -> survivor-only body (ERT/call-in role stays CMUJobRaiderLeader).
+- type: entity
+  parent: CMUSurvivorFreeCompanyLeader
+  id: CMUSurvFreeCompanyLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-raider-name-leader
+    description: cmu-raider-description
+    reregister: false
+    job: CMUSurvivorJobFreeCompanyLeader
+    raffle:
+      settings: short
+    rules: cmu-raider-rules
+
+
+- type: job
+  parent: CMUJobRaiderLeader
+  id: CMUJobSurvFreeCompanyLeader
+  startingGear: CMUGearSurvFreeCompanyLeader
+
+- type: startingGear
+  parent: CMUGearRaiderLeader
+  id: CMUGearSurvFreeCompanyLeader
+
+# CMUSurvivorFreeCompanyRaider -> survivor-only body (ERT/call-in role stays CMUJobRaider).
+- type: entity
+  parent: CMUSurvivorFreeCompanyRaider
+  id: CMUSurvFreeCompanyRaider
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-raider-name
+    description: cmu-raider-description
+    reregister: false
+    job: CMUSurvivorJobFreeCompanyRaider
+    raffle:
+      settings: short
+    rules: cmu-raider-rules
+
+
+- type: job
+  parent: CMUJobRaider
+  id: CMUJobSurvFreeCompanyRaider
+  startingGear: CMUGearSurvFreeCompanyRaider
+
+- type: startingGear
+  parent: CMUGearRaider
+  id: CMUGearSurvFreeCompanyRaider
+
+# CMUSurvivorUniscPlatoonOps -> survivor-only body (ERT/call-in role stays AU14JobUNISCPltOpsOff).
+- type: entity
+  parent: CMUSurvivorUniscPlatoonOps
+  id: CMUSurvUniscPlatoonOps
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Platoon Operations Officer
+    description: A United Nations Interstellar Space Corps Platoon Operations Officer, since the Platoon Commander didn't want to deploy today.
+    reregister: false
+    job: CMUSurvivorJobUniscPlatoonOps
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCPltOpsOff
+  id: CMUJobSurvUniscPlatoonOps
+  startingGear: CMUGearSurvUniscPlatoonOps
+
+- type: startingGear
+  parent: AU14GearUNISCPltOpsOff
+  id: CMUGearSurvUniscPlatoonOps
+
+# CMUSurvivorUniscSquadLeader -> survivor-only body (ERT/call-in role stays AU14JobUNISCSquadleader).
+- type: entity
+  parent: CMUSurvivorUniscSquadLeader
+  id: CMUSurvUniscSquadLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Squad Leader
+    description: A United Nations Interstellar Space Corps Non-Comissioned Officer in charge of leading a Squad of 4 men.
+    reregister: false
+    job: CMUSurvivorJobUniscSquadLeader
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCSquadleader
+  id: CMUJobSurvUniscSquadLeader
+  startingGear: CMUGearSurvUniscSquadLeader
+
+- type: startingGear
+  parent: AU14GearUNISCSquadleader
+  id: CMUGearSurvUniscSquadLeader
+
+# CMUSurvivorUniscRifleman -> survivor-only body (ERT/call-in role stays AU14JobUNISCRifleman).
+- type: entity
+  parent: CMUSurvivorUniscRifleman
+  id: CMUSurvUniscRifleman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Rifleman.
+    description: A United Nations Interstellar Space Corps Rifleman.
+    reregister: false
+    job: CMUSurvivorJobUniscRifleman
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCRifleman
+  id: CMUJobSurvUniscRifleman
+  startingGear: CMUGearSurvUniscRifleman
+
+- type: startingGear
+  parent: AU14GearUNISCRifleman
+  id: CMUGearSurvUniscRifleman
+
+# CMUSurvivorUniscAutomaticRifleman -> survivor-only body (ERT/call-in role stays AU14JobUNISCAutomaticRifleman).
+- type: entity
+  parent: CMUSurvivorUniscAutomaticRifleman
+  id: CMUSurvUniscAutomaticRifleman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Automatic Rifleman
+    description: A United Nations Interstellar Space Corps Automatic Rifleman
+    reregister: false
+    job: CMUSurvivorJobUniscAutomaticRifleman
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCAutomaticRifleman
+  id: CMUJobSurvUniscAutomaticRifleman
+  startingGear: CMUGearSurvUniscAutomaticRifleman
+
+- type: startingGear
+  parent: AU14GearUNISCAutomaticRifleman
+  id: CMUGearSurvUniscAutomaticRifleman
+
+# CMUSurvivorUniscCorpsman -> survivor-only body (ERT/call-in role stays AU14JobUNISCCorpsman).
+- type: entity
+  parent: CMUSurvivorUniscCorpsman
+  id: CMUSurvUniscCorpsman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Corpsman
+    description: A United Nations Interstellar Space Corps Corpsman
+    reregister: false
+    job: CMUSurvivorJobUniscCorpsman
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCCorpsman
+  id: CMUJobSurvUniscCorpsman
+  startingGear: CMUGearSurvUniscCorpsman
+
+- type: startingGear
+  parent: AU14GearUNISCCorpsman
+  id: CMUGearSurvUniscCorpsman
+
+# CMUSurvivorUniscEnforcer -> survivor-only body (ERT/call-in role stays AU14JobUNISCEnforcer).
+- type: entity
+  parent: CMUSurvivorUniscEnforcer
+  id: CMUSurvUniscEnforcer
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Enforcer
+    description: A United Nations Interstellar Space Corps Enforcer
+    reregister: false
+    job: CMUSurvivorJobUniscEnforcer
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCEnforcer
+  id: CMUJobSurvUniscEnforcer
+  startingGear: CMUGearSurvUniscEnforcer
+
+- type: startingGear
+  parent: AU14GearUNISCEnforcer
+  id: CMUGearSurvUniscEnforcer
+
+# CMUSurvivorUniscEnforcerLeader -> survivor-only body (ERT/call-in role stays AU14JobUNISCEnforcerLeader).
+- type: entity
+  parent: CMUSurvivorUniscEnforcerLeader
+  id: CMUSurvUniscEnforcerLeader
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: UNISC Lead Enforcer
+    description: A United Nations Interstellar Space Corps Lead Enforcer
+    reregister: false
+    job: CMUSurvivorJobUniscEnforcerLeader
+    raffle:
+      settings: short
+    rules: au14-unisc-rules
+
+
+- type: job
+  parent: AU14JobUNISCEnforcerLeader
+  id: CMUJobSurvUniscEnforcerLeader
+  startingGear: CMUGearSurvUniscEnforcerLeader
+
+- type: startingGear
+  parent: AU14GearUNISCEnforcerLeader
+  id: CMUGearSurvUniscEnforcerLeader
+
+# CMUSurvivorUniscObserver -> survivor-only body (ERT/call-in role stays AU14JobInvestigationCMBRightsObserver).
+- type: entity
+  parent: CMUSurvivorUniscObserver
+  id: CMUSurvUniscObserver
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: au14-job-name-civilianrightsobserver
+    description: au14-job-description-investigationrightsobserver
+    reregister: false
+    job: CMUSurvivorJobUniscObserver
+    raffle:
+      settings: short
+    rules: au14-job-description-investigationrightsobserver
+
+
+- type: job
+  parent: AU14JobInvestigationCMBRightsObserver
+  id: CMUJobSurvUniscObserver
+  startingGear: CMUGearSurvUniscObserver
+
+- type: startingGear
+  parent: AU14GearCMBInvestigationRightsObserver
+  id: CMUGearSurvUniscObserver
+
+# CMUMobDutchsDozenArnold -> survivor-only body (ERT/call-in role stays CMUJobDutchsDozenArnold).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenArnold
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-arnold
+    description: cmu-dutchs-dozen-ghost-description-arnold
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenArnold
+    raffle:
+      settings: short
+
+# gear
+
+
+- type: job
+  parent: CMUJobDutchsDozenArnold
+  id: CMUJobSurvDutchsDozenArnold
+  startingGear: CMUGearSurvDutchsDozenArnold
+
+- type: startingGear
+  parent: CMUGearDutchsDozenArnold
+  id: CMUGearSurvDutchsDozenArnold
+  equipment:
+    # Standard magazine belt; the survivor AP upgrade adds the AP rounds.
+    belt: CMBeltMarineM16
+  storage:
+    # Standard 5.56mm in the jacket; the survivor AP upgrade converts a few magazines.
+    outerClothing:
+    - RMCMagazineRifleM16
+    - RMCMagazineRifleM16
+
+# CMUMobDutchsDozenRifleman -> survivor-only body (ERT/call-in role stays CMUJobDutchsDozenRifleman).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenRifleman
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-rifleman
+    description: cmu-dutchs-dozen-ghost-description
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenRifleman
+    raffle:
+      settings: short
+
+
+- type: job
+  parent: CMUJobDutchsDozenRifleman
+  id: CMUJobSurvDutchsDozenRifleman
+  startingGear: CMUGearSurvDutchsDozenRifleman
+
+- type: startingGear
+  parent: CMUGearDutchsDozenRifleman
+  id: CMUGearSurvDutchsDozenRifleman
+  equipment:
+    # Standard magazine belt; the survivor AP upgrade adds the AP rounds.
+    belt: CMBeltMarineM16
+    # Plain M16 magazine pouch; the survivor AP upgrade fills part of it with AP.
+    pocket1: AU14PouchMagazineLargeFilledM16
+
+# CMUMobDutchsDozenMedic -> survivor-only body (ERT/call-in role stays CMUJobDutchsDozenMedic).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenMedic
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-medic
+    description: cmu-dutchs-dozen-ghost-description-medic
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenMedic
+    raffle:
+      settings: short
+
+
+- type: job
+  parent: CMUJobDutchsDozenMedic
+  id: CMUJobSurvDutchsDozenMedic
+  startingGear: CMUGearSurvDutchsDozenMedic
+
+- type: startingGear
+  parent: CMUGearDutchsDozenMedic
+  id: CMUGearSurvDutchsDozenMedic
+  equipment:
+    # Standard magazine belt; the survivor AP upgrade adds the AP rounds.
+    belt: CMBeltMarineM16
+    # Survivors spawn with plain 5.56mm and let SurvivorAmmoUpgrade decide the AP split; the call-in squad
+    # keeps the AP pouch on the parent preset.
+    pocket1: AU14PouchMagazineLargeFilledM16
+
+# CMUMobDutchsDozenGrenadier -> survivor-only body (ERT/call-in role stays CMUJobDutchsDozenGrenadier).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenGrenadier
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-grenadier
+    description: cmu-dutchs-dozen-ghost-description
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenGrenadier
+    raffle:
+      settings: short
+
+
+- type: job
+  parent: CMUJobDutchsDozenGrenadier
+  id: CMUJobSurvDutchsDozenGrenadier
+  startingGear: CMUGearSurvDutchsDozenGrenadier
+
+- type: startingGear
+  parent: CMUGearDutchsDozenGrenadier
+  id: CMUGearSurvDutchsDozenGrenadier
+  equipment:
+    # Standard magazine belt; the survivor AP upgrade adds the AP rounds.
+    belt: CMBeltMarineM16
+    # Plain M16 magazine pouch; the survivor AP upgrade fills part of it with AP.
+    pocket1: AU14PouchMagazineLargeFilledM16
+
+# CMUMobDutchsDozenMinigunner -> survivor-only body (ERT/call-in role stays CMUJobDutchsDozenMinigunner).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenMinigunner
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-minigunner
+    description: cmu-dutchs-dozen-ghost-description
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenMinigunner
+    raffle:
+      settings: short
+
+
+- type: job
+  parent: CMUJobDutchsDozenMinigunner
+  id: CMUJobSurvDutchsDozenMinigunner
+  startingGear: CMUGearSurvDutchsDozenMinigunner
+
+- type: startingGear
+  parent: CMUGearDutchsDozenMinigunner
+  id: CMUGearSurvDutchsDozenMinigunner
+
+# CMUMobDutchsDozenFlamer -> survivor-only body (ERT/call-in role stays CMUJobDutchsDozenFlamer).
+- type: entity
+  parent: [ CMUBaseMobDutchsDozen, CMUSurvivorBaseHumanoid ]
+  id: CMUSurvDutchsDozenFlamer
+  components:
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-dutchs-dozen-name-flamer
+    description: cmu-dutchs-dozen-ghost-description
+    rules: cmu-dutchs-dozen-ghost-rules
+    reregister: false
+    job: CMUSurvivorJobDutchsDozenFlamer
+    raffle:
+      settings: short
+
+
+- type: job
+  parent: CMUJobDutchsDozenFlamer
+  id: CMUJobSurvDutchsDozenFlamer
+  startingGear: CMUGearSurvDutchsDozenFlamer
+
+- type: startingGear
+  parent: CMUGearDutchsDozenFlamer
+  id: CMUGearSurvDutchsDozenFlamer
+  equipment:
+    # Standard magazine belt; the survivor AP upgrade adds the AP rounds.
+    belt: CMBeltMarineM16

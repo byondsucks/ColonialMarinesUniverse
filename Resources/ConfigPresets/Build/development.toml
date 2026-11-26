@@ -9,7 +9,14 @@ engine_version = "v290.0.0"
 defaultpreset = "Insurgency"
 # Straight in-game baby
 map = "USSBushRedux"
-lobbyenabled = false
+# TEMPORARY (survivor rework testing): keep the normal pre-round lobby so a round no longer starts the
+# instant the server boots. Testers get the lobby countdown to connect and inspect the lobby, the
+# gamemode/planet votes and the survivor setup before anyone spawns.
+# The countdown is the standard game.lobbyduration timer; round-start rules (minimum players, ready
+# state, pauses, the vote sequence) all still apply. Force an early start with the "startround" command.
+# Restore the previous instant local start by setting lobbyenabled = false and deleting lobbyduration.
+lobbyenabled = true
+lobbyduration = 60 # 1 minute: quick round transitions while testing
 role_timers = false
 role_whitelist = false
 admin_job_tracking = true
@@ -22,6 +29,20 @@ server_performance.log_enabled = false
 
 [cmu.game]
 vote_start_delay = 0  # stops "Round start has been paused." on localhost
+
+# CMU14 TEMPORARY (survivor rework testing): the survivor group vote draws from exactly these factions
+# instead of the planet's survivor faction list, so the three test squads can be tried in-game at any
+# population. Comma-separated third-party ids; empty = normal eligibility.
+# This preset only loads in Debug/DebugOpt/Tools builds, so production servers are unaffected.
+# Disable by emptying this value or deleting this block, then restart the server.
+[cmu.survivor]
+# CMU14 TEMPORARY (survivor rework testing): true puts every eligible survivor faction on the
+# ballot instead of drawing two, so all of them can be voted for in one round. Set to false (the
+# default) to restore the normal two-faction draw.
+test_all_candidates = true
+test_factions = "CMUProdigySurvivors,CMUWYPMCSurvivors,CMUCLFCommandoSurvivors,CMUUSArmySurvivors,CMUFORECONSurvivors,FreeCompanyRaidersSurv,CMUUNISCSurvivors,CMUDutchsDozenSurvivors"
+# TEMPORARY (survivor rework testing): always schedule 8 survivors; -1 restores the lobby ratio.
+test_count = 8
 
 [rmc]
 distress_xenos_minimum = 0  # stop blocking distress testing

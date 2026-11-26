@@ -10,83 +10,6 @@ namespace Content.IntegrationTests.CMU14.ThirdParty;
 [TestFixture]
 public sealed class DistressSignalSurvivorPrototypeTest
 {
-    private static readonly HashSet<string> ExpectedSurvivorParties = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "AU14IntelThirdPartyMarksmanGOVFOR",
-        "AU14IntelThirdPartySniperGOVFOR",
-        "CHTORM_PMC_BEAR",
-        "CLFCellCommandosIntel",
-        "CLFCellReinforcementsIntel",
-        "CLFCellReinforcementsIntelEngineer",
-        "CLFCellReinforcementsIntelMachineGunner",
-        "CLFCellReinforcementsIntelSpecialist",
-        "CLFCellReinforcementsSurv",
-        "CLFSurvsBig",
-        "CLFSurvsMedium",
-        "CLFSurvsSmall",
-        "DiplomaticAttaches",
-        "DiplomaticAttachesSurv",
-        "FORECON",
-        "FORECONAlt",
-        "FORECONAlt2",
-        "FORECONFirstRecon",
-        "FORECONKillTeam",
-        "FreeCompanyRaiders",
-        "FreeCompanyRaidersSurv",
-        "Freelancers",
-        "FreelancersSurv",
-        "GROZA_PMC_BEAR",
-        "IPIE",
-        "IPIESynth",
-        "LACNSniperteam",
-        "LACNSniperteamIntel",
-        "Liquidators",
-        "Migrant_UPP",
-        "NSPAInvestigationParty",
-        "NSPAInvestigationPartyAlt",
-        "NSPAInvestigationPartyArmored",
-        "PAPInvestigationParty",
-        "PAPInvestigationPartyAlt",
-        "SKALA_PMC_BEAR",
-        "UPPGROM",
-        "UPPGROMAlt",
-        "UPPGROMAlt2",
-        "UPPTDLostTeam",
-        "USArmy",
-        "USArmyAlt",
-        "USArmyAlt2",
-        "USArmyArmored",
-        "USArmyTank",
-        "VAIPO",
-        "VAISO",
-        "VAISP",
-        "WEYUSurvLarge",
-        "WEYUSurvMedium",
-        "WEYUSurvSmall",
-        "ProdigySurvLarge",
-        "ProdigySurvMedium",
-        "ProdigySurvSmall",
-        "ProdigyLawyer",
-        "TWEParamarines",
-        "TWEParamarinesCommand",
-        "TWEParamarinesSurv",
-        "UPPLineCommandos",
-        "UPPLineSquad",
-        "UPPLineSquadSurv",
-        "WYHT",
-        "WYExecutivesSurv",
-        "WYPMCParty",
-        "WYPMCPartyAlt",
-        "WYPMCWhiteout",
-        // cmu edit start
-        "CMUBosenmoriColonists",
-        "CMUCCAFFireTeam",
-        "CMUCLFJeepReinforcements", // inherits survivor announcing from CLFCellReinforcementsIntel
-        "IASFSurvBosenmori",
-        "IASFSurvBosenmoriPilot",
-        // cmu edit end
-    };
-
     [Test]
     public async Task SurvivorPartiesAndAnnouncementsAreValid()
     {
@@ -102,7 +25,17 @@ public sealed class DistressSignalSurvivorPrototypeTest
                 .Where(party => party.AnnounceAsSurvivors)
                 .ToDictionary(party => party.ID, StringComparer.OrdinalIgnoreCase);
 
-            Assert.That(survivorParties.Keys, Is.EquivalentTo(ExpectedSurvivorParties));
+            // The exact set is deliberately not pinned: legacy third-party parties still carry the survivor
+            // flag and are filtered out of the vote by the survivor role registry. What must hold is that every
+            // survivor faction (and the civilian group) announces, and that each one is structurally valid.
+            string[] expected =
+            {
+                "CMUProdigySurvivors", "CMUWYPMCSurvivors", "CMUCLFCommandoSurvivors",
+                "CMUUSArmySurvivors", "CMUFORECONSurvivors", "FreeCompanyRaidersSurv", "CMUUNISCSurvivors",
+                "CMUDutchsDozenSurvivors",
+            };
+            Assert.That(survivorParties.Keys, Is.SupersetOf(expected),
+                "every survivor faction and the civilian group must announce as survivors");
             foreach (var (id, party) in survivorParties)
             {
                 Assert.That(

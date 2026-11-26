@@ -1,0 +1,43 @@
+# Survivor faction parties.
+#
+# Round-start survivor variant of this faction's squad. It reuses the faction's existing spawn template
+# (now made of survivor-only role prototypes) so survivors field the real squad roles, and enters on the
+# ground like the other survivor parties. The normal shuttle call-in prototype is untouched.
+#
+# The faction's equipment selection lives in survivor_loadouts.yml.
+
+- type: thirdParty
+  intro: cmu-survivor-intro-army
+  story: cmu-survivor-story-army
+  id: CMUUSArmySurvivors
+  announceAsSurvivors: true
+  displayName: U.S. Army
+  partyspawn: CMUSurvivorSpawnUSArmy
+  entrymethod: ground
+  weight: 25
+  minplayers: 0
+  maxplayers: 400
+  ghostsNeeded: 0
+  roundstart: true
+  survivorIcons:
+    Commander:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_co_army
+    SquadLeader:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_sl_army
+    Medic:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_cmt
+    Technician:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_cet
+    WeaponSpecialist:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_mmg
+    Rifleman:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_trpr
+    Support:
+      sprite: CMU14/Interface/job_icons.rsi
+      state: hudsquad_syn_army

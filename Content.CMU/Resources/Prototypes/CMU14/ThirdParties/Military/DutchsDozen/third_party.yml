@@ -36,7 +36,7 @@
   gruntsToSpawn:
     CMUMobDutchsDozenRifleman: 3
     CMUMobDutchsDozenGrenadier: 2
-    CMUMobDutchsDozenMachineGunner: 1
+    CMUSurvDutchsDozenMachineGunner: 1
     CMUMobDutchsDozenMinigunner: 1
     CMUMobDutchsDozenFlamer: 2
     CMUMobDutchsDozenMedic: 2

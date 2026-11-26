@@ -143,6 +143,14 @@ public sealed partial class RMCPlanetMapPrototypeComponent : Component
     [DataField("thirdparties")]
     public List<ProtoId<ThirdPartyPrototype>> ThirdParties = new();
 
+    /// <summary>
+    ///     CMU14: which survivor story scenario this map tells (for example <c>crash_landing</c> or
+    ///     <c>colonial_uprising</c>). Survivor factions key their spawn briefing variants by this, so maps that
+    ///     share a scenario share one piece of text instead of duplicating it per faction per map.
+    /// </summary>
+    [DataField("survivorscenario")]
+    public string? SurvivorScenario;
+
 
     [DataField("thirdpartyinterval"), AutoNetworkedField]
     public int? ThirdPartyInterval =14000;

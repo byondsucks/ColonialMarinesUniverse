@@ -1,0 +1,81 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                      xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                      Title="{Loc 'cmu-survivor-setup-title'}"
+                      MinSize="900 640">
+    <BoxContainer Orientation="Vertical" Margin="8" SeparationOverride="6">
+        <!-- Header: phase, title, timer and its progress bar stay identical across both phases. -->
+        <PanelContainer StyleClasses="CrtPanel">
+            <BoxContainer Orientation="Vertical" Margin="8 6" SeparationOverride="4">
+                <!-- Same stepper on both screens: which stage of the survivor flow this is. -->
+                <BoxContainer Orientation="Horizontal" SeparationOverride="6">
+                    <Label Name="StepRole" StyleClasses="LabelSubText" />
+                    <Label Name="StepDividerOne" StyleClasses="LabelSubText" />
+                    <Label Name="StepVote" StyleClasses="LabelSubText" />
+                    <Label Name="StepDividerTwo" StyleClasses="LabelSubText" />
+                    <Label Name="StepReady" StyleClasses="LabelSubText" />
+                </BoxContainer>
+                <BoxContainer Orientation="Horizontal" SeparationOverride="8">
+                    <Label Name="PhaseBadge" StyleClasses="LabelKeyText" />
+                    <Label Name="PhaseLabel" StyleClasses="LabelHeading" HorizontalExpand="True" />
+                    <Label Name="TimerLabel" StyleClasses="LabelHeading" />
+                </BoxContainer>
+                <ProgressBar Name="TimerBar" MinValue="0" MaxValue="1" Value="1" />
+                <Label Name="FactionLabel" StyleClasses="LabelSubText" Visible="False" />
+            </BoxContainer>
+        </PanelContainer>
+
+        <!-- Body: role/character column on the left, loadout and faction list on the right. -->
+        <BoxContainer Name="Body" Orientation="Horizontal" VerticalExpand="True" SeparationOverride="8">
+            <BoxContainer Name="LeftColumn" Orientation="Vertical" SeparationOverride="6" HorizontalExpand="True">
+                <PanelContainer Name="VoteSection" StyleClasses="CrtPanel">
+                    <BoxContainer Orientation="Vertical" Margin="8 6" SeparationOverride="4">
+                        <Label Text="{Loc 'cmu-survivor-setup-vote-heading'}" StyleClasses="LabelKeyText" />
+                        <BoxContainer Name="VotePanel" Orientation="Vertical" SeparationOverride="4" />
+                    </BoxContainer>
+                </PanelContainer>
+
+                <PanelContainer Name="RolesSection" StyleClasses="CrtPanel" VerticalExpand="True">
+                    <BoxContainer Orientation="Vertical" Margin="8 6" SeparationOverride="4">
+                        <Label Text="{Loc 'cmu-survivor-setup-roles'}" StyleClasses="LabelKeyText" />
+                        <ScrollContainer Name="SlotsScroll" HScrollEnabled="False" VerticalExpand="True"
+                                         MinSize="0 96">
+                            <BoxContainer Name="Slots" Orientation="Vertical" SeparationOverride="3" />
+                        </ScrollContainer>
+                    </BoxContainer>
+                </PanelContainer>
+
+                <PanelContainer Name="CharacterSection" StyleClasses="CrtPanel">
+                    <BoxContainer Orientation="Horizontal" Margin="8 4" SeparationOverride="8">
+                        <Label Text="{Loc 'cmu-survivor-setup-character'}" StyleClasses="LabelKeyText" />
+                        <OptionButton Name="CharacterSelect" HorizontalExpand="True" />
+                    </BoxContainer>
+                </PanelContainer>
+            </BoxContainer>
+
+            <BoxContainer Name="RightColumn" Orientation="Vertical" SeparationOverride="6" HorizontalExpand="True">
+                <PanelContainer Name="LoadoutSection" StyleClasses="CrtPanel" VerticalExpand="True">
+                    <BoxContainer Orientation="Vertical" Margin="8 6" SeparationOverride="4">
+                        <Label Text="{Loc 'cmu-survivor-setup-loadout'}" StyleClasses="LabelKeyText" />
+                        <!-- Held open in every state so the two columns keep their shape: an empty loadout column
+                             left a blank strip beside the role list, and filling it in shifted the whole layout. -->
+                        <Label Name="LoadoutPlaceholder" Text="{Loc 'cmu-survivor-setup-loadout-placeholder'}"
+                               StyleClasses="LabelSubText" VerticalExpand="True" />
+                        <BoxContainer Name="LoadoutPanel" Orientation="Vertical" SeparationOverride="8"
+                                      VerticalExpand="True" />
+                    </BoxContainer>
+                </PanelContainer>
+
+            </BoxContainer>
+        </BoxContainer>
+
+        <!-- The survivor group: the main section, one card per teammate with their character, role and loadout. -->
+        <PanelContainer StyleClasses="CrtPanel" MinSize="0 190">
+            <BoxContainer Orientation="Vertical" Margin="8 6" SeparationOverride="4" VerticalExpand="True">
+                <Label Text="{Loc 'cmu-survivor-setup-group'}" StyleClasses="LabelKeyText" />
+                <ScrollContainer Name="RosterScroll" HScrollEnabled="False" VerticalExpand="True" MinSize="0 150">
+                    <BoxContainer Name="RosterList" Orientation="Vertical" SeparationOverride="4" />
+                </ScrollContainer>
+            </BoxContainer>
+        </PanelContainer>
+    </BoxContainer>
+</controls:FancyWindow>

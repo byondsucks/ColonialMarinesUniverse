@@ -1,0 +1,372 @@
+# CLF Spec Ops (Wet Ops) survivor gear.
+#
+# Source: cmss13 PR #8387 (Navalis Platform 13), code/modules/gear_presets/survivors/navalis/preset_navalis.dm,
+# presets /survivor/navalis/clf_wet_ops/{operative,tech,medic,spec,leader}, plus the CLF kit those presets use
+# (clothing/suit/storage/marine/veteran/ua_riot/clf{,/jacket,/heavy}, clothing/head/helmet/marine/veteran/
+# clf{,/riot,/heavy}, clothing/under/colonist/clf/{operative,medic,leader}).
+#
+# Armor values are the source's CLOTHING_ARMOR tiers mapped to the numbers this codebase uses
+# (15 = mediumlow, 20 = medium, 25 = mediumhigh, 30 = high, 35 = highplus). CMArmor has no laser, energy or
+# radiation fields, so those source tiers are not represented. Storage slot counts follow the source's
+# storage_slots (grid width = 2 per slot - 1, as the rest of the codebase does).
+#
+# The uniforms are the existing CMU CLF fatigues: CMU14FatiguesCLFCommando (source clf_fighter),
+# CMU14FatiguesCLFCommandoMedic (clf_medic) and CMU14FatiguesCLFCommandoLeader (clf_leader).
+
+- type: entity
+  parent: RMCArmorPMCRiot
+  id: CMU14CLFSpecOpsArmorHunter
+  name: camouflaged hunter gear rig
+  description: A camouflaged hunter gear rig that has an armor plate on the body while it sports custom made kneepads. This armor is sometimes seen in the hands of the more professional forces of the Colonial Liberation Front.
+  components:
+  - type: Sprite
+    sprite: CMU14/Clothing/CLF_Commandos/clfspecarmor.rsi
+  - type: CMArmor
+    melee: 20 # CLOTHING_ARMOR_MEDIUM
+    bullet: 20
+    bio: 20
+    explosionArmor: 20
+  - type: Storage
+    grid:
+    - 0,0,7,1 # 4 slots, matching the source's storage_slots
+
+- type: entity
+  parent: RMCArmorPMCRiot
+  id: CMU14CLFSpecOpsArmorHeavy
+  name: heavy plated combat armor
+  description: An extremely heavy-duty set of body armor made out of customised armor plates and repurposed surplus ballistic vests. Heavy and highly resistant, used by the professional members of the Colonial Liberation Front for when subterfuge is not the answer.
+  components:
+  - type: Sprite
+    sprite: CMU14/Clothing/CLF_Commandos/clfspecarmor.rsi
+  - type: CMArmor
+    melee: 25 # CLOTHING_ARMOR_MEDIUMHIGH
+    bullet: 35 # CLOTHING_ARMOR_HIGHPLUS
+    bio: 20 # CLOTHING_ARMOR_MEDIUM
+    explosionArmor: 30 # CLOTHING_ARMOR_HIGH
+  - type: RMCArmorSpeedTier
+    speedTier: medium
+  - type: Storage
+    grid:
+    - 0,0,3,1 # 2 slots, matching the source's storage_slots
+
+- type: entity
+  parent: ArmorHelmetPMCRiotShield
+  id: CMU14CLFSpecOpsHelmetRiot
+  name: repainted RC6 helmet
+  description: A Riot Control 6 helmet that has been repainted with a darker color scheme and modified by its user, with its riot shield visor. This custom model is used by the few professional members of the Colonial Liberation Front.
+  components:
+  - type: Sprite
+    sprite: CMU14/Clothing/CLF_Commandos/clfspechelmet.rsi
+  - type: Clothing
+    sprite: CMU14/Clothing/CLF_Commandos/clfspechelmet.rsi
+
+- type: entity
+  parent: CMU14CLFCommandoHelmet
+  id: CMU14CLFSpecOpsHelmetHeavy
+  name: repainted reinforced M10 pattern helmet
+  description: A repainted M10 helmet that has seen a complete overhaul of its exterior design to shove on as much protection as possible. This custom model is used by the few professional members of the Colonial Liberation Front.
+  components:
+  - type: CMArmor
+    melee: 25 # CLOTHING_ARMOR_MEDIUMHIGH
+    bullet: 35 # CLOTHING_ARMOR_HIGHPLUS
+    explosionArmor: 30 # CLOTHING_ARMOR_HIGH
+
+# ── Uniform webbing ────────────────────────────────────────────────────────────────────────────────────
+# The source equips webbing on the uniform (WEAR_ACCESSORY) and loads it with magazines. CMU webbing is a
+# uniform accessory too (UniformAccessoryHolder), so the magazines ride in the webbing rather than a pouch.
+- type: entity
+  parent: CMWebbing
+  id: CMUWebbingCLFFive
+  name: five-slot webbing
+  description: A sturdy mess of synthcotton belts and buckles, cut long enough to carry a medic's magazines.
+  components:
+  - type: Storage
+    maxItemSize: Small
+    grid:
+    - 0,0,9,1 # 5 slots
+  - type: Webbing
+    components:
+    - type: Storage
+      maxItemSize: Small
+      grid:
+      - 0,0,9,1 # 5 slots
+
+- type: entity
+  parent: CMWebbing
+  id: CMUWebbingCLFM16Filled
+  suffix: Filled, M16
+  components:
+  - type: StorageFill
+    contents:
+    - id: RMCMagazineRifleM16
+      amount: 3
+
+- type: entity
+  parent: CMUWebbingCLFFive
+  id: CMUWebbingCLFMP5Filled
+  suffix: Filled, MP5
+  components:
+  - type: StorageFill
+    contents:
+    - id: CMMagazineSMGMP5
+      amount: 5
+
+# ── Uniforms ───────────────────────────────────────────────────────────────────────────────────────────
+- type: entity
+  parent: CMU14FatiguesCLFCommando
+  id: CMU14FatiguesCLFSpecOpsOperative
+  components:
+  - type: UniformAccessoryHolder
+    startingAccessories:
+    - CMUWebbingCLFM16Filled
+
+- type: entity
+  parent: CMU14FatiguesCLFCommandoLeader
+  id: CMU14FatiguesCLFSpecOpsLeader
+  components:
+  - type: UniformAccessoryHolder
+    startingAccessories:
+    - CMUWebbingCLFM16Filled
+
+- type: entity
+  parent: CMU14FatiguesCLFCommandoMedic
+  id: CMU14FatiguesCLFSpecOpsMedic
+  components:
+  - type: UniformAccessoryHolder
+    startingAccessories:
+    - CMUWebbingCLFMP5Filled
+  # Surgical webbing vest worn on the uniform: scalpel, retractor, cautery, saw, drill, bone gel/bonesetter, grafts,
+  # fix-o-vein, organ clamp and a surgical line.
+  - type: WebbingClothing
+    startingWebbing: CMWebbingSurgicalBlue
+
+- type: entity
+  parent: CMU14FatiguesCLFCommando
+  id: CMU14FatiguesCLFSpecOpsTechnician
+  components:
+  - type: UniformAccessoryHolder
+    startingAccessories:
+    - RMCToolWebbingFilled
+
+# ── Unit Leader ────────────────────────────────────────────────────────────────────────────────────────
+- type: entity
+  parent: CMBeltMarine
+  id: CMUBeltMarineM16Extended
+  suffix: Filled, M16 extended
+  components:
+  - type: StorageFill
+    contents:
+    - id: RMCMagazineRifleM16
+      amount: 7
+
+- type: startingGear
+  id: CMUGearCLFSpecOpsLeader
+  equipment:
+    id: AU14IDCardColonyColonist
+    jumpsuit: CMU14FatiguesCLFSpecOpsLeader
+    shoes: RMCBootsPMCCommandoFilled
+    gloves: RMCHandsCombat
+    mask: RMCMaskCoifPMC
+    ears: AU14HeadsetCLF
+    head: CMU14CLFCommandoHelmet
+    outerClothing: CMU14CLFCommandoArmor
+    belt: CMBeltMarineM16
+    back: RMCSatchelLightpack5Slot
+    pocket1: RMCPouchFirstAidERTFill
+  inhand:
+  - RMCWeaponRifleM16A5
+  storage:
+    back:
+    - RMCMRECLF
+    - CMGrenadeHighExplosive
+    - RMCMagazineRifleM16
+    - RMCMagazineRifleM16
+    outerClothing:
+    - RMCMagazineRifleM16
+
+# ── Operative ───────────────────────────────────────────────────────────────────────────────────────────
+- type: startingGear
+  id: CMUGearCLFSpecOpsOperative
+  equipment:
+    id: AU14IDCardColonyColonist
+    jumpsuit: CMU14FatiguesCLFSpecOpsOperative
+    shoes: RMCBootsPMCCommandoFilled
+    gloves: RMCHandsCombat
+    ears: AU14HeadsetCLF
+    head: CMU14CLFCommandoHelmet
+    outerClothing: CMU14CLFCommandoArmor
+    belt: CMBeltMarineM16
+    back: RMCSatchelLightpack5Slot
+    pocket1: RMCPouchFirstAidERTFill
+  inhand:
+  - RMCWeaponRifleM16A5
+  storage:
+    back:
+    - RMCMRECLF
+    - CMGrenadeHighExplosive
+    - RMCMagazineRifleM16
+    outerClothing:
+    - RMCMagazineRifleM16
+    - CMGrenadeHighExplosive
+
+# ── Medic ──────────────────────────────────────────────────────────────────────────────────────────────
+- type: startingGear
+  id: CMUGearCLFSpecOpsMedic
+  equipment:
+    id: AU14IDCardColonyColonist
+    jumpsuit: CMU14FatiguesCLFSpecOpsMedic
+    shoes: RMCBootsPMCCommandoFilled
+    gloves: RMCHandsCombat
+    ears: AU14HeadsetCLF
+    eyes: RMCGlassesMedicalHUDGlasses
+    head: CMU14CLFCommandoHelmet
+    outerClothing: CMU14CLFCommandoArmor
+    # The full medical belt (defibrillator and health analyser included), not the basic medical belt.
+    belt: RMCBeltMedicalDefibAnalyzerFilled
+    back: RMCSatchelLightpack5Slot
+    # An MP5 pouch, not the M16 one: the medic's magazines are 9x19mm SMG mags, and the M16 pouch's own
+    # contents are stripped as foreign, leaving him wearing an empty pouch.
+    pocket1: RMCPouchMagazineLarge
+    pocket2: RMCPouchMedkitPMCFullAdvanced
+  inhand:
+  - CMU14WeaponSMGMP5SD
+  storage:
+    back:
+    - CMAdvFirstAidKit
+    - CMDefibrillator
+    - CMRollerBedSpawnFolded
+    - CMMagazineSMGMP5
+    outerClothing:
+    - CMMagazineSMGMP5
+    - CMMagazineSMGMP5
+
+# ── Technician ─────────────────────────────────────────────────────────────────────────────────────────
+- type: startingGear
+  id: CMUGearCLFSpecOpsTechnician
+  equipment:
+    id: AU14IDCardColonyColonist
+    jumpsuit: CMU14FatiguesCLFSpecOpsTechnician
+    shoes: RMCBootsPMCCommandoFilled
+    gloves: RMCHandsCombat
+    ears: AU14HeadsetCLF
+    head: CMU14CLFCommandoHelmet
+    outerClothing: CMU14CLFCommandoArmor
+    belt: AU14BeltUtilityCombatProdigyRUFilled
+    back: RMCBackpackWelderPMC
+    pocket1: RMCPouchFirstAidERTFill
+  inhand:
+  - RMCWeaponRifleM16A5
+  storage:
+    back:
+    - RMCMRECLF
+    - CMGrenadeHighExplosive
+    - RMCMagazineRifleM16
+    - CMBeltUtilityFilled
+    outerClothing:
+    - RMCMagazineRifleM16
+
+# ── Heavy Weapons ──────────────────────────────────────────────────────────────────────────────────────
+- type: startingGear
+  id: CMUGearCLFSpecOpsHeavy
+  equipment:
+    id: AU14IDCardColonyColonist
+    jumpsuit: CMU14FatiguesCLFSpecOpsOperative
+    shoes: RMCBootsPMCCommandoFilled
+    gloves: RMCHandsCombat
+    ears: AU14HeadsetCLF
+    head: CMU14CLFSpecOpsHelmetHeavy
+    outerClothing: CMU14CLFSpecOpsArmorHeavy
+    belt: CMUBeltMarineM16Extended
+    back: RMCSatchelLightpack5Slot
+    pocket1: RMCPouchFirstAidERTFill
+  inhand:
+  - RMCWeaponRifleM16A5
+  storage:
+    back:
+    - RMCMRECLF
+    - CMGrenadeHighExplosive
+    - CMUMagazineRifleM16AP
+    outerClothing:
+    - CMUMagazineRifleM16AP
+    - CMGrenadeHighExplosive
+
+# ── Survivor jobs (the call-in keeps its own AU14IntelThirdParty* jobs) ────────────────────────────────
+- type: job
+  # The survivor job base: faction identity and rank come from the survivor side, never from the
+  # CLF commando call-in squad.
+  parent: CMUSurvivorJobBase
+  id: CMUJobCLFSpecOpsLeader
+  startingGear: CMUGearCLFSpecOpsLeader
+  name: cmu-job-name-clf-specops-leader
+  ranks:
+    RMCRankCivilian: []
+
+- type: job
+  # The survivor job base: faction identity and rank come from the survivor side, never from the
+  # CLF commando call-in squad.
+  parent: CMUSurvivorJobBase
+  id: CMUJobCLFSpecOpsOperative
+  startingGear: CMUGearCLFSpecOpsOperative
+  name: cmu-job-name-clf-specops-operative
+  ranks:
+    RMCRankCivilian: []
+
+- type: job
+  # The survivor job base: faction identity and rank come from the survivor side, never from the
+  # CLF commando call-in squad.
+  parent: CMUSurvivorJobBase
+  id: CMUJobCLFSpecOpsMedic
+  startingGear: CMUGearCLFSpecOpsMedic
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillSurgery: 3
+      RMCSkillMedical: 4
+      RMCSkillFireman: 3
+      RMCSkillEndurance: 1
+      RMCSkillFirearms: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillJtac: 2
+      RMCSkillPolice: 2
+  name: cmu-job-name-clf-specops-medic
+  ranks:
+    RMCRankCivilian: []
+
+- type: job
+  # The survivor job base: faction identity and rank come from the survivor side, never from the
+  # CLF commando call-in squad.
+  parent: CMUSurvivorJobBase
+  id: CMUJobCLFSpecOpsTechnician
+  startingGear: CMUGearCLFSpecOpsTechnician
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillEngineer: 4
+      RMCSkillEndurance: 1
+      RMCSkillFirearms: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillJtac: 2
+      RMCSkillPolice: 2
+  name: cmu-job-name-clf-specops-technician
+  ranks:
+    RMCRankCivilian: []
+
+- type: job
+  # The survivor job base: faction identity and rank come from the survivor side, never from the
+  # CLF commando call-in squad.
+  parent: CMUSurvivorJobBase
+  id: CMUJobCLFSpecOpsHeavy
+  startingGear: CMUGearCLFSpecOpsHeavy
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillEndurance: 1
+      RMCSkillFirearms: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillJtac: 2
+      RMCSkillPolice: 2
+  name: cmu-job-name-clf-specops-heavy
+  ranks:
+    RMCRankCivilian: []

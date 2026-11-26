@@ -29,6 +29,14 @@
     - IASFSurvBosenmori
     - IASFSurvBosenmoriPilot
     - CMUBosenmoriColonists
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - FreeCompanyRaidersSurv
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     jobScalingFof: DefaultGovforOpforScale
     jobScalingIns: DefaultInsurgencyScale
 

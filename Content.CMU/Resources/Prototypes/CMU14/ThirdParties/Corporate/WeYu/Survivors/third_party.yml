@@ -14,7 +14,7 @@
 - type: thirdParty
   id: WEYUSurvLarge
   announceAsSurvivors: true
-  displayName: Weyland-Yutani Survivors
+  displayName: W-Y PMC
   partyspawn: WEYUSurvSpawnLarge
   blacklistedGamemodes:
     - insurgency
@@ -42,7 +42,7 @@
 - type: thirdParty
   id: WEYUSurvMedium
   announceAsSurvivors: true
-  displayName: Weyland-Yutani Survivors
+  displayName: W-Y PMC
   partyspawn: WEYUSurvSpawnMedium
   blacklistedGamemodes:
     - insurgency
@@ -69,7 +69,7 @@
 - type: thirdParty
   id: WEYUSurvSmall
   announceAsSurvivors: true
-  displayName: Weyland-Yutani Survivors
+  displayName: W-Y PMC
   partyspawn: WEYUSurvSpawnSmall
   blacklistedGamemodes:
     - insurgency

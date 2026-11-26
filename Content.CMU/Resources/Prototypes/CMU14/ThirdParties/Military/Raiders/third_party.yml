@@ -22,9 +22,26 @@
   announcearrival: ''
 
 - type: thirdParty
+  intro: cmu-survivor-intro-freecompany
+  story: cmu-survivor-story-freecompany
   parent: FreeCompanyRaiders
   id: FreeCompanyRaidersSurv
-  displayName: Free Company Raiders (Survivors)
+  displayName: Free Company Raiders
+  # Freelancer job icons: the raiders are freelancers, not a corporate or military unit.
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_sl
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_med
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_rfn
+  announceAsSurvivors: true
+  survivorPool: true
+  minplayers: 0
+  partyspawn: CMUSurvivorSpawnFreeCompany
   entrymethod: ground
   weight: 2 # rare
   ghostsNeeded: 0

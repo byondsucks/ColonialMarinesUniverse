@@ -1,0 +1,50 @@
+# Survivor faction parties.
+#
+# Round-start survivor variant of this faction's squad. It reuses the faction's existing spawn template
+# (now made of survivor-only role prototypes) so survivors field the real squad roles, and enters on the
+# ground like the other survivor parties. The normal shuttle call-in prototype is untouched.
+#
+# The faction's equipment selection lives in survivor_loadouts.yml.
+
+- type: thirdParty
+  intro: cmu-survivor-intro-wypmc
+  story: cmu-survivor-story-wypmc
+  id: CMUWYPMCSurvivors
+  announceAsSurvivors: true
+  displayName: W-Y PMC
+  partyspawn: CMUSurvivorSpawnWyPmc
+  entrymethod: ground
+  weight: 25
+  minplayers: 0
+  maxplayers: 400
+  ghostsNeeded: 0
+  roundstart: true
+  # The faction now fields two bodies in the leader, medic and technician positions (the original W-Y PMC
+  # survivor squad and the Solaris Ridge crash-landing group). Pick one of each at random per round instead
+  # of always the first, so both sets are reachable.
+  randomSpecialistRoles: true
+  survivorIcons:
+    Commander:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_fol
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_tl
+    Liaison:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_assman
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_md
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_td
+    WeaponSpecialist:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_sg
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_gun
+    Support:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: pmc_syn

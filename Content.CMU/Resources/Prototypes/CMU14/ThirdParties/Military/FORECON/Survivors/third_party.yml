@@ -1,20 +1,38 @@
 - type: partySpawn
   id: FORECONSpawn
   leadersToSpawn:
-    AU14JobFORECONCommander: 1
-    AU14JobFORECONSquadleader: 1
+    CMUSurvivorForeconCommander: 1
+    CMUSurvivorForeconSquadLeader: 1
   gruntsToSpawn:
-    AU14JobFORECONSynth: 1
-    AU14JobFORECONSupportTech: 1
-    AU14JobFORECONSmartGunOperator: 1
-    AU14JobFORECONMarksman: 1
-    AU14JobFORECONRifleman: 1
+    CMUSurvivorForeconMedic: 1
+    CMUSurvivorForeconSynth: 1
+    CMUSurvivorForeconTechnician: 1
+    CMUSurvivorForeconSmartGunner: 1
+    CMUSurvivorForeconMarksman: 1
+    CMUSurvivorForeconRifleman: 1
+  scalewithpop: false
+  spawnTogether: true
+
+- type: partySpawn
+  id: CMUSurvivorSpawnForecon
+  leadersToSpawn:
+    CMUSurvForeconCommander: 1
+    CMUSurvForeconSquadLeader: 1
+  gruntsToSpawn:
+    CMUSurvForeconMedic: 1
+    CMUSurvForeconSynth: 1
+    CMUSurvForeconTechnician: 1
+    CMUSurvForeconSmartGunner: 1
+    CMUSurvForeconMarksman: 1
+    CMUSurvForeconSniper: 1
+    CMUSurvForeconRifleman: 1
   scalewithpop: false
   spawnTogether: true
 
 - type: thirdParty
   id: FORECON
   announceAsSurvivors: true
+  displayName: FORECON
   partyspawn: FORECONSpawn
   blacklistedGamemodes:
     - insurgency
@@ -30,20 +48,21 @@
 - type: partySpawn
   id: FORECONSpawnAlt
   leadersToSpawn:
-    AU14JobFORECONCommander: 1
-    AU14JobFORECONSquadleader: 1
+    CMUSurvivorForeconCommander: 1
+    CMUSurvivorForeconSquadLeader: 1
   gruntsToSpawn:
-    AU14JobFORECONRifleman: 0
-    AU14JobFORECONSupportTech: 1
-    AU14JobFORECONSmartGunOperator: 0
-    AU14JobFORECONMarksman: 0
-    AU14JobFORECONSynth: 0
+    CMUSurvivorForeconRifleman: 0
+    CMUSurvivorForeconTechnician: 1
+    CMUSurvivorForeconSmartGunner: 0
+    CMUSurvivorForeconMarksman: 0
+    CMUSurvivorForeconSynth: 0
   scalewithpop: false
   spawnTogether: true
 
 - type: thirdParty
   id: FORECONAlt
   announceAsSurvivors: true
+  displayName: FORECON
   partyspawn: FORECONSpawnAlt
   blacklistedGamemodes:
     - insurgency
@@ -59,20 +78,21 @@
 - type: partySpawn
   id: FORECONSpawnAlt2
   leadersToSpawn:
-    AU14JobFORECONCommander: 1
-    AU14JobFORECONSquadleader: 1
+    CMUSurvivorForeconCommander: 1
+    CMUSurvivorForeconSquadLeader: 1
   gruntsToSpawn:
-    AU14JobFORECONRifleman: 0
-    AU14JobFORECONSupportTech: 1
-    AU14JobFORECONSmartGunOperator: 1
-    AU14JobFORECONMarksman: 1
-    AU14JobFORECONSynth: 0
+    CMUSurvivorForeconRifleman: 0
+    CMUSurvivorForeconTechnician: 1
+    CMUSurvivorForeconSmartGunner: 1
+    CMUSurvivorForeconMarksman: 1
+    CMUSurvivorForeconSynth: 0
   scalewithpop: false
   spawnTogether: true
 
 - type: thirdParty
   id: FORECONAlt2
   announceAsSurvivors: true
+  displayName: FORECON
   partyspawn: FORECONSpawnAlt2
   blacklistedGamemodes:
     - insurgency

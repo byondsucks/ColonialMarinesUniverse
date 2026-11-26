@@ -9,7 +9,8 @@
   description: Wide area EMP grenade. The label reads, 'CLOAKER DESTROYER - EXTREMELY STRONG'.
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Grenades/empgrenade.rsi
+    # cmss13's own EMP grenade art (grenade.dmi, state "emp"). RMC's empgrenade.rsi is a different sprite.
+    sprite: CMU14/Objects/Weapons/Dutch/grenade_emp.rsi
     layers:
     - state: icon
       map: ["enum.TriggerVisualLayers.Base"]

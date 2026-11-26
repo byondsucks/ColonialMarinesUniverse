@@ -81,7 +81,9 @@
     gloves: AU14PVEHandsInsulatedBlackMarine
     shoes: AU14BootsUSArmyFilled
     head: AU14HelmetUSArmy
+    # cmss13's trooper wears the keffiyeh and M1A1 goggles on the character rather than tucking them away.
     mask: RMCMaskKeffiyehBlack
+    eyes: AU14GogglesM1A1Ballistic
     belt: RMCM1984BeltFilled
     pocket1: AU14PouchIFAKFill
     pocket2: AU14PouchIFAKFill
@@ -89,8 +91,6 @@
     ears: AU14HeadsetUSArmy
     suitstorage: RMCWeaponRifleM54C
   storage:
-    head:
-    - AU14GogglesM1A1Ballistic
     back:
     - RMCRadioHandheldColony
     - CMMagazineRifleM54C

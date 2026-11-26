@@ -33,6 +33,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Server.CMU14.Survivors.Setup; // CMU14
 
 namespace Content.Server.GameTicking
 {
@@ -50,6 +51,7 @@ namespace Content.Server.GameTicking
         [Dependency] private ThirdPartySystem _thirdParty = default!;
         [Dependency] private AllegianceSystem _allegianceSystem = default!;
         [Dependency] private OriginSystem _originSystem = default!;
+        [Dependency] private SurvivorSetupSystem _survivorSetup = default!; // CMU14
 
         public static readonly EntProtoId ObserverPrototypeName = "MobObserver";
         public static readonly EntProtoId MentorObserverPrototypeName = "MentorObserver";
@@ -59,6 +61,7 @@ namespace Content.Server.GameTicking
         private const string AuThreatMemberJob = "AU14JobThreatMember";
         private const string AuThirdPartyLeaderJob = "AU14JobThirdPartyLeader";
         private const string AuThirdPartyMemberJob = "AU14JobThirdPartyMember";
+        private const string AuStrandedSurvivorJob = "AU14JobStrandedThirdPartyMember"; // CMU14: survivor rollers
 
         // Mainly to avoid allocations.
         private readonly List<EntityCoordinates> _possiblePositions = new();
@@ -97,6 +100,43 @@ namespace Content.Server.GameTicking
                 threatMembers,
                 thirdPartyLeaders,
                 thirdPartyMembers);
+        }
+
+        // CMU14 method: third-party jobs are not station jobs, so survivors are rolled from profile priorities.
+        // A player rolls survivor when a third-party job is (tied for) their highest priority.
+        private Dictionary<NetUserId, ProtoId<JobPrototype>> TakeSurvivorRollers(
+            Dictionary<NetUserId, HumanoidCharacterProfile> profiles)
+        {
+            var rollers = new Dictionary<NetUserId, ProtoId<JobPrototype>>();
+            // Gate on the factions the survivors can actually be drawn as, not merely on a party announcing as
+            // survivors: holding players for a group with no eligible faction would strand them in the lobby.
+            if (_auRoundSystem.GetEligibleSurvivorFactions().Count == 0)
+                return rollers;
+
+            var strandedJob = new ProtoId<JobPrototype>(AuStrandedSurvivorJob);
+            foreach (var (user, profile) in profiles)
+            {
+                if (_auJobSelectionSystem.ForcedJobAssignments.ContainsKey(user)) // held for the threat vote
+                    continue;
+
+                var top = JobPriority.Never;
+                foreach (var priority in profile.JobPriorities.Values)
+                {
+                    if (priority > top)
+                        top = priority;
+                }
+
+                if (top == JobPriority.Never)
+                    continue;
+
+                // CMU14: survivors are rolled with "Stranded Third Party Member". The call-in jobs (leader and
+                // member) no longer double as survivor rollers, and the role is picked in the survivor screen,
+                // so none of these jobs promises a particular survivor role.
+                if (profile.JobPriorities.GetValueOrDefault(strandedJob) == top)
+                    rollers[user] = strandedJob;
+            }
+
+            return rollers;
         }
 
         /// <summary>
@@ -303,8 +343,35 @@ namespace Content.Server.GameTicking
 
             List<EntityUid> spawnableStations = GetSpawnableStations();
             _sawmill.Debug($"[RoundStart] Found {spawnableStations.Count} spawnable station(s).");
+            // CMU14 Survivors Begin: survivors are kept out of station assignment and added afterwards.
+            // The scheduled survivor count is a hard cap: only the sampled players are held, vote and spawn,
+            // and every other roller continues through the normal lobby/spawn flow.
+            var eligibleSurvivorRollers = TakeSurvivorRollers(assignmentProfiles);
+            var scheduledSurvivorCount = _auRoundSystem.ScheduledSurvivorCount;
+            var survivorRollers = SurvivorRollCap.Apply(
+                eligibleSurvivorRollers,
+                scheduledSurvivorCount,
+                _robustRandom.Next);
+            _sawmill.Info(
+                $"[RoundStart] Survivors: scheduled={scheduledSurvivorCount}, eligibleRollers={eligibleSurvivorRollers.Count}, selected={survivorRollers.Count}, survivorParties=[{string.Join(", ", _auRoundSystem.SelectedThirdParties.Where(party => party.RoundStart && party.AnnounceAsSurvivors).Select(party => party.ID))}]");
+
+            var heldSurvivors = new Dictionary<NetUserId, ProtoId<JobPrototype>>(survivorRollers);
+
+            var stationProfiles = heldSurvivors.Count == 0
+                ? assignmentProfiles
+                : assignmentProfiles.Where(pair => !heldSurvivors.ContainsKey(pair.Key)).ToDictionary();
+
             Dictionary<NetUserId, (ProtoId<JobPrototype>?, EntityUid)> assignedJobs
-                = _stationJobs.AssignJobs(assignmentProfiles, spawnableStations);
+                = _stationJobs.AssignJobs(stationProfiles, spawnableStations);
+
+            foreach (var (user, job) in heldSurvivors)
+            {
+                assignedJobs[user] = (job, EntityUid.Invalid);
+            }
+
+            _sawmill.Debug($"[RoundStart] Survivor rollers: {survivorRollers.Count}"); // CMU14
+            // CMU14 End
+
             if (_sawmill.Level <= LogLevel.Debug)
             {
                 AuAssignmentCounts stationAssignmentCounts = GameTicker.CountAuAssignments(assignedJobs);
@@ -414,11 +481,14 @@ namespace Content.Server.GameTicking
                     _chatManager.DispatchServerMessage(playerSession,
                         Loc.GetString("job-not-available-wait-in-lobby"));
                 }
-                else
+                else if (stationJobCounts.ContainsKey(station)) // CMU14: survivors have no station
                     stationJobCounts[station] += 1;
             }
 
             _stationJobs.CalcExtendedAccess(stationJobCounts);
+
+            // CMU14: rolled survivors have no body yet; they vote on their group and pick a role first
+            _survivorSetup.Begin(assignedJobs);
 
             // Spawn everybody in!
             foreach ((NetUserId player, (ProtoId<JobPrototype>? job, EntityUid station)) in assignedJobs)
@@ -435,6 +505,10 @@ namespace Content.Server.GameTicking
                 // EXCEPTION_TOLERANCE catch and called RestartRound(). Keep them in the standard
                 // pipeline so they have a body even if SpawnThirdParty later no-ops.
                 if (job != null && (job == "AU14JobThreatLeader" || job == "AU14JobThreatMember"))
+                    continue;
+
+                // CMU14: held survivors are spawned by SurvivorSetupSystem after they choose
+                if (_survivorSetup.IsHeld(player))
                     continue;
 
                 if (job == null)
@@ -552,6 +626,9 @@ namespace Content.Server.GameTicking
                 if (threatVotePrepared && ThreatSystem.IsThreatJob(job))
                     continue;
 
+                if (_survivorSetup.IsHeld(netUserId)) // CMU14: held players are released by SurvivorSetupSystem
+                    continue;
+
                 if (readySessions.TryGetValue(netUserId, out ICommonSession? session))
                     jobsAssignedList.Add(session);
             }
@@ -603,6 +680,12 @@ namespace Content.Server.GameTicking
 
         private bool IsThreatVoteRoundJoinBlocked(ICommonSession player)
         {
+            if (_survivorSetup.IsHeld(player.UserId)) // CMU14
+            {
+                _chatManager.DispatchServerMessage(player, Loc.GetString("cmu-survivor-setup-join-blocked"));
+                return true;
+            }
+
             if (!_threatVoteSystem.IsRoundJoinBlocked(player.UserId))
                 return false;
 

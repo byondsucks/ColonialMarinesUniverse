@@ -1,0 +1,50 @@
+# Prodigy PMC survivor party.
+#
+# The ProdigySurvSmall/Medium/Large prototypes are Prodigy's *insert* squads: eight-body call-in parties with
+# a 100-player floor, built for ERT drops. Survivors need their own party whose template describes the roles
+# the group can field, with the actual group size coming from the round's scheduled survivor count. This is
+# that party: one leader, one medic, one rifleman body and the corporate liaison, with every extra survivor
+# spawning as the faction's rifleman.
+
+- type: partySpawn
+  id: CMUProdigySurvivorSpawn
+  leadersToSpawn:
+    CMUSurvProdigyGuardLeader: 1
+  gruntsToSpawn:
+    CMUSurvProdigyGuardMedic: 1
+    CMUSurvProdigyGuard: 1
+    CMUSurvProdigyLiaison: 1
+  scalewithpop: false
+  spawnTogether: true
+
+- type: thirdParty
+  id: CMUProdigySurvivors
+  displayName: Prodigy PMC
+  partyspawn: CMUProdigySurvivorSpawn
+  entrymethod: ground
+  roundstart: true
+  announceAsSurvivors: true
+  survivorPool: true
+  allegiance: Prodigy
+  weight: 25
+  minplayers: 0
+  maxplayers: 400
+  ghostsNeeded: 0
+  intro: cmu-survivor-intro-prodigy
+  story: cmu-survivor-story-prodigy
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_lead
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_medic
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_engi
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+    Liaison:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_liaison

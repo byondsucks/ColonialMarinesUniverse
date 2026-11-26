@@ -1,0 +1,2691 @@
+# Dedicated CMU jobs for every survivor role.
+#
+# A survivor role owns its job instead of borrowing the call-in job of the squad its faction also fields. The job
+# decides the rank shown, the skills granted and - through JobPrototype.PlayTimeTracker - the playtime counter the
+# role records against (SharedRoleSystem.MindGetAllRoleInfo reads job.PlayTimeTracker, and PlayTimeTrackingSystem
+# indexes that tracker), so every job below has its own tracker, its own explicit skills and no call-in rank.
+#
+# Each job parents the role's previous job so its starting gear and identity are unchanged. roundComponents are
+# re-emitted in full because a job's roundComponents list is *replaced*, not merged, when a child declares its own.
+
+
+# --- AU14CLFSurvFighter (Rifleman) ---
+- type: job
+  parent: AU14JobCLFSurvFighter
+  id: CMUSurvivorJobCLFSurvFighter
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobCLFSurvFighter
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: NpcFactionMember
+    factions:
+    - AUColonist
+    - CLF
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 3
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 1
+      RMCSkillPolice: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobCLFSurvFighter
+
+# --- AU14CLFSurvLeader (Leader) ---
+- type: job
+  parent: AU14JobCLFSurvLeader
+  id: CMUSurvivorJobCLFSurvLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobCLFSurvLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: NpcFactionMember
+    factions:
+    - AUColonist
+    - CLF
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 2
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillIntel: 2
+      RMCSkillJtac: 4
+      RMCSkillLeadership: 3
+      RMCSkillMedical: 1
+      RMCSkillNavigations: 1
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillSurgery: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobCLFSurvLeader
+
+# --- AU14IASFSurvCombatEngineer (Technician) ---
+- type: job
+  parent: AU14IASFSurvCombatEngineer
+  id: CMUSurvivorJobIASFSurvCombatEngineer
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFSurvCombatEngineer
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-iasf
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_breacher
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_para
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFSurvCombatEngineer
+
+# --- AU14IASFSurvCommander (Commander) ---
+- type: job
+  parent: AU14IASFSurvCommander
+  id: CMUSurvivorJobIASFSurvCommander
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFSurvCommander
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-tweiasf-co
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: MarineOrders
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_commander
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFSurvCommander
+
+# --- AU14IASFSurvPilot (WeaponSpecialist) ---
+- type: job
+  parent: AU14IASFSurvPilot
+  id: CMUSurvivorJobIASFSurvPilot
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFSurvPilot
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-tweiasf-pl
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_marksman
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFSurvPilot
+
+# --- AU14IASFSurvRifleman (Rifleman) ---
+- type: job
+  parent: AU14IASFSurvRifleman
+  id: CMUSurvivorJobIASFSurvRifleman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFSurvRifleman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-iasf
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_rifleman
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_para
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFSurvRifleman
+
+# --- AU14IASFSurvRiflemanAmmo (Rifleman) ---
+- type: job
+  parent: AU14IASFSurvRiflemanAmmo
+  id: CMUSurvivorJobIASFSurvRiflemanAmmo
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFSurvRiflemanAmmo
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-iasf
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_rifleman
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_para
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFSurvRiflemanAmmo
+
+# --- AU14IASFSurvTeamLead (SquadLeader) ---
+- type: job
+  parent: AU14IASFSurvTeamLead
+  id: CMUSurvivorJobIASFSurvTeamLead
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFSurvTeamLead
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-tweiasf-sl
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: MarineOrders
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: SquadLeader
+    icon:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_teamleader_alt
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_teamleader
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_para
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFSurvTeamLead
+
+# --- AU14IASFsurvMedicalTechnician (Medic) ---
+- type: job
+  parent: AU14IASFsurvMedicalTechnician
+  id: CMUSurvivorJobIASFsurvMedicalTechnician
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobIASFsurvMedicalTechnician
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadIASF
+  - type: JobPrefix
+    prefix: au14-job-prefix-iasf
+  - type: Language
+    spokenLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    understoodLanguages:
+    - English
+    - Japanese
+    - Indonesian
+    currentLanguage: Indonesian
+    defaultLanguage: Indonesian
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: rmc_medic
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_para
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 2
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobIASFsurvMedicalTechnician
+
+# --- AU14JCLFSurvSurgeon (Medic) ---
+- type: job
+  parent: AU14JobCLFSurvSurgeon
+  id: CMUSurvivorJobJCLFSurvSurgeon
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobJCLFSurvSurgeon
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: NpcFactionMember
+    factions:
+    - AUColonist
+    - CLF
+  - type: Skills
+    skills:
+      RMCSkillDomestics: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillMedical: 4
+      RMCSkillPolice: 1
+      RMCSkillResearch: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobJCLFSurvSurgeon
+
+# --- AU14JobWYSurvEngineer (Technician) ---
+- type: job
+  parent: AU14JobWYSurvEngineer
+  id: CMUSurvivorJobWYSurvEngineer
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWYSurvEngineer
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: JobPrefix
+    prefix: au14-job-prefix-govforsquadcombattech
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWYSurvEngineer
+
+# --- AU14JobWYSurvGoon (Rifleman) ---
+- type: job
+  parent: AU14JobWYSurvGoon
+  id: CMUSurvivorJobWYSurvGoon
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWYSurvGoon
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - SquadPMC
+  - type: EquipEntityPreset
+    preset: AU14WYSurvRiflePreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-wyguard
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillCqc: 2
+      RMCSkillEndurance: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillIntel: 1
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 2
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWYSurvGoon
+
+# --- AU14JobWYSurvGoonShotgun (Rifleman) ---
+- type: job
+  parent: AU14JobWYSurvGoonShotgun
+  id: CMUSurvivorJobWYSurvGoonShotgun
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWYSurvGoonShotgun
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - SquadPMC
+  - type: JobPrefix
+    prefix: au14-job-prefix-wyguard
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillCqc: 2
+      RMCSkillEndurance: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillIntel: 1
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 2
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWYSurvGoonShotgun
+
+# --- AU14JobWYSurvLiaison (Liaison) ---
+- type: job
+  parent: AU14JobCivilianCorporateLiaisonSurv
+  id: CMUSurvivorJobWYSurvLiaison
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWYSurvLiaison
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - SquadPMC
+  - type: CMVendorUser
+    id: AU14JobCivilianCorporateLiaison
+    points: 70
+  - type: EquipEntityPreset
+    preset: AU14WeYuSurvPistolPreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-corporateliaison
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillDomestics: 1
+      RMCSkillFirearms: 1
+      RMCSkillFireman: 1
+      RMCSkillIntel: 1
+      RMCSkillJtac: 3
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 3
+      RMCSkillResearch: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWYSurvLiaison
+
+# --- AU14JobWYSurvPMC (Commander) ---
+- type: job
+  parent: AU14JobWYSurvPMC
+  id: CMUSurvivorJobWYSurvPMC
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWYSurvPMC
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - SquadPMC
+  - type: EquipEntityPreset
+    preset: AU14WYSurvRifleBackpackPreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-AU14JobGOVFORSquadRiflemanWYPMC
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 3
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 1
+      RMCSkillJtac: 3
+      RMCSkillPolice: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWYSurvPMC
+
+# --- AU14JobWYSurvScientist (Support) ---
+- type: job
+  parent: AU14JobWYSurvScientist
+  id: CMUSurvivorJobWYSurvScientist
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWYSurvScientist
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - SquadPMC
+  - type: EquipEntityPreset
+    preset: AU14WeYuSurvPistolPreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-civilianscientist
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 3
+      RMCSkillDomestics: 1
+      RMCSkillEngineer: 3
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 1
+      RMCSkillMedical: 3
+      RMCSkillResearch: 1
+      RMCSkillSurgery: 4
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWYSurvScientist
+
+# --- CMUSurvDutchsDozenArnold (Leader) ---
+- type: job
+  parent: CMUJobSurvDutchsDozenArnold
+  id: CMUSurvivorJobDutchsDozenArnold
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenArnold
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillAntagonist: 2
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 5
+      RMCSkillEndurance: 5
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 5
+      RMCSkillJtac: 3
+      RMCSkillLeadership: 4
+      RMCSkillMedical: 3
+      RMCSkillMeleeWeapons: 2
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 3
+      RMCSkillSpecialistWeapons: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenArnold
+
+# --- CMUSurvDutchsDozenFlamer (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvDutchsDozenFlamer
+  id: CMUSurvivorJobDutchsDozenFlamer
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenFlamer
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 1
+      RMCSkillMedical: 1
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSpecialistWeapons: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenFlamer
+
+# --- CMUSurvDutchsDozenGrenadier (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvDutchsDozenGrenadier
+  id: CMUSurvivorJobDutchsDozenGrenadier
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenGrenadier
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 1
+      RMCSkillMedical: 1
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSpecialistWeapons: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenGrenadier
+
+# --- CMUSurvDutchsDozenMachineGunner (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobDutchsDozenMachineGunner
+  id: CMUSurvivorJobDutchsDozenMachineGunner
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenMachineGunner
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillJtac: 1
+      RMCSkillMedical: 1
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSpecialistWeapons: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenMachineGunner
+
+# --- CMUSurvDutchsDozenMedic (Medic) ---
+- type: job
+  parent: CMUJobSurvDutchsDozenMedic
+  id: CMUSurvivorJobDutchsDozenMedic
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenMedic
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 1
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSurgery: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenMedic
+
+# --- CMUSurvDutchsDozenMinigunner (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvDutchsDozenMinigunner
+  id: CMUSurvivorJobDutchsDozenMinigunner
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenMinigunner
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillJtac: 1
+      RMCSkillMedical: 1
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSmartGun: 1
+      RMCSkillSpecialistWeapons: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenMinigunner
+
+# --- CMUSurvDutchsDozenRifleman (Rifleman) ---
+- type: job
+  parent: CMUJobSurvDutchsDozenRifleman
+  id: CMUSurvivorJobDutchsDozenRifleman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobDutchsDozenRifleman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillJtac: 1
+      RMCSkillMedical: 1
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSpecialistWeapons: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobDutchsDozenRifleman
+
+# --- CMUSurvForeconCommander (Commander) ---
+- type: job
+  parent: CMUJobSurvForeconCommander
+  id: CMUSurvivorJobForeconCommander
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconCommander
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: rmc-job-prefix-forecon-co
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: MarineOrders
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: co
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_command
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconCommander
+
+# --- CMUSurvForeconMarksman (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvForeconMarksman
+  id: CMUSurvivorJobForeconMarksman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconMarksman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: rmc-job-prefix-forecon-marksman
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: ScoutWhitelist
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spec
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconMarksman
+
+# --- CMUSurvForeconMedic (Medic) ---
+- type: job
+  parent: CMUJobSurvForeconMedic
+  id: CMUSurvivorJobForeconMedic
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconMedic
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadFirstRecon
+  - type: JobPrefix
+    prefix: au14-job-prefix-forecon-corpsman
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: engi
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 1
+      RMCSkillLeadership: 0
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 0
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconMedic
+
+# --- CMUSurvForeconRifleman (Rifleman) ---
+- type: job
+  parent: CMUJobSurvForeconRifleman
+  id: CMUSurvivorJobForeconRifleman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconRifleman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: cm-job-prefix-rifleman
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: private
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconRifleman
+
+# --- CMUSurvForeconSmartGunner (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvForeconSmartGunner
+  id: CMUSurvivorJobForeconSmartGunner
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconSmartGunner
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: cm-job-prefix-gun-operator
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: smartgunner
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconSmartGunner
+
+# --- CMUSurvForeconSniper (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvForeconSniper
+  id: CMUSurvivorJobForeconSniper
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconSniper
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: rmc-job-prefix-forecon-marksman
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: ScoutWhitelist
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spec
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconSniper
+
+# --- CMUSurvForeconSquadLeader (SquadLeader) ---
+- type: job
+  parent: CMUJobSurvForeconSquadLeader
+  id: CMUSurvivorJobForeconSquadLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconSquadLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: cm-job-prefix-squad-leader
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: MarineOrders
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: SpotterWhitelist
+  - type: SquadLeader
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: leader
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconSquadLeader
+
+# --- CMUSurvForeconSynth (Support) ---
+- type: job
+  parent: CMUJobSurvForeconSynth
+  id: CMUSurvivorJobForeconSynth
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconSynth
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: DemoSpecWhitelist
+  - type: GrenadeSpecWhitelist
+  - type: JobPrefix
+    prefix: rmc-job-prefix-synth
+  - type: Language
+    preset: AU14LanguagePresetSynth
+  - type: LanguageLearning
+    preset: AU14LanguageLearningPresetSynth
+  - type: MeleeWeapon
+    soundHit:
+      path: /Audio/_RMC14/Weapons/synthpunch1.ogg
+      params:
+        variation: 0.15
+        volume: -1
+    angle: 30
+    animation: WeaponArcFist
+    attackRate: 1
+    damage:
+      types:
+        Blunt: 35
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: PyroWhitelist
+  - type: ScoutWhitelist
+  - type: SniperWhitelist
+  - type: Synth
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: forecon_synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 3
+      RMCSkillCqc: 5
+      RMCSkillDomestics: 2
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 5
+      RMCSkillIntel: 2
+      RMCSkillJtac: 3
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 2
+      RMCSkillNavigations: 1
+      RMCSkillOverwatch: 1
+      RMCSkillPilot: 2
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 2
+      RMCSkillResearch: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 2
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconSynth
+
+# --- CMUSurvForeconTechnician (Technician) ---
+- type: job
+  parent: CMUJobSurvForeconTechnician
+  id: CMUSurvivorJobForeconTechnician
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobForeconTechnician
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - RMCSquadFORECON
+  - type: JobPrefix
+    prefix: rmc-job-prefix-forecon-support-tech
+  - type: LanguagePreset
+    spokenLanguages:
+    - English
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: NpcFactionMember
+    factions:
+    - GOVFOR
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: engi
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_forecon
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillCqc: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 1
+      RMCSkillJtac: 1
+      RMCSkillLeadership: 0
+      RMCSkillMedical: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillSurgery: 1
+      RMCSkillVehicles: 0
+
+- type: playTimeTracker
+  id: CMUSurvivorJobForeconTechnician
+
+# --- CMUSurvFreeCompanyLeader (Leader) ---
+- type: job
+  parent: CMUJobSurvFreeCompanyLeader
+  id: CMUSurvivorJobFreeCompanyLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobFreeCompanyLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: JobPrefix
+    prefix: cmu-raider-prefix-leader
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 3
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillJtac: 3
+      RMCSkillLeadership: 2
+      RMCSkillMedical: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobFreeCompanyLeader
+
+# --- CMUSurvFreeCompanyRaider (Rifleman) ---
+- type: job
+  parent: CMUJobSurvFreeCompanyRaider
+  id: CMUSurvivorJobFreeCompanyRaider
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobFreeCompanyRaider
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: JobPrefix
+    prefix: cmu-raider-prefix
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spp_pvt
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillCqc: 3
+      RMCSkillEndurance: 4
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 1
+      RMCSkillMedical: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobFreeCompanyRaider
+
+# --- CMUSurvProdigyGuard (Rifleman) ---
+- type: job
+  parent: CMUJobSurvProdigyGuard
+  id: CMUSurvivorJobProdigyGuard
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobProdigyGuard
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - CMU14SquadProdigy
+  - type: EquipEntityPreset
+    preset: CMU14ProdigySurvBasePreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-wyguard
+  - type: NpcFactionMember
+    factions:
+    - CMUProdigy
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 2
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillIntel: 1
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 2
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobProdigyGuard
+
+# --- CMUSurvProdigyGuardLeader (Leader) ---
+- type: job
+  parent: CMUJobSurvProdigyGuardLeader
+  id: CMUSurvivorJobProdigyGuardLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobProdigyGuardLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - CMU14SquadProdigy
+  - type: EquipEntityPreset
+    preset: CMU14ProdigySurvBasePreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-wyguard
+  - type: MarineOrders
+  - type: NpcFactionMember
+    factions:
+    - CMUProdigy
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 2
+      RMCSkillEndurance: 3
+      RMCSkillEngineer: 3
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 2
+      RMCSkillIntel: 1
+      RMCSkillJtac: 3
+      RMCSkillLeadership: 1
+      RMCSkillMedical: 2
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 3
+      RMCSkillSurgery: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobProdigyGuardLeader
+
+# --- CMUSurvProdigyGuardMedic (Medic) ---
+- type: job
+  parent: CMUJobSurvProdigyGuardMedic
+  id: CMUSurvivorJobProdigyGuardMedic
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobProdigyGuardMedic
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - CMU14SquadProdigy
+  - type: EquipEntityPreset
+    preset: CMU14ProdigySurvBasePreset
+  - type: JobPrefix
+    prefix: au14-job-prefix-wyguard
+  - type: NpcFactionMember
+    factions:
+    - CMUProdigy
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 2
+      RMCSkillCqc: 2
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 2
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillIntel: 1
+      RMCSkillMedical: 4
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 2
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobProdigyGuardMedic
+
+# --- CMUSurvProdigyLiaison (Liaison) ---
+- type: job
+  parent: CMUJobSurvProdigyLiaison
+  id: CMUSurvivorJobProdigyLiaison
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobProdigyLiaison
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - CMU14SquadProdigy
+  - type: CMVendorUser
+    id: CMU14JobCivilianProdigyLiaison
+    points: 70
+  - type: JobPrefix
+    prefix: au14-job-prefix-corporateliaison
+  - type: NpcFactionMember
+    factions:
+    - CMUProdigy
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_liaison
+  - type: Skills
+    skills:
+      RMCSkillDomestics: 1
+      RMCSkillFirearms: 1
+      RMCSkillFireman: 1
+      RMCSkillIntel: 1
+      RMCSkillJtac: 3
+      RMCSkillOverwatch: 1
+      RMCSkillPolice: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobProdigyLiaison
+
+# --- CMUSurvUSArmyCommander (Commander) ---
+- type: job
+  parent: CMUJobSurvUSArmyCommander
+  id: CMUSurvivorJobUSArmyCommander
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmyCommander
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: rmc-job-prefix-forecon-co
+  - type: MarineOrders
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: co
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_command
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmyCommander
+
+# --- CMUSurvUSArmyHeavyGunner (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvUSArmyHeavyGunner
+  id: CMUSurvivorJobUSArmyHeavyGunner
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmyHeavyGunner
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: au14-job-prefix-usarmy-hg
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: smartgunner
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_ua
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmyHeavyGunner
+
+# --- CMUSurvUSArmyMarksman (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvUSArmyMarksman
+  id: CMUSurvivorJobUSArmyMarksman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmyMarksman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: rmc-job-prefix-forecon-marksman
+  - type: ScoutWhitelist
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: spec
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_ua
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmyMarksman
+
+# --- CMUSurvUSArmyMedic (Medic) ---
+- type: job
+  parent: CMUJobSurvUSArmyMedic
+  id: CMUSurvivorJobUSArmyMedic
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmyMedic
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: au14-job-prefix-usarmy-cmt
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: engi
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_ua
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 2
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmyMedic
+
+# --- CMUSurvUSArmyRifleman (Rifleman) ---
+- type: job
+  parent: CMUJobSurvUSArmyRifleman
+  id: CMUSurvivorJobUSArmyRifleman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmyRifleman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: au14-job-prefix-usarmy-trooper
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: private
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_ua
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmyRifleman
+
+# --- CMUSurvUSArmySquadLeader (SquadLeader) ---
+- type: job
+  parent: CMUJobSurvUSArmySquadLeader
+  id: CMUSurvivorJobUSArmySquadLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmySquadLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: cm-job-prefix-squad-leader
+  - type: MarineOrders
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: SpotterWhitelist
+  - type: SquadLeader
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: leader
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_ua
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmySquadLeader
+
+# --- CMUSurvUSArmySynth (Support) ---
+- type: job
+  parent: CMUJobSurvUSArmySynth
+  id: CMUSurvivorJobUSArmySynth
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmySynth
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: DemoSpecWhitelist
+  - type: GrenadeSpecWhitelist
+  - type: JobPrefix
+    prefix: rmc-job-prefix-synth
+  - type: Language
+    preset: AU14LanguagePresetSynth
+  - type: LanguageLearning
+    preset: AU14LanguageLearningPresetSynth
+  - type: MeleeWeapon
+    soundHit:
+      path: /Audio/_RMC14/Weapons/synthpunch1.ogg
+      params:
+        variation: 0.15
+        volume: -1
+    angle: 30
+    animation: WeaponArcFist
+    attackRate: 1
+    damage:
+      types:
+        Blunt: 35
+  - type: PyroWhitelist
+  - type: ScoutWhitelist
+  - type: SniperWhitelist
+  - type: Synth
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: forecon_synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 3
+      RMCSkillCqc: 5
+      RMCSkillDomestics: 2
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 5
+      RMCSkillIntel: 2
+      RMCSkillJtac: 3
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 2
+      RMCSkillNavigations: 1
+      RMCSkillOverwatch: 1
+      RMCSkillPilot: 2
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 2
+      RMCSkillResearch: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 2
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmySynth
+
+# --- CMUSurvUSArmyTechnician (Technician) ---
+- type: job
+  parent: CMUJobSurvUSArmyTechnician
+  id: CMUSurvivorJobUSArmyTechnician
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUSArmyTechnician
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUSArmy
+  - type: JobPrefix
+    prefix: au14-job-prefix-usarmy-cet
+  - type: SpotterWhitelist
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: medic
+    background:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: background_ua
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUSArmyTechnician
+
+# --- CMUSurvUniscAutomaticRifleman (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobSurvUniscAutomaticRifleman
+  id: CMUSurvivorJobUniscAutomaticRifleman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscAutomaticRifleman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix: au14-job-name-unisc-automatic-rifleman
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscAutomaticRifleman
+
+# --- CMUSurvUniscCorpsman (Medic) ---
+- type: job
+  parent: CMUJobSurvUniscCorpsman
+  id: CMUSurvivorJobUniscCorpsman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscCorpsman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix: au14-job-name-unisc-corpsman
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 2
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscCorpsman
+
+# --- CMUSurvUniscEnforcer (Rifleman) ---
+- type: job
+  parent: CMUJobSurvUniscEnforcer
+  id: CMUSurvivorJobUniscEnforcer
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscEnforcer
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix: au14-job-name-unisc-enforcer
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscEnforcer
+
+# --- CMUSurvUniscEnforcerLeader (Rifleman) ---
+- type: job
+  parent: CMUJobSurvUniscEnforcerLeader
+  id: CMUSurvivorJobUniscEnforcerLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscEnforcerLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix: au14-job-name-unisc-lead-enforcer
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscEnforcerLeader
+
+# --- CMUSurvUniscObserver (Rifleman) ---
+- type: job
+  parent: CMUJobSurvUniscObserver
+  id: CMUSurvivorJobUniscObserver
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscObserver
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: JobPrefix
+    prefix: au14-job-prefix-civilianrightsobserver
+  - type: TacticalMapIcon
+    icon:
+      sprite: /Textures/_RMC14/Interface/map_blips.rsi
+      state: synth
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 1
+      RMCSkillMedical: 3
+      RMCSkillSurgery: 2
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscObserver
+
+# --- CMUSurvUniscPlatoonOps (Commander) ---
+- type: job
+  parent: CMUJobSurvUniscPlatoonOps
+  id: CMUSurvivorJobUniscPlatoonOps
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscPlatoonOps
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix:  au14-job-name-unisc-platoon-operations-officer
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: MarineOrders
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscPlatoonOps
+
+# --- CMUSurvUniscRifleman (Rifleman) ---
+- type: job
+  parent: CMUJobSurvUniscRifleman
+  id: CMUSurvivorJobUniscRifleman
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscRifleman
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix: au14-job-name-unisc-rifleman
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscRifleman
+
+# --- CMUSurvUniscSquadLeader (SquadLeader) ---
+- type: job
+  parent: CMUJobSurvUniscSquadLeader
+  id: CMUSurvivorJobUniscSquadLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobUniscSquadLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: AssignSquad
+    whitelist:
+      tags:
+      - AU14SquadUNISC
+  - type: JobPrefix
+    prefix: au14-job-name-unisc-squad-leader
+  - type: Language
+    spokenLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    understoodLanguages:
+    - English
+    - Russian
+    - Spanish
+    - TacticalSignLanguage
+    currentLanguage: English
+    defaultLanguage: English
+  - type: MarineOrders
+  - type: RMCPointing
+  - type: RMCTrackable
+  - type: SquadLeader
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobUniscSquadLeader
+
+# --- CMUSurvivorClfSpecOpsHeavy (WeaponSpecialist) ---
+- type: job
+  parent: CMUJobCLFSpecOpsHeavy
+  id: CMUSurvivorJobClfSpecOpsHeavy
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobClfSpecOpsHeavy
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillEndurance: 1
+      RMCSkillFirearms: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillSpecialistWeapons: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobClfSpecOpsHeavy
+
+# --- CMUSurvivorClfSpecOpsLeader (SquadLeader) ---
+- type: job
+  parent: CMUJobCLFSpecOpsLeader
+  id: CMUSurvivorJobClfSpecOpsLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobClfSpecOpsLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobClfSpecOpsLeader
+
+# --- CMUSurvivorClfSpecOpsMedic (Medic) ---
+- type: job
+  parent: CMUJobCLFSpecOpsMedic
+  id: CMUSurvivorJobClfSpecOpsMedic
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobClfSpecOpsMedic
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillEndurance: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 2
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillSurgery: 3
+
+- type: playTimeTracker
+  id: CMUSurvivorJobClfSpecOpsMedic
+
+# --- CMUSurvivorClfSpecOpsOperative (Rifleman) ---
+- type: job
+  parent: CMUJobCLFSpecOpsOperative
+  id: CMUSurvivorJobClfSpecOpsOperative
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobClfSpecOpsOperative
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobClfSpecOpsOperative
+
+# --- CMUSurvivorClfSpecOpsTechnician (Technician) ---
+- type: job
+  parent: CMUJobCLFSpecOpsTechnician
+  id: CMUSurvivorJobClfSpecOpsTechnician
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobClfSpecOpsTechnician
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+
+- type: playTimeTracker
+  id: CMUSurvivorJobClfSpecOpsTechnician
+
+# --- CMUSurvivorWyPmcEngineer (Technician) ---
+- type: job
+  parent: CMUJobWyPmcSurvEngineer
+  id: CMUSurvivorJobWyPmcEngineer
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcEngineer
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 4
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 4
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcEngineer
+
+# --- CMUSurvivorWyPmcFieldOpsLeader (Commander) ---
+- type: job
+  parent: CMUJobWyPmcFieldOpsLeader
+  id: CMUSurvivorJobWyPmcFieldOpsLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcFieldOpsLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcFieldOpsLeader
+
+# --- CMUSurvivorWyPmcLeader (Leader) ---
+- type: job
+  parent: CMUJobWyPmcLeader
+  id: CMUSurvivorJobWyPmcLeader
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcLeader
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 2
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcLeader
+
+# --- CMUSurvivorWyPmcMedic (Medic) ---
+- type: job
+  parent: CMUJobWyPmcMedic
+  id: CMUSurvivorJobWyPmcMedic
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcMedic
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 4
+      RMCSkillJtac: 2
+      RMCSkillMedical: 4
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillSurgery: 3
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcMedic
+
+# --- CMUSurvivorWyPmcStandard (Rifleman) ---
+- type: job
+  parent: CMUJobWyPmcStandard
+  id: CMUSurvivorJobWyPmcStandard
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcStandard
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 3
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcStandard
+
+# --- CMUSurvivorWyPmcSupervisor (Liaison) ---
+- type: job
+  parent: CMUJobWyPmcSupervisor
+  id: CMUSurvivorJobWyPmcSupervisor
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcSupervisor
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 1
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 1
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 3
+      RMCSkillJtac: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 3
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcSupervisor
+
+# --- CMUSurvivorWyPmcSynth (Support) ---
+- type: job
+  parent: CMUJobWyPmcSynth
+  id: CMUSurvivorJobWyPmcSynth
+  # Its own counter: sharing the call-in job's tracker is what made two roles record the same playtime.
+  playTimeTracker: CMUSurvivorJobWyPmcSynth
+  # Survivors are civilians and wear no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillConstruction: 3
+      RMCSkillEndurance: 1
+      RMCSkillEngineer: 3
+      RMCSkillFirearms: 2
+      RMCSkillFireman: 3
+      RMCSkillJtac: 2
+      RMCSkillMedical: 3
+      RMCSkillMeleeWeapons: 1
+      RMCSkillPolice: 2
+      RMCSkillPowerLoader: 1
+      RMCSkillSpecialistWeapons: 1
+      RMCSkillVehicles: 1
+
+- type: playTimeTracker
+  id: CMUSurvivorJobWyPmcSynth

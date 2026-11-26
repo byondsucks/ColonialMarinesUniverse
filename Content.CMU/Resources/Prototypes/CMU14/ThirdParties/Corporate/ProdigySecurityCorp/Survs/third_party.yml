@@ -10,10 +10,28 @@
   spawnTogether: true
 
 - type: thirdParty
+  intro: cmu-survivor-intro-prodigy
+  story: cmu-survivor-story-prodigy
   id: ProdigySurvLarge
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_lead
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_medic
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_engi
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+    Liaison:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_liaison
   allegiance: Prodigy
   announceAsSurvivors: true
-  displayName: Prodigy Survivors
+  displayName: Prodigy PMC
   partyspawn: ProdigySurvSpawnLarge
   blacklistedGamemodes:
     - insurgency
@@ -38,10 +56,28 @@
   spawnTogether: true
 
 - type: thirdParty
+  intro: cmu-survivor-intro-prodigy
+  story: cmu-survivor-story-prodigy
   id: ProdigySurvMedium
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_lead
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_medic
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_engi
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+    Liaison:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_liaison
   allegiance: Prodigy
   announceAsSurvivors: true
-  displayName: Prodigy Survivors
+  displayName: Prodigy PMC
   partyspawn: ProdigySurvSpawnMedium
   blacklistedGamemodes:
     - insurgency
@@ -66,10 +102,12 @@
   spawnTogether: true
 
 - type: thirdParty
+  intro: cmu-survivor-intro-prodigy
+  story: cmu-survivor-story-prodigy
   id: ProdigySurvSmall
   allegiance: Prodigy
   announceAsSurvivors: true
-  displayName: Prodigy Survivors
+  displayName: Prodigy PMC
   partyspawn: ProdigySurvSpawnSmall
   blacklistedGamemodes:
     - insurgency
@@ -81,3 +119,19 @@
   maxplayers: 50
   ghostsNeeded: 0
   roundstart: true
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_lead
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_medic
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_engi
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: weya_goon_standard
+    Liaison:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_liaison

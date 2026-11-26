@@ -59,6 +59,13 @@
     - WYPMCParty
     - WYPMCPartyAlt
     - biomorphThirdParty
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     # threats:
     # - XenoThreat # map has no threat spawn markers
     # - NeomorphsThreat # map has no threat spawn markers

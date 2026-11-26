@@ -74,21 +74,24 @@
   id: AU14GearUSArmyCommander
   equipment:
     id: AU14IDCardUSArmyCommander
-    outerClothing: AU14ArmorUSArmy
+    # cmss13's army CO is a dress-uniform commander, not a line trooper: service jacket over the fatigues, the
+    # cavalry hat, sunglasses and a neckerchief. The jacket shares the outer slot with a body armour vest, so
+    # matching the source means he goes without one.
+    outerClothing: RMCCoatCOServiceJacketGreen
     jumpsuit: AU14ArmyJumpsuitCavalry
     gloves: AU14PVEHandsInsulatedBlackMarine
     shoes: AU14BootsUSArmyFilled
-    head: AU14BeretUSArmyMajor
+    head: AU14HatUSArmy
+    eyes: RMCSunglasses
     mask: RMCMaskNeckerchiefTanDown
+    # The Mateba is his whole armament in the source - a revolver belt with its speed loaders.
     belt: RMCMatebaBeltForeconFilled
     pocket1: RMCPouchCommand
     pocket2: AU14PouchIFAKFill
     back: AU14AU14MolleBackpackCOFull
     ears: AU14HeadsetUSArmy
-    suitstorage: RMCWeaponRifleM54CFilled
   storage:
     back:
-    - AU14HatUSArmy
     - RMCFlashlight
 
 - type: jobIcon

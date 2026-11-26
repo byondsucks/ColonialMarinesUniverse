@@ -7,6 +7,7 @@ using Content.Shared._RMC14.Item;
 using Content.Shared._RMC14.Weapons.Common;
 using Content.Shared._RMC14.Weapons.Ranged;
 using Content.Shared._RMC14.Wieldable.Events;
+using Content.Shared.Interaction.Components; // CMU14: Unremoveable
 using Content.Shared._RMC14.Xenonids;
 using Content.Shared.ActionBlocker;
 using Content.Shared.CMU14.Attachable; // CMU14
@@ -504,6 +505,10 @@ public sealed partial class AttachableHolderSystem : EntitySystem
         EntityUid userUid,
         string? slotId = null)
     {
+        // CMU14: a part fitted for good (cmss13 expresses this by omitting ATTACH_REMOVABLE) cannot be detached.
+        if (HasComp<UnremoveableComponent>(attachableUid))
+            return false;
+
         if (TerminatingOrDeleted(holder) || !holder.Comp.Running)
             return false;
 

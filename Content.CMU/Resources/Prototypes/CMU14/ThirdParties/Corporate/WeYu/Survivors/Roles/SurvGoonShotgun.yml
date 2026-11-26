@@ -64,7 +64,7 @@
     name: au14-job-name-wyguard
     description: au14-wysurv-description
     reregister: false
-    job: AU14JobWYSurvGoonShotgun
+    job: CMUSurvivorJobWYSurvGoonShotgun
     raffle:
       settings: short
     rules: au14-wysurv-description

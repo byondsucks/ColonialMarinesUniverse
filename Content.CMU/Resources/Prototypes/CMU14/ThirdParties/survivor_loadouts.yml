@@ -1,0 +1,563 @@
+# Faction-specific survivor loadouts.
+#
+# Each prototype configures the armor, helmet and firearm options one survivor faction offers after the
+# group faction vote. `factions` lists the third-party survivor party prototypes that share the loadout
+# (size variants and round-start survivor parties share their faction's equipment).
+#
+# Every id below must be a real entity prototype; SurvivorLoadoutSystem validates them on load and logs
+# missing references. Add, remove or reorder options here without touching any code: the selection UI,
+# server-side validation and spawn equipment all read this data.
+
+# --- PRODIGY PMC ---
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutProdigy
+  factions:
+  - CMUProdigySurvivors
+  armor:
+  - CMUArmorProdigyFlakVest
+  - CMUArmorProdigyFlakVestAlt
+  - CMUArmorProdigyFlakVestMedical
+  helmets:
+  - AU14ProdigyBallisticHelmet
+  - AU14ProdigyCap
+  - AU14ProdigyBeret
+  - AU14ProdigyBallisticHelmetPART
+  - AU14ProdigyBeretPART
+  - CMU14ProdigyCapGrey
+  # The shotgun is the military HG 37-12: cmss13 /obj/item/weapon/gun/shotgun/pump/dual_tube/cmb/m3717.
+  firearms:
+  - AU14WeaponRifleprodigyrifleAR
+  - RMCWeaponShotgunM3717
+  - RMCWeaponSMGM63ExtendedFilled
+  roleArmor:
+    CMUSurvProdigyGuardLeader:
+    - CMUArmorProdigyFlakVest
+    CMUSurvProdigyGuardMedic:
+    - CMUArmorProdigyFlakVestMedical
+    CMUSurvProdigyGuard:
+    - CMUArmorProdigyFlakVest
+    - CMUArmorProdigyFlakVestAlt
+    CMUSurvProdigyLiaison:
+    - CMUArmorProdigyFlakVest
+  roleHelmets:
+    CMUSurvProdigyGuardLeader:
+    - AU14ProdigyBeret
+    - AU14ProdigyBallisticHelmet
+    - CMU14ProdigyCapGrey
+    CMUSurvProdigyGuardMedic:
+    - AU14ProdigyBallisticHelmet
+    - CMU14ProdigyCapGrey
+    CMUSurvProdigyGuard:
+    - AU14ProdigyBallisticHelmet
+    - AU14ProdigyCap
+    - CMU14ProdigyCapGrey
+    CMUSurvProdigyLiaison:
+    - AU14ProdigyCap
+    - CMU14ProdigyCapGrey
+
+# --- W-Y PMC ---
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutWyPmc
+  factions:
+  - WEYUSurvSmall
+  - WEYUSurvMedium
+  - WEYUSurvLarge
+  - CMUWYPMCSurvivors
+  armor:
+  - AU14WYPMCArmor
+  - AU14WYPMCArmorMin
+  - AU14WYPMCArmorEngineer
+  helmets:
+  - AU14ArmorHelmetPMCTactical
+  - AU14WYPMCHelmet
+  - AU14WYPMCHelmetHeavy
+  firearms:
+  - RMCWeaponRifleM54C2
+  - RMCWeaponSMGM63B2
+  - RMCWeaponRifleSSG45
+  - CMUWeaponShotgunM890Filled
+  firearmAmmo:
+    CMUWeaponShotgunM890Filled: CMShellShotgunBuckshot
+  # The Field Commander is issued five M39 magazines; the survivor ammunition upgrade then converts one to three of
+  # those five to AP, so the rig always holds five magazines with a 1-3 AP mix.
+  roleMagazineIssue:
+    CMUSurvivorWyPmcFieldOpsLeader: 5
+  # The Solaris Ridge crash-landing roles wear their own kit: armor and helmet are fixed per role, while the
+  # firearm stays a pick from the faction list above (M54C2 / M63B2 / NSG-23). Roles without an entry here
+  # keep the faction-wide armor and helmet lists.
+  roleArmor:
+    CMUSurvivorWyPmcStandard:
+    - CMArmorM4PMCLight
+    - AU14WYPMCArmor
+    CMUSurvivorWyPmcMedic:
+    - CMArmorM4PMCLight
+    CMUSurvivorWyPmcEngineer:
+    - RMCArmorM4PMCEngineer
+    CMUSurvivorWyPmcLeader:
+    - CMArmorM4PMCLeader
+    CMUSurvivorWyPmcFieldOpsLeader:
+    - CMArmorM4PMCLeader
+    CMUSurvivorWyPmcSupervisor:
+    - RMCJacketCorporateManager
+    CMUSurvivorWyPmcSynth:
+    - CMArmorM4PMCSynth
+  roleHelmets:
+    CMUSurvivorWyPmcStandard:
+    - ArmorHelmetPMC
+    - AU14WYPMCHelmet
+    CMUSurvivorWyPmcMedic:
+    - ArmorHelmetPMC
+    CMUSurvivorWyPmcEngineer:
+    - ArmorHelmetPMCEngineer
+    CMUSurvivorWyPmcLeader:
+    - ArmorHelmetPMCOfficer
+    CMUSurvivorWyPmcFieldOpsLeader:
+    - ArmorHelmetPMCFieldOfficer
+    CMUSurvivorWyPmcSupervisor:
+    - RMCHeadCapManager
+    CMUSurvivorWyPmcSynth:
+    - ArmorHelmetPMCOfficer
+
+# --- CLF SPEC OPS (Wet Ops) ---
+# cmss13 PR #8387: the section carries the M16A5, the medic carries the MP5, the heavy weapons specialist is
+# locked to the heavy suit and helmet, and everyone else may pick their suit (standard or hunter rig) and
+# helmet (standard or repainted RC6).
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutClfCommandos
+  factions:
+  - CMUCLFCommandoSurvivors
+  - CLFCellCommandosIntel
+  armor:
+  - CMU14CLFCommandoArmor
+  - CMU14CLFSpecOpsArmorHunter
+  - CMU14CLFSpecOpsArmorHeavy
+  helmets:
+  - CMU14CLFCommandoHelmet
+  - CMU14CLFSpecOpsHelmetRiot
+  - CMU14CLFSpecOpsHelmetHeavy
+  firearms:
+  - RMCWeaponRifleM16A5
+  - CMUWeaponRifleMAR30Tactical
+  - CMUWeaponRifleMAR40Tactical
+  - RMCWeaponShotgunHG3712
+  - AU14WeaponMar50LMGTactical
+  - CMU14WeaponSMGMP5SD
+  roleFirearms:
+    CMUSurvivorClfSpecOpsLeader:
+    - RMCWeaponRifleM16A5
+    - CMUWeaponRifleMAR30Tactical
+    - CMUWeaponRifleMAR40Tactical
+    - RMCWeaponShotgunHG3712
+    CMUSurvivorClfSpecOpsOperative:
+    - RMCWeaponRifleM16A5
+    - CMUWeaponRifleMAR30Tactical
+    - CMUWeaponRifleMAR40Tactical
+    - RMCWeaponShotgunHG3712
+    CMUSurvivorClfSpecOpsMedic:
+    - CMU14WeaponSMGMP5SD
+    CMUSurvivorClfSpecOpsTechnician:
+    - RMCWeaponRifleM16A5
+    - CMUWeaponRifleMAR30Tactical
+    - CMUWeaponRifleMAR40Tactical
+    - RMCWeaponShotgunHG3712
+    # The heavy weapons role defaults to the MAR-50; the rest stay available.
+    CMUSurvivorClfSpecOpsHeavy:
+    - AU14WeaponMar50LMGTactical
+    - RMCWeaponRifleM16A5
+    - CMUWeaponRifleMAR30Tactical
+    - CMUWeaponRifleMAR40Tactical
+    - RMCWeaponShotgunHG3712
+  roleArmor:
+    CMUSurvivorClfSpecOpsLeader:
+    - CMU14CLFCommandoArmor
+    - CMU14CLFSpecOpsArmorHunter
+    CMUSurvivorClfSpecOpsOperative:
+    - CMU14CLFCommandoArmor
+    - CMU14CLFSpecOpsArmorHunter
+    CMUSurvivorClfSpecOpsMedic:
+    - CMU14CLFCommandoArmor
+    - CMU14CLFSpecOpsArmorHunter
+    CMUSurvivorClfSpecOpsTechnician:
+    - CMU14CLFCommandoArmor
+    - CMU14CLFSpecOpsArmorHunter
+    CMUSurvivorClfSpecOpsHeavy:
+    - CMU14CLFSpecOpsArmorHeavy
+  roleHelmets:
+    CMUSurvivorClfSpecOpsLeader:
+    - CMU14CLFCommandoHelmet
+    - CMU14CLFSpecOpsHelmetRiot
+    CMUSurvivorClfSpecOpsOperative:
+    - CMU14CLFCommandoHelmet
+    - CMU14CLFSpecOpsHelmetRiot
+    CMUSurvivorClfSpecOpsMedic:
+    - CMU14CLFCommandoHelmet
+    - CMU14CLFSpecOpsHelmetRiot
+    CMUSurvivorClfSpecOpsTechnician:
+    - CMU14CLFCommandoHelmet
+    - CMU14CLFSpecOpsHelmetRiot
+    CMUSurvivorClfSpecOpsHeavy:
+    - CMU14CLFSpecOpsHelmetHeavy
+
+# --- U.S. ARMY ---
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutUsArmy
+  # The commander wears a Mateba autorevolver on the belt with 1-3 high-impact and 1-3 standard loads.
+  commanderRoles:
+  - CMUSurvUSArmyCommander
+  commanderSidearm: RMCWeaponRevolverMateba
+  commanderSidearmAmmo:
+  - RMCSpeedLoaderMateba
+  commanderSidearmHighImpactAmmo:
+  - RMCSpeedLoaderMatebaHighImpact
+  # The commander's magazine pouch takes four magazines, matching the fill the kit shipped before the loadout
+  # stocked it (the survivor upgrade then converts one to three of those four to AP).
+  roleMagazineIssue:
+    CMUSurvUSArmyCommander: 4
+  factions:
+  - USArmy
+  - USArmyAlt
+  - USArmyAlt2
+  - CMUUSArmySurvivors
+  armor:
+  - AU14ArmorUSArmy
+  - AU14ArmorUSArmyNormal
+  - AU14ArmorSmartGunJungleCombatHarnessForeconFilled
+  helmets:
+  - AU14HelmetUSArmy
+  - AU14BeretUSArmy
+  - AU14HatUSArmy
+  firearms:
+  - RMCWeaponRifleM54C
+  - RMCWeaponShotgunM37A1Filled
+  - WeaponSMGM63
+  - WeaponRifleM4SPRCustom
+  - RMCSmartGun
+  firearmAmmo:
+    # These ship with an empty magazine well, so the loadout states which magazine they feed.
+    RMCWeaponRifleM54C: CMMagazineRifleM54C
+    WeaponSMGM63: CMMagazineSMGM63
+  roleFirearms:
+    CMUSurvUSArmyHeavyGunner:
+    - RMCSmartGun
+    CMUSurvUSArmyMarksman:
+    - WeaponRifleM4SPRCustom
+    - WeaponRifleM4SPRFilled
+    - RMCWeaponRifleM54C
+    - RMCWeaponShotgunM37A1Filled
+    - WeaponSMGM63
+  firearmRoles:
+    # The marksman rifle is offered to weapon specialists only.
+    WeaponRifleM4SPRCustom:
+    - WeaponSpecialist
+    RMCSmartGun:
+    - WeaponSpecialist
+  roleArmor:
+    CMUSurvUSArmyCommander:
+    # He wears the dress service jacket, so the armour vest is not one of his options.
+    - RMCCoatCOServiceJacketGreen
+    CMUSurvUSArmySquadLeader:
+    - AU14ArmorUSArmy
+    CMUSurvUSArmySynth:
+    - AU14ArmorUSArmyNormal
+    CMUSurvUSArmyTechnician:
+    - AU14ArmorUSArmyNormal
+    CMUSurvUSArmyMedic:
+    - AU14ArmorUSArmyNormal
+    CMUSurvUSArmyHeavyGunner:
+    - AU14ArmorSmartGunJungleCombatHarnessForeconFilled
+    CMUSurvUSArmyMarksman:
+    - AU14ArmorUSArmy
+    CMUSurvUSArmyRifleman:
+    - AU14ArmorUSArmyNormal
+  roleHelmets:
+    CMUSurvUSArmyCommander:
+    - AU14BeretUSArmy
+    CMUSurvUSArmySquadLeader:
+    - AU14BeretUSArmy
+    CMUSurvUSArmySynth:
+    - AU14HelmetUSArmy
+    CMUSurvUSArmyTechnician:
+    - AU14HelmetUSArmy
+    CMUSurvUSArmyMedic:
+    - AU14HelmetUSArmy
+    CMUSurvUSArmyHeavyGunner:
+    - AU14HelmetUSArmy
+    CMUSurvUSArmyMarksman:
+    - AU14HelmetUSArmy
+    CMUSurvUSArmyRifleman:
+    - AU14HelmetUSArmy
+
+# --- FORECON ---
+# Same weapon pool as the Army. The thermal poncho is the marksman's; everyone else wears light armor
+# or the webbing harness, and picks their own headgear from boonie/cap/helmet.
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutForecon
+  # The commander wears a Mateba autorevolver on the belt with 1-3 high-impact and 1-3 standard loads.
+  commanderRoles:
+  - CMUSurvForeconCommander
+  commanderSidearm: RMCWeaponRevolverMateba
+  commanderSidearmAmmo:
+  - RMCSpeedLoaderMateba
+  commanderSidearmHighImpactAmmo:
+  - RMCSpeedLoaderMatebaHighImpact
+  factions:
+  - FORECON
+  - FORECONAlt
+  - FORECONAlt2
+  - CMUFORECONSurvivors
+  armor:
+  - AU14ArmorM3RForecon
+  - RMCOuterClothingExternalWebbingForeconSurvivorFill
+  - RMCArmorUDEPForecon
+  helmets:
+  - ArmorHelmetM10
+  - RMCHeadCapFlippable
+  - RMCBoonieTan
+  firearms:
+  - RMCWeaponRifleM54C
+  - RMCWeaponShotgunM37A1Filled
+  - WeaponSMGM63
+  - WeaponRifleM4SPRCustom
+  - RMCSmartGun
+  # The M39 (WeaponSMGM63) ships without a starting magazine, so the loadout has to state which one it feeds.
+  # Without this the survivor kept whatever primary ammunition their gear came with (M4RA) and the gun was empty.
+  firearmAmmo:
+    # These ship with an empty magazine well, so the loadout states which magazine they feed.
+    RMCWeaponRifleM54C: CMMagazineRifleM54C
+    WeaponSMGM63: CMMagazineSMGM63
+  roleFirearms:
+    CMUSurvForeconSmartGunner:
+    - RMCSmartGun
+    CMUSurvForeconSniper:
+    - WeaponRifleM4SPRCustom
+    - WeaponRifleM4SPRFilled
+    CMUSurvForeconMarksman:
+    - WeaponRifleM4SPRCustom
+    - WeaponRifleM4SPRFilled
+    - RMCWeaponRifleM54C
+    - RMCWeaponShotgunM37A1Filled
+    - WeaponSMGM63
+  firearmRoles:
+    # The marksman rifle is offered to weapon specialists only.
+    WeaponRifleM4SPRCustom:
+    - WeaponSpecialist
+    RMCSmartGun:
+    - WeaponSpecialist
+  roleArmor:
+    CMUSurvForeconMarksman:
+    - RMCArmorUDEPForecon
+    CMUSurvForeconSniper:
+    - AU14ArmorGhillie
+    CMUSurvForeconCommander:
+    - AU14ArmorM3RForecon
+    - RMCOuterClothingExternalWebbingForeconSurvivorFill
+    CMUSurvForeconSquadLeader:
+    - AU14ArmorM3RForecon
+    - RMCOuterClothingExternalWebbingForeconSurvivorFill
+    CMUSurvForeconMedic:
+    - AU14ArmorM3RForecon
+    - RMCOuterClothingExternalWebbingForeconSurvivorFill
+    CMUSurvForeconSynth:
+    - AU14ArmorM3RForecon
+    - RMCOuterClothingExternalWebbingForeconSurvivorFill
+    CMUSurvForeconTechnician:
+    - AU14ArmorM3RForecon
+    - RMCOuterClothingExternalWebbingForeconSurvivorFill
+    CMUSurvForeconSmartGunner:
+    - AU14ArmorSmartGunJungleCombatHarnessForeconFilled
+    CMUSurvForeconRifleman:
+    - AU14ArmorM3RForecon
+    - RMCOuterClothingExternalWebbingForeconSurvivorFill
+  roleHelmets:
+    CMUSurvForeconSniper:
+    - AU14HelmetGhillie
+    CMUSurvForeconCommander:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconSquadLeader:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconMedic:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconSynth:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconTechnician:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconSmartGunner:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconMarksman:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+    CMUSurvForeconRifleman:
+    - RMCBoonieTan
+    - RMCHeadCapFlippable
+    - ArmorHelmetM10
+
+# --- FREE COMPANY RAIDERS ---
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutFreeCompanyRaiders
+  factions:
+  - FreeCompanyRaidersSurv
+  - FreeCompanyRaiders
+  armor:
+  - CMUArmorRaider
+  helmets:
+  - CMUArmorHelmetRaider
+  firearms:
+  - CMUWeaponRifleM54CMK1Raider
+  - RMCWeaponRifleMAR30
+  - WeaponRifleMAR40
+  - RMCWeaponShotgunType23
+  # The leader carries the crew-served weapons; raiders get the rifles and the shotgun.
+  roleFirearms:
+    CMUSurvFreeCompanyLeader:
+    - AU14WeaponMar50LMGTactical
+    - CMUWeaponRifleXM40Raider
+    CMUSurvFreeCompanyRaider:
+    - CMUWeaponRifleM54CMK1Raider
+    - RMCWeaponRifleMAR30
+    - WeaponRifleMAR40
+    - RMCWeaponShotgunType23
+  firearmAmmo:
+    # Only the shotgun loads loose ammunition; every raider rifle has its own magazine.
+    RMCWeaponShotgunType23: CMShellShotgunBuckshot
+  roleArmor:
+    CMUSurvFreeCompanyLeader:
+    - CMUArmorRaider
+    CMUSurvFreeCompanyRaider:
+    - CMUArmorRaider
+  roleHelmets:
+    CMUSurvFreeCompanyLeader:
+    - CMUArmorHelmetRaider
+    CMUSurvFreeCompanyRaider:
+    - CMUArmorHelmetRaider
+
+# --- UNISC ---
+# Every role may pick any UNISC armor; the helmet stays role-appropriate.
+- type: survivorLoadout
+  id: CMUSurvivorLoadoutUnisc
+  factions:
+  - CMUUNISCSurvivors
+  - UNISCTeamParty
+  armor:
+  - AU14ArmorM3UNISC
+  - AU14ArmorM3UNISCMedium
+  - AU14ArmorM3UNISCHeavy
+  helmets:
+  - AU14UNISCM10Helmet
+  - AU14UNISCM11Helmet
+  - AU14UNISCBeret
+  firearms:
+  - RMCWeaponRifleM54CMK1
+  - RMCWeaponShotgunM37A1Filled
+  - RMCSmartGun
+  # Restricted to the weapon specialist by firearmRoles below, so it has to be offered here as well.
+  - WeaponRifleM4SPRCustom
+  roleFirearms:
+    CMUSurvUniscAutomaticRifleman:
+    - RMCSmartGun
+  firearmRoles:
+    # The smartgun and the marksman rifle are weapon-specialist kit; every other UNISC role keeps the
+    # unrestricted firearms (rifle, shotgun).
+    RMCSmartGun:
+    - WeaponSpecialist
+    WeaponRifleM4SPRCustom:
+    - WeaponSpecialist
+  roleHelmets:
+    CMUSurvUniscPlatoonOps:
+    - AU14UNISCBeret
+    CMUSurvUniscSquadLeader:
+    - AU14UNISCBeret
+    CMUSurvUniscRifleman:
+    - AU14UNISCM10Helmet
+    CMUSurvUniscAutomaticRifleman:
+    - AU14UNISCM11Helmet
+    CMUSurvUniscCorpsman:
+    - AU14UNISCM10Helmet
+    CMUSurvUniscEnforcer:
+    - AU14UNISCM10Helmet
+    CMUSurvUniscEnforcerLeader:
+    - AU14UNISCM10Helmet
+    CMUSurvUniscObserver:
+    - AU14UNISCM10Helmet
+
+# --- DUTCH'S DOZEN ---
+- type: survivorLoadout
+  id: CMUDutchsDozenSurvivorLoadout
+  factions:
+  - CMUDutchsDozenSurvivors
+  armor:
+  - CMArmorDutchVest
+  helmets:
+  - RMCArmorHelmetDutch
+  - RMCArmorHelmetDutchCap
+  firearms:
+  - CMUWeaponRifleXM177Dutch
+  - CMUWeaponRifleM16A1UGL
+  - RMCWeaponShotgunM37A1Filled
+  - CMUWeaponMinigunOlPainless
+  roleFirearms:
+    CMUSurvDutchsDozenGrenadier:
+    - CMUWeaponRifleXM177Dutch
+    - CMUWeaponRifleM16A1UGL
+    - RMCWeaponShotgunM37A1Filled
+    CMUSurvDutchsDozenArnold:
+    - CMUWeaponRifleXM177Dutch
+    - RMCWeaponShotgunM37A1Filled
+    CMUSurvDutchsDozenRifleman:
+    - CMUWeaponRifleXM177Dutch
+    - RMCWeaponShotgunM37A1Filled
+    CMUSurvDutchsDozenMedic:
+    - CMUWeaponRifleXM177Dutch
+    - RMCWeaponShotgunM37A1Filled
+    # The minigunner's GAU-19 rig is his identity: locked to it.
+    CMUSurvDutchsDozenMinigunner:
+    - CMUWeaponMinigunOlPainless
+    # The M240-T rides in the Broiler-T harness on his back (its own item slot, not suit storage), so the flamer still
+    # picks a primary weapon for suit storage exactly like the rest of the Dozen: the harness gun is kit, not a pick.
+    CMUSurvDutchsDozenFlamer:
+    - CMUWeaponRifleXM177Dutch
+    - RMCWeaponShotgunM37A1Filled
+  # The Dozen load armour-piercing 5.56mm; the swap converts every magazine they spawn with.
+  firearmAmmo:
+    # Survivors carry standard 5.56mm; SurvivorAmmoUpgrade converts 1-3 of those to AP. The call-in squad is
+    # the group that arrives with everything AP. The M16A1 mapping was stale: the Dozen carry the XM177.
+    CMUWeaponRifleXM177Dutch: RMCMagazineRifleM16
+    CMUWeaponRifleM16A1UGL: RMCMagazineRifleM16
+  roleArmor:
+    CMUSurvDutchsDozenArnold:
+    - CMArmorDutchVest
+    CMUSurvDutchsDozenRifleman:
+    - CMArmorDutchVest
+    CMUSurvDutchsDozenMedic:
+    - CMArmorDutchVest
+    CMUSurvDutchsDozenGrenadier:
+    - CMArmorDutchVest
+    CMUSurvDutchsDozenMinigunner:
+    - CMArmorDutchVest
+    CMUSurvDutchsDozenFlamer:
+    - CMArmorDutchVest
+  roleHelmets:
+    CMUSurvDutchsDozenArnold:
+    - RMCArmorHelmetDutchCap
+    CMUSurvDutchsDozenRifleman:
+    - RMCArmorHelmetDutch
+    CMUSurvDutchsDozenMedic:
+    - RMCArmorHelmetDutch
+    CMUSurvDutchsDozenGrenadier:
+    - RMCArmorHelmetDutch
+    CMUSurvDutchsDozenMinigunner:
+    - RMCArmorHelmetDutch
+    CMUSurvDutchsDozenFlamer:
+    - RMCArmorHelmetDutch

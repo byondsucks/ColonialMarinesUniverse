@@ -1,0 +1,476 @@
+# Weyland-Yutani PMC survivors: the corporate detachment the W-Y PMC survivor faction spawns.
+#
+# These are general W-Y PMC survivor roles, not a map-specific insert: any colony can roll the faction.
+# The equipment mapping follows code/modules/gear_presets/survivors/solaris/crashlanding-offices_insert_bigred.dm
+# (cmss13, commit ae42879bbb), presets pmc/standard, pmc/medic, pmc/engineer, pmc/pmc_leader,
+# corporate/manager, synth/survivor/pmc and pmc/pmc_commander, because that file is where the source keeps
+# the complete corporate squad.
+#
+# SCOPE: role bodies and the equipment of those roles only. Briefing/story text and a dedicated third-party
+# prototype are not ported: the roles join the existing W-Y PMC survivor faction (CMUWYPMCSurvivors) through
+# its party template and loadout.
+#
+# RMC14 already contains the six organic presets as roundstart survivor jobs with their gear
+# (Resources/Prototypes/_RMC14/Roles/Jobs/Survivor/Solaris/Crashlanding_Offices/), ported from the same
+# .dm file. Those jobs carry the equipment, so this file only adds the CMU role bodies that point at
+# them, plus the one preset RMC14 is missing entirely: the PMC support synthetic.
+#
+# Mapping notes for the organic roles (RMC14's own port):
+#  - suit/storage/marine/veteran/pmc/light, /light/bulletproof, /no_lamp -> CMArmorM4PMCLight,
+#    RMCArmorM4PMCBulletProof, RMCArmorM4PMCNoLight; /engineer -> RMCArmorM4PMCEngineer;
+#    /leader -> CMArmorM4PMCLeader; /light/synth -> CMArmorM4PMCSynth.
+#  - helmet /pmc -> ArmorHelmetPMC, /black -> RMCArmorHelmetPMCBlack (RMC14 has no black tactical cap
+#    in the standard preset yet), /enclosed -> RMCArmorHelmetPMCTactical, /enclosed/engineer ->
+#    ArmorHelmetPMCEngineer, /leader -> ArmorHelmetPMCOfficer, /fieldleader -> ArmorHelmetPMCFieldOfficer.
+#  - belt/gun/m4a3/wy/mod88_near_empty -> RMCM77BeltPMCFilledNearEmpty (the existing RMC14 prototype;
+#    no new near-empty/partial variant is added).
+#
+# Grain of salt: the source rolls the standard preset's suit+helmet+backpack as one of three triplets
+# (rand(1,3)). RMC14's random outfit preset still has TODOs for the bulletproof/no-lamp options and lists
+# a weapon in an armour slot for the third, so the standard role below is written as a fixed kit
+# (light suit + tactical cap, matching the source's first option) while keeping the random PMC weapon.
+
+# ── Role bodies ─────────────────────────────────────────────────────────────────────────────────────
+
+# Standard PMC (source: /datum/equipment_preset/survivor/pmc/standard, "Survivor - PMC Standard").
+- type: entity
+  parent: AU14BaseMobSpeciesOrganicWeYu
+  id: CMUSurvivorWyPmcStandard
+  name: PMC Operator (Surv)
+  components:
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-pmc-standard
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobWyPmcStandard
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+- type: entity
+  parent: AU14BaseMobSpeciesOrganicWeYu
+  id: CMUSurvivorWyPmcMedic
+  name: PMC Medic (Surv)
+  components:
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-pmc-medic
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobWyPmcMedic
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+- type: entity
+  parent: AU14BaseMobSpeciesOrganicWeYu
+  id: CMUSurvivorWyPmcEngineer
+  name: PMC Engineer (Surv)
+  components:
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-pmc-engineer
+    description: rmc-job-description-survivor-military
+    reregister: false
+    # The survivor engineer runs the welder-satchel gear, not the call-in welder backpack.
+    job: CMUSurvivorJobWyPmcEngineer
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+- type: entity
+  parent: AU14BaseMobSpeciesOrganicWeYu
+  id: CMUSurvivorWyPmcLeader
+  name: PMC Leader (Surv)
+  components:
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-pmc-leader
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobWyPmcLeader
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+- type: entity
+  parent: AU14BaseMobSpeciesOrganicWeYu
+  id: CMUSurvivorWyPmcFieldOpsLeader
+  name: PMC Field Operations Leader (Surv)
+  components:
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-pmc-field-operations-leader
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobWyPmcFieldOpsLeader
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+# Corporate supervisor (source: /datum/equipment_preset/survivor/corporate/manager). Corporate, not PMC:
+# the source gives it FACTION_WY and the Assistant Manager rank.
+- type: entity
+  parent: AU14BaseMobSpeciesOrganicWeYu
+  id: CMUSurvivorWyPmcSupervisor
+  name: Corporate Supervisor (Surv)
+  components:
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: rmc-job-name-survivor-solaris-corporate-supervisor
+    description: rmc-job-description-survivor-military
+    reregister: false
+    job: CMUSurvivorJobWyPmcSupervisor
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+# PMC support synthetic (source: /datum/equipment_preset/synth/survivor/pmc). Not present in RMC14, so the
+# job and its kit live here. Third generation synthetic: EMP-vulnerable, no blood, synthetic organs.
+- type: entity
+  parent: AU14BaseMobSpeciesSyntheticProdigy
+  id: CMUSurvivorWyPmcSynth
+  name: PMC Support Synthetic (Surv)
+  components:
+  - type: NpcFactionMember
+    factions:
+    - AUWeYu
+  - type: Synth
+    generation: "rmc-species-synth-generation-third"
+  - type: GhostTakeoverAvailable
+  - type: GhostRoleApplySpecial
+  - type: GhostRole
+    makeSentient: true
+    allowSpeech: true
+    allowMovement: true
+    name: cmu-job-name-wy-pmc-synth
+    description: rmc-job-description-survivor-synth
+    reregister: false
+    job: CMUSurvivorJobWyPmcSynth
+    raffle:
+      settings: short
+    rules: cmu-wy-pmc-survivor-rules
+
+# ── Jobs ────────────────────────────────────────────────────────────────────────────────────────────
+# Thin CMU aliases over RMC14's ported presets so the CMU survivor system has a stable, CMU-owned role id
+# for every body. Equipment, skills, ranks, greeting and access are inherited from the RMC14 job.
+
+- type: job
+  parent: RMCSurvivorSolarisPMCStandard
+  id: CMUJobWyPmcStandard
+  hidden: false
+  # RMC14's preset points at an undefined description key; use the existing military-survivor one.
+  description: rmc-job-description-survivor-military
+  # The source rolls the suit/helmet triplet; RMC14's random outfit preset is incomplete (see header),
+  # so this role uses a fixed first-option kit plus the source's random PMC weapon preset.
+  startingGear: CMUGearWyPmcStandard
+  special:
+  - !type:AddComponentSpecial
+    components:
+    - type: Skills
+      preset: RMCSkillPresetSurvivorWeYaPMCStandard
+    - type: RMCSurvivor
+    - type: MotionDetectorTracked
+    - type: RMCAllowSuitStorage
+    - type: IntelRescueSurvivorObjective
+    - type: EquipEntityPreset
+      preset: RMCGearSurvivorPresetPMCGun
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+    - type: JobPrefix
+      prefix: rmc-job-prefix-pmc-standard
+
+- type: job
+  parent: RMCSurvivorSolarisPMCMedic
+  id: CMUJobWyPmcMedic
+  # Survivor skills: the inherited preset for this rank, so the squad is not skill-less.
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+    - type: Skills
+      preset: RMCSkillPresetSurvivorWeYaPMCMedic
+  # Own title: the inherited Solaris job reads as a legacy colonial survivor.
+  name: rmc-job-name-pmc-medic
+  description: rmc-job-description-survivor-military
+  startingGear: CMUGearWyPmcMedic
+  hidden: false
+
+- type: job
+  parent: RMCSurvivorSolarisPMCEngineer
+  id: CMUJobWyPmcEngineer
+  # Survivor skills: the inherited preset for this rank, so the squad is not skill-less.
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+    - type: Skills
+      preset: RMCSkillPresetSurvivorWeYaPMCEngineer
+  name: rmc-job-name-pmc-engineer
+  description: rmc-job-description-survivor-military
+  startingGear: CMUGearWyPmcEngineer
+  hidden: false
+
+- type: job
+  parent: RMCSurvivorSolarisPMCLeader
+  id: CMUJobWyPmcLeader
+  # Survivor skills: the inherited preset for this rank, so the squad is not skill-less.
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+    - type: Skills
+      preset: RMCSkillPresetSurvivorWeYaPMCLeader
+  name: rmc-job-name-pmc-leader
+  description: rmc-job-description-survivor-military
+  startingGear: CMUGearWyPmcLeader
+  hidden: false
+
+- type: job
+  parent: RMCSurvivorSolarisPMCCommander
+  id: CMUJobWyPmcFieldOpsLeader
+  # Survivor skills: the inherited preset for this rank, so the squad is not skill-less.
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+    - type: Skills
+      preset: RMCSkillPresetSurvivorWeYaPMCCommander
+  name: rmc-job-name-pmc-field-operations-leader
+  description: rmc-job-description-survivor-military
+  startingGear: CMUGearWyPmcFieldOpsLeader
+  hidden: false
+
+- type: job
+  parent: RMCSurvivorSolarisCorporateSupervisor
+  id: CMUJobWyPmcSupervisor
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+  name: rmc-job-name-corp-exec-supervisor
+  description: rmc-job-description-survivor-military
+  startingGear: CMUGearWyPmcSupervisor
+  hidden: false
+
+# Synthetic support. No RMC14 preset exists, so the job is written out in full. Rank and skills follow the
+# source's PAY_SHORT_SYN / synthetic skill preset.
+- type: job
+  parent: CMJobBase
+  id: CMUJobWyPmcSynth
+  # The synthetic gets the same survivor skill block as the standard operative; without it the synth spawned
+  # with no skills at all.
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+    - type: Skills
+      preset: RMCSkillPresetSurvivorWeYaPMCStandard
+  roundSide: ThirdParty
+  name: cmu-job-name-wy-pmc-synth
+  description: rmc-job-description-survivor-synth
+  playTimeTracker: CMUJobWyPmcSynth
+  ranks:
+    RMCRankWeYaPMCSynthetic: []
+    RMCRankCivilian: []
+  spawnMenuRoleName: Synthetic (WY Syn, Weyland-Yutani PMC, surv)
+  startingGear: CMUGearWyPmcSynth
+  greeting: cmu-wy-pmc-survivor-synth-greeting
+  joinNotifyCrew: false
+  supervisors: cm-job-supervisors-we-ya
+  accessGroups:
+  - ColonistPMC
+  hidden: false
+  # No skills/survivor components: the body carries the synthetic ones, matching the HIG synthetic role.
+
+- type: playTimeTracker
+  id: CMUJobWyPmcSynth
+
+# ── Equipment ───────────────────────────────────────────────────────────────────────────────────────
+
+# Standard: uniform, WY patch, knife boots, veteran gloves, gas mask, hvh headset, random (light suit +
+# tactical cap + PMC combat backpack), MRE, metal sheet, M77 belt (the source's near-empty mod88 belt),
+# WY survival pouch, WY ERT first-aid pouch. The source's rand(1,3) armour selection is documented in the
+# header; this kit is its first option.
+- type: startingGear
+  parent: RMCGearSurvivorPMCBase
+  id: CMUGearWyPmcStandard
+  equipment:
+    jumpsuit: RMCJumpsuitVeteranPMCNoWebbingPatch
+    shoes: RMCBootsPMCFilled
+    gloves: CMUHandsVeteranPMC
+    mask: RMCMaskCoifPMC
+    ears: RMCHeadsetHvHWeYaPMC
+    outerClothing: CMArmorM4PMCLight
+    head: ArmorHelmetPMC
+    back: RMCSatchelPMC
+    belt: RMCM77BeltPMCFilledNearEmpty
+    pocket1: RMCPouchSurvivalBlackFilled
+    pocket2: RMCPouchFirstAidPMCFill
+  storage:
+    # cmss13 keeps the MRE in the armour; CMU armour pockets are Tiny, so it rides in the pack.
+    back:
+    - CMSheetMetal20
+    - RMCMREWeYa
+
+# Synthetic: PMC uniform, black droppouch, light synth suit, telebaton, leader helmet, command headset,
+# big sunglasses, white V42A1 smartpack (roller, surgical roller, mini extinguisher, upgraded defib, crew
+# monitor, synth defib, radio), WY medical belt, tactical tools pouch, barbed-wire construction pouch.
+#
+# Differences from the source, all slot/prototype limits rather than guesses:
+#  - the black droppouch is an accessory, and a startingGear slot cannot fill accessories; its contents
+#    (manager scalpel, WY flask, zip cuffs) ride in the pack, and the WY patch accessory is dropped.
+#  - lifesaver/wy/partial does not exist in CMU; the full WY-TM625 medical belt (RMCBeltMedicBagPMCFilled)
+#    is issued instead (no new partial-fill variant is added).
+#  - the tactical tools pouch is RMCPouchToolsSocFill, and the barbed-wire pouch is the RMC14 construction
+#    pouch fill that carries BarbedWire15.
+#  - tool/crew_monitor has no CMU prototype (same documented gap as the HIG port).
+- type: startingGear
+  parent: RMCGearSurvivorPMCBase
+  id: CMUGearWyPmcSynth
+  equipment:
+    jumpsuit: RMCJumpsuitVeteranPMCNoWebbingPatch
+    outerClothing: CMArmorM4PMCSynth
+    shoes: RMCBootsPMCFilled
+    gloves: CMUHandsVeteranPMC
+    eyes: RMCSunglassesBig
+    head: ArmorHelmetPMCOfficer
+    ears: RMCHeadsetHvHWeYaPMCLeader
+    belt: RMCBeltMedicBagPMCFilled
+    back: RMCSmartpackA1White
+    pocket1: RMCPouchToolsSocFill
+    pocket2: RMCPouchConstructionFillLowGrade
+  storage:
+    back:
+    - RMCMREWeYa
+    - AU14TeleBaton
+    - CMScalpelManager
+    - CMWEYAFlask
+    - RMCZipties
+    - CMRollerBedSpawnFolded
+    - CMPortableSurgicalBedSpawnFolded
+    - CMFireExtinguisherPortable
+    - AU14CMDefibrillator
+    - CMUDefibrillatorCompactSynth
+
+# The field operations leader inherits the Solaris commander kit, whose waist slot is an SMG holster belt. A
+# holster belt both collides with the loadout's firearm pick and stacks extra pistols on top of the holsters his
+# carrier uniform already has, so he wears a plain magazine belt filled with the carbine's own magazines.
+# CMU has no W-Y-pattern magazine belt (the MK80 and M77 PMC belts are both holster rigs), so this is the
+# standard black M16 magazine belt; the survivor AP upgrade converts a few of its magazines afterwards.
+- type: startingGear
+  parent: RMCGearSurvivorPMCCommander
+  id: CMUGearWyPmcFieldOpsLeader
+  equipment:
+    # The commander preset wears the same officer-pattern balaclava.
+    mask: CMUClothingMaskWYPMCOfficer
+    # Issued empty: the survivor loadout fills it with the magazines of whichever firearm the player picks.
+    belt: CMBeltMarine
+
+# The cmss13 engineer survivor carries a welder satchel (storage on the back with the tool kit), not the
+# heavy ERT welder backpack the call-in engineer uses.
+- type: startingGear
+  id: CMUGearWyPmcSurvEngineer
+  parent: RMCGearSurvivorPMCEngineer
+  equipment:
+    back: RMCSatchelLightpackWelder
+
+- type: job
+  parent: RMCSurvivorSolarisPMCEngineer
+  id: CMUJobWyPmcSurvEngineer
+  special:
+  - !type:AddComponentSpecial
+    components:
+    # The inherited Solaris preset puts the legacy access factions on the squad, which read as
+    # "Weyland-Yutani Corp. (legacy)" and "Colonists (legacy)" on examine. The corporation's own faction is
+    # the current one; a W-Y squad is not colonists.
+    - type: NpcFactionMember
+      factions:
+      - AUWeYu
+  startingGear: CMUGearWyPmcSurvEngineer
+
+# Armoured CMU gloves instead of the unarmoured legacy pair.
+- type: startingGear
+  parent: RMCGearSurvivorPMCMedic
+  id: CMUGearWyPmcMedic
+  equipment:
+    gloves: CMUHandsVeteranPMC
+
+# Armoured CMU gloves instead of the unarmoured legacy pair.
+- type: startingGear
+  parent: RMCGearSurvivorPMCEngineer
+  id: CMUGearWyPmcEngineer
+  equipment:
+    gloves: CMUHandsVeteranPMC
+
+# Armoured CMU gloves instead of the unarmoured legacy pair.
+- type: startingGear
+  parent: RMCGearSurvivorPMCLeader
+  id: CMUGearWyPmcLeader
+  equipment:
+    gloves: CMUHandsVeteranPMC
+    # cmss13 gives the W-Y PMC team leader the officer-pattern armoured balaclava.
+    mask: CMUClothingMaskWYPMCOfficer
+
+# Armoured CMU gloves instead of the unarmoured legacy pair.
+- type: startingGear
+  parent: RMCGearSurvivorSolarisCorporateSupervisor
+  id: CMUGearWyPmcSupervisor
+  equipment:
+    gloves: CMUHandsVeteranPMC

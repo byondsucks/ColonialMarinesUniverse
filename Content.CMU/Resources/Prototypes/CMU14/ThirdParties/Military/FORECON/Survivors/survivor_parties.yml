@@ -1,0 +1,47 @@
+# Survivor faction parties.
+#
+# Round-start survivor variant of this faction's squad. It reuses the faction's existing spawn template
+# (now made of survivor-only role prototypes) so survivors field the real squad roles, and enters on the
+# ground like the other survivor parties. The normal shuttle call-in prototype is untouched.
+#
+# The faction's equipment selection lives in survivor_loadouts.yml.
+
+- type: thirdParty
+  intro: cmu-survivor-intro-forecon
+  story: cmu-survivor-story-forecon
+  id: CMUFORECONSurvivors
+  announceAsSurvivors: true
+  displayName: FORECON
+  # Optional briefing styling. The intro and story print in the muted gold below unless the faction sets
+  # its own colour, and the locale text may carry chat markup for individual lines, e.g.
+  #   [color=#c83232]Threat detected.[/color] Hold the line.
+  # briefingColor: "#d8b465"
+  partyspawn: CMUSurvivorSpawnForecon
+  entrymethod: ground
+  weight: 25
+  minplayers: 0
+  maxplayers: 400
+  ghostsNeeded: 0
+  roundstart: true
+  survivorIcons:
+    Commander:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_co
+    SquadLeader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_hgsl
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_med
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_engi
+    WeaponSpecialist:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_hgspec
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_rifleman
+    Support:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: hudsquad_syn_forecon

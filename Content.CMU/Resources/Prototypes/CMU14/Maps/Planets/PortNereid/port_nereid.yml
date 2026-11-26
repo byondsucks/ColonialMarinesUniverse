@@ -66,6 +66,13 @@
     - WYPMCParty
     - WYPMCPartyAlt
     - biomorphThirdParty
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     joboverrides:
       AU14JobLEOLeaderBase: AU14JobCivilianNSPAInspector
       AU14JobLEOBase: AU14JobCivilianNSPAConstable

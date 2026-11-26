@@ -1,0 +1,57 @@
+# Dutch's Dozen as a round-start survivor faction.
+#
+# The call-in party above is admin-only; this variant puts the same squad into the survivor faction vote.
+# Picking it is a statement of intent: the round is forced into its Predator configuration (see
+# SurvivorSetupSystem.ForcePredatorRound), so the hunters and the hunted exist together from the start.
+#
+# Roster follows the half-dozen template: Arnold leads, then one of the three weapon specialists
+# (grenadier / minigunner / flamer - picked at random, see randomSpecialistRoles), a medic, and riflemen
+# for everyone else.
+
+# The survivor insert has its own template; the call-in party (CMUDutchsDozen) keeps CMUDutchsDozenSpawn.
+- type: partySpawn
+  id: CMUDutchsDozenSurvivorSpawn
+  leadersToSpawn:
+    CMUSurvDutchsDozenArnold: 1
+  gruntsToSpawn:
+    CMUSurvDutchsDozenRifleman: 1
+    CMUSurvDutchsDozenMedic: 1
+    CMUSurvDutchsDozenGrenadier: 1
+    CMUSurvDutchsDozenMinigunner: 1
+    CMUSurvDutchsDozenFlamer: 1
+  scalewithpop: false
+  spawnTogether: true
+
+- type: thirdParty
+  intro: cmu-survivor-intro-dutch
+  story: cmu-survivor-story-dutch
+  parent: CMUDutchsDozen
+  id: CMUDutchsDozenSurvivors
+  displayName: cmu-dutchs-dozen-party-name
+  partyspawn: CMUDutchsDozenSurvivorSpawn
+  entrymethod: ground
+  roundstart: true
+  announceAsSurvivors: true
+  announcearrival: ''
+  minplayers: 0
+  maxplayers: 100
+  weight: 3
+  # Always offered by the survivor vote and never by the shuttle scheduler.
+  survivorPool: true
+  # Dutch's Dozen are freelancers, not CLF: give their role rows the freelancer job icons.
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_sl
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_med
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_rfn
+    WeaponSpecialist:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: free_rfn
+  # Selecting it forces a Predator round.
+  forcesPredatorRound: true
+  randomSpecialistRoles: true

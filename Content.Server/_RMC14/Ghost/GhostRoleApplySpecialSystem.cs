@@ -26,6 +26,8 @@ using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 // cmu edit end
 
+using Content.Server.CMU14.Survivors.Setup; // cmu edit
+
 namespace Content.Server._RMC14.Ghost;
 
 public sealed partial class GhostRoleApplySpecialSystem : EntitySystem
@@ -41,6 +43,7 @@ public sealed partial class GhostRoleApplySpecialSystem : EntitySystem
     [Dependency] private SharedIdCardSystem _idCard = default!;
     // cmu edit start
     [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SurvivorLoadoutSystem _survivorLoadouts = default!; // cmu edit
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private SharedStorageSystem _storage = default!;

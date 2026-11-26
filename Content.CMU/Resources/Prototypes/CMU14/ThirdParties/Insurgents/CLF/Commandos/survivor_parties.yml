@@ -1,0 +1,44 @@
+# Survivor faction parties.
+#
+# CLF Spec Ops (Wet Ops): cmss13 PR #8387, code/modules/gear_presets/survivors/navalis/preset_navalis.dm,
+# presets /survivor/navalis/clf_wet_ops/{leader,operative,medic,tech,spec}. This replaces the old CLF
+# Commando survivor faction: there is one CLF survivor faction and it is Spec Ops.
+#
+# Round-start survivor variant of this faction's squad. It reuses the faction's existing spawn template
+# (now made of survivor-only role prototypes) so survivors field the real squad roles, and enters on the
+# ground like the other survivor parties. The normal shuttle call-in prototype is untouched.
+#
+# The faction's equipment selection lives in survivor_loadouts.yml.
+
+- type: thirdParty
+  intro: cmu-survivor-intro-clf
+  story: cmu-survivor-story-clf
+  id: CMUCLFCommandoSurvivors
+  announceAsSurvivors: true
+  displayName: CLF Spec Ops
+  partyspawn: CMUSurvivorSpawnClfCommando
+  entrymethod: ground
+  weight: 25
+  minplayers: 0
+  maxplayers: 400
+  ghostsNeeded: 0
+  roundstart: true
+  survivorIcons:
+    Leader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: clf_sl
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: clf_med
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: clf_engi
+    WeaponSpecialist:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: clf_spec
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: clf_mil
+    Support:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: clf_synth

@@ -36,7 +36,7 @@
     allowMovement: true
     name: au14-job-name-tweiasf-paratrooper
     description: au14-job-description-IASFsurv
-    job: AU14IASFSurvRifleman
+    job: CMUSurvivorJobIASFSurvRifleman
     rules: au14-job-rules-IASFsurv
     raffle:
       settings: short
@@ -55,7 +55,7 @@
     allowMovement: true
     name: au14-job-name-tweiasf-paratrooper
     description: au14-job-description-IASFsurv
-    job: AU14IASFSurvRiflemanAmmo
+    job: CMUSurvivorJobIASFSurvRiflemanAmmo
     rules: au14-job-rules-IASFsurv
     raffle:
       settings: short

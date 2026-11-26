@@ -1,5 +1,6 @@
 using Content.Server.Chat.Managers;
 using Content.Server.GameTicking;
+using Content.Shared.GameTicking;
 using Content.Server.Preferences.Managers;
 using Content.Server.Voting.Managers;
 using Content.Shared.Voting;
@@ -7,12 +8,14 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Configuration;
 using System.Linq;
 using Content.Server.CMU14.Threats;
+using Content.Server.CMU14.Survivors.Setup; // CMU14
 using Content.Server.GameTicking.Presets;
 using Content.Shared.Maps;
 using Content.Server.Voting;
 using Content.Shared._RMC14.Intel;
 using Content.Shared._RMC14.Rules;
 using Content.Shared._RMC14.TacticalMap;
+using Content.Shared.CMU14.Survivors;
 using Content.Shared.CMU14.Threats;
 using Content.Shared.CMU14.util;
 using Content.Shared.CCVar;
@@ -30,7 +33,37 @@ namespace Content.Server.CMU14.Round
     /// <summary>
     /// Persistent system that manages the full sequence of votes (preset, planet, platoon, etc.)
     /// </summary>
-    public sealed partial class AuRoundSystem : EntitySystem
+    /// <summary>
+///     Bounds on how many stranded third party survivors a round schedules. Zero means the round scheduled no
+///     survivors at all (a map without survivor parties); anything above zero is clamped into this range.
+/// </summary>
+public static class SurvivorCountLimits
+{
+    /// <summary>A round that runs survivors always runs at least this many.</summary>
+    public const int MinSurvivors = 2;
+
+    /// <summary>No round schedules more than this many survivors.</summary>
+    public const int MaxSurvivors = 10;
+
+    public static int Clamp(int scheduled)
+        => scheduled <= 0 ? 0 : Math.Clamp(scheduled, MinSurvivors, MaxSurvivors);
+
+    /// <summary>
+    ///     Survivors a round schedules for a lobby of this size: round(players * ratio), clamped to
+    ///     <see cref="MinSurvivors"/>-<see cref="MaxSurvivors"/>. A non-positive or invalid ratio still
+    ///     schedules the minimum, because the caller only asks when the round runs survivors at all.
+    /// </summary>
+    public static int FromLobby(int readyPlayers, float perPlayerRatio)
+    {
+        if (perPlayerRatio <= 0f || float.IsNaN(perPlayerRatio) || float.IsInfinity(perPlayerRatio))
+            return MinSurvivors;
+
+        var scaled = (int) Math.Round(Math.Max(0, readyPlayers) * perPlayerRatio, MidpointRounding.AwayFromZero);
+        return Math.Clamp(scaled, MinSurvivors, MaxSurvivors);
+    }
+}
+
+public sealed partial class AuRoundSystem : EntitySystem
     {
         private const string DistressSignalPresetId = "DistressSignal";
 
@@ -73,6 +106,7 @@ namespace Content.Server.CMU14.Round
         [Dependency] private ItemCamouflageSystem _camo = default!;
         [Dependency] private IChatManager _chatManager = default!;
         [Dependency] private GameTicker _gameTicker = default!;
+        [Dependency] private SurvivorLoadoutSystem _survivorLoadouts = default!; // CMU14
 
         [ViewVariables]
         public string? SelectedPlanetMapName => SelectedPlanetMap?.Announcement;
@@ -179,10 +213,30 @@ namespace Content.Server.CMU14.Round
             base.Initialize();
             SubscribeLocalEvent<LoadingMapsEvent>(OnLoadingMaps);
             SubscribeLocalEvent<PostGameMapLoad>(OnPostGameMapLoad);
+            SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
             _voteSequence.Reset();
             _state.Reset();
             SelectedPlanetMap = null;
 
+        }
+
+        /// <summary>
+        ///     Round restart: drop every piece of per-round vote state. A vote sequence cut off by the end of the
+        ///     round used to leave <c>_voteSequenceRunning</c> set, which silently disabled the next round's
+        ///     preset and planet votes - and with no planet selected there is no survivor pool, so from the
+        ///     second distress-signal round onwards no survivors spawned at all.
+        /// </summary>
+        private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
+        {
+            _voteSequence.Reset();
+            _voteSequenceRunning = false;
+            _selectedPreset = null;
+            _selectedPlanet = null;
+            _selectedPlanetId = null;
+            SelectedPlanetMap = null;
+            _state.Reset();
+            _selectedThirdParties.Clear();
+            _spawnedThirdParties.Clear();
         }
 
         /// <summary>
@@ -387,6 +441,172 @@ namespace Content.Server.CMU14.Round
                 platoonSpawnRuleSystem.SelectedGovforPlatoon?.ID,
                 platoonSpawnRuleSystem.SelectedOpforPlatoon?.ID,
                 _playerManager.PlayerCount);
+        }
+
+        /// <summary>
+        ///     CMU14: how many survivors this round scheduled at round start. This is the hard cap on how many
+        ///     players roll survivor and participate in the survivor group vote.
+        ///     If the pre-round announcement state was cleared before round start (lobby player-count resets
+        ///     do this), fall back to the survivor parties the round actually scheduled, so a stale zero
+        ///     cannot silently wipe the survivor group.
+        /// </summary>
+        public int ScheduledSurvivorCount
+        {
+            get
+            {
+                if (_state.DistressSignalSurvivorCount > 0)
+                    return SurvivorCountLimits.Clamp(_state.DistressSignalSurvivorCount);
+
+                return ScheduledSurvivorCountFor(_gameTicker.ReadyPlayerCount());
+            }
+        }
+
+        /// <summary>
+        ///     The survivor cap for a lobby of this size. Derived from the lobby alone - a per-player ratio
+        ///     clamped to <see cref="SurvivorCountLimits"/> - so the announced number is independent of which
+        ///     third-party parties the scheduler drew, and can never disagree with the faction the group later
+        ///     votes for. Zero when the round has no survivor group to offer at all.
+        /// </summary>
+        public int ScheduledSurvivorCountFor(int readyPlayers)
+        {
+            if (!HasSurvivorCandidates())
+                return 0;
+
+            // CMU14 TEMPORARY (survivor rework testing): a fixed group size, so a test round always has enough
+            // survivors to exercise the role and loadout flow. -1 keeps the lobby-derived count.
+            var testCount = _cfg.GetCVar(CCVars.SurvivorTestCount);
+            if (testCount >= 0)
+                return testCount;
+
+            return SurvivorCountLimits.FromLobby(readyPlayers, _cfg.GetCVar(CCVars.SurvivorCountRatio));
+        }
+
+        /// <summary>
+        ///     True when the round can host a survivor group at all: the planet it landed on lists a round-start
+        ///     party that announces as survivors, or - with no planet at all, as when an admin forces
+        ///     <c>startround</c> before the colony vote - a party that carries its own survivor pool exists.
+        ///     Prototype-only on purpose: the survivor cap is decided before the vote and must not depend on the
+        ///     loadout system.
+        /// </summary>
+        private bool HasSurvivorCandidates()
+        {
+            // Survivors are a distress signal feature: no other gamemode fields them.
+            if (!SurvivorRoundGate.IsSurvivorRound(_selectedPreset?.ID))
+                return false;
+
+            if (_selectedPlanet == null)
+            {
+                // The development test pool names its factions explicitly, so it counts on its own.
+                if (SurvivorTestFactionPool.ParseIds(_cfg.GetCVar(CCVars.SurvivorTestFactions)).Count > 0)
+                    return true;
+
+                foreach (var party in _prototypeManager.EnumeratePrototypes<ThirdPartyPrototype>())
+                {
+                    if (party.SurvivorPool &&
+                        party.RoundStart &&
+                        party.AnnounceAsSurvivors &&
+                        IsThirdPartyAllowedForCurrentContext(party))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            foreach (var partyId in _selectedPlanet.ThirdParties)
+            {
+                if (_prototypeManager.TryIndex(partyId, out ThirdPartyPrototype? party) &&
+                    party.RoundStart &&
+                    party.AnnounceAsSurvivors)
+                {
+                    return true;
+                }
+            }
+
+            // A faction pool set by hand (the development test pool) arms survivors even when the planet does not
+            // list a survivor party. Without this the cap revalidates to zero at round start and the round
+            // announces - and spawns - no survivors at all.
+            if (SurvivorTestFactionPool.ParseIds(_cfg.GetCVar(CCVars.SurvivorTestFactions)).Count > 0)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        ///     CMU14: every survivor faction on the current planet that may host the survivor group this round.
+        ///     This is the pool the survivor group vote draws its options from. It is deliberately independent
+        ///     of <see cref="SelectedThirdParties"/>: the third-party scheduler decides how many survivors are
+        ///     announced and spawned at round start, not which faction they end up belonging to.
+        /// </summary>
+        public List<ThirdPartyPrototype> GetEligibleSurvivorFactions()
+        {
+            var factions = new List<ThirdPartyPrototype>();
+
+            // Survivor parties only exist on a distress signal round.
+            if (!SurvivorRoundGate.IsSurvivorRound(_selectedPreset?.ID))
+                return factions;
+
+            // CMU14 TEMPORARY (survivor rework testing): an explicitly listed test pool replaces normal
+            // survivor eligibility. The CVar is empty outside the development config preset.
+            var testPool = SurvivorTestFactionPool.ParseIds(_cfg.GetCVar(CCVars.SurvivorTestFactions));
+            if (testPool.Count > 0)
+            {
+                foreach (var id in testPool)
+                {
+                    if (!_prototypeManager.TryIndex(id, out ThirdPartyPrototype? testParty))
+                    {
+                        _sawmill.Warning($"[AuRoundSystem] Survivor test faction '{id}' is not a third-party prototype, skipping.");
+                        continue;
+                    }
+
+                    if (!testParty.AnnounceAsSurvivors || !_prototypeManager.TryIndex(testParty.PartySpawn, out PartySpawnPrototype? _))
+                    {
+                        _sawmill.Warning($"[AuRoundSystem] Survivor test faction '{id}' has no survivor spawn template, skipping.");
+                        continue;
+                    }
+
+                    factions.Add(testParty);
+                }
+
+                return factions;
+            }
+
+            // Factions that belong to the survivor pool by themselves (Dutch's Dozen) do not depend on a
+            // planet listing them.
+            foreach (var party in _prototypeManager.EnumeratePrototypes<ThirdPartyPrototype>())
+            {
+                if (!party.SurvivorPool ||
+                    !party.AnnounceAsSurvivors ||
+                    !_survivorLoadouts.HasLoadout(party) ||
+                    !IsThirdPartyAllowedForCurrentContext(party))
+                {
+                    continue;
+                }
+
+                factions.Add(party);
+            }
+
+            if (_selectedPlanet == null)
+                return factions;
+
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var partyId in _selectedPlanet.ThirdParties)
+            {
+                if (!_prototypeManager.TryIndex(partyId, out ThirdPartyPrototype? party) ||
+                    !party.RoundStart ||
+                    !party.AnnounceAsSurvivors ||
+                    !_survivorLoadouts.HasLoadout(party) ||
+                    !IsThirdPartyAllowedForCurrentContext(party))
+                {
+                    continue;
+                }
+
+                if (seen.Add(party.ID))
+                    factions.Add(party);
+            }
+
+            return factions;
         }
 
         private static bool IsThirdPartyAllowed(
@@ -748,10 +968,47 @@ namespace Content.Server.CMU14.Round
             if (_state.DistressSignalThirdPartiesLocked && !revalidate)
                 return true;
 
+
             if (_selectedPreset?.ID.Equals(DistressSignalPresetId, StringComparison.OrdinalIgnoreCase) != true ||
                 _selectedPlanet == null)
             {
                 return false;
+            }
+
+            // CMU14 TEMPORARY (survivor rework testing): an explicit test pool also seeds round-start
+            // survivor scheduling, so the roll/hold/vote flow runs at test populations where the normal
+            // body budget would schedule no survivors at all.
+            var testFactions = SurvivorTestFactionPool.ParseIds(_cfg.GetCVar(CCVars.SurvivorTestFactions));
+            if (testFactions.Count > 0)
+            {
+                ThirdPartyPrototype? seeded = null;
+                foreach (var id in testFactions)
+                {
+                    if (_prototypeManager.TryIndex(id, out ThirdPartyPrototype? party) &&
+                        party.RoundStart &&
+                        party.AnnounceAsSurvivors)
+                    {
+                        // One round-start group is enough to arm the roll; the vote still draws from the pool.
+                        seeded = party;
+                        break;
+                    }
+                }
+
+                if (seeded != null)
+                {
+                    // Same lobby-derived cap as the normal path: the seeded group only arms the roll, it does
+                    // not decide how many survivors the round schedules.
+                    survivorCount = ScheduledSurvivorCountFor(_gameTicker.ReadyPlayerCount());
+
+                    SetSelectedThirdPartiesInSpawnOrder(new[] { seeded });
+                    _state.DistressSignalSurvivorCount = survivorCount;
+                    _state.DistressSignalThirdPartiesLocked = true;
+                    // Nothing else is scheduled during a survivor test round.
+                    _state.DistressSignalThirdPartyFillCompleted = true;
+                    _sawmill.Info(
+                        $"[AuRoundSystem] Survivor test pool active: seeded={seeded.ID}, survivors={survivorCount}, pool=[{string.Join(", ", testFactions)}].");
+                    return true;
+                }
             }
 
             // Threat voting and spawning use ready profiles, not everyone connected to the server.
@@ -846,7 +1103,9 @@ namespace Content.Server.CMU14.Round
                 DistressSignalRandomThirdPartyShare));
 
             SetSelectedThirdPartiesInSpawnOrder(selected);
-            survivorCount = CalculateAnnouncedSurvivorCount(selected, party => bodyCounts[party]);
+            // The survivor cap comes from the lobby, not from the parties just drawn: the group has not voted
+            // for a faction yet, so the announced number must not depend on which parties were selected.
+            survivorCount = ScheduledSurvivorCountFor(playerCount);
             _state.DistressSignalSurvivorCount = survivorCount;
             _state.DistressSignalThirdPartiesLocked = true;
             _state.DistressSignalThirdPartyFillCompleted = false;
@@ -876,15 +1135,6 @@ namespace Content.Server.CMU14.Round
             return (
                 threatLimits.Min(limit => Math.Max(0, limit.MaxThirdParties)),
                 threatLimits.Min(limit => Math.Max(0, limit.BodyBudget)));
-        }
-
-        internal static int CalculateAnnouncedSurvivorCount(
-            IEnumerable<ThirdPartyPrototype> selected,
-            Func<ThirdPartyPrototype, int> getBodyCount)
-        {
-            return selected
-                .Where(party => party.RoundStart && party.AnnounceAsSurvivors)
-                .Sum(getBodyCount);
         }
 
         /// <summary>

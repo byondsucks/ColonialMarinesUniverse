@@ -1,4 +1,7 @@
+using Robust.Shared.Maths;
 using Content.Shared.CMU14.Allegiance;
+using Content.Shared.CMU14.Survivors;
+using Robust.Shared.Utility;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 using Robust.Shared.Utility;
@@ -80,6 +83,26 @@ public sealed partial class ThirdPartyPrototype : IPrototype, IInheritingPrototy
     public bool RoundStart { get; private set; }
 
     /// <summary>
+    ///     Always part of the survivor faction pool, regardless of which planets list it.
+    /// </summary>
+    [DataField]
+    public bool SurvivorPool { get; private set; }
+
+    /// <summary>
+    ///     When this party wins the survivor faction vote the round is forced into a Predator round
+    ///     (Dutch's Dozen exist to hunt Yautja).
+    /// </summary>
+    [DataField]
+    public bool ForcesPredatorRound { get; private set; }
+
+    /// <summary>
+    ///     When the party fields several roles in the same composition category (three weapon specialists,
+    ///     say), one is picked at random each round instead of always the first.
+    /// </summary>
+    [DataField]
+    public bool RandomSpecialistRoles { get; private set; }
+
+    /// <summary>
     ///     Whether this party belongs to a faction included in the Distress Signal survivor announcement.
     /// </summary>
     [DataField]
@@ -87,6 +110,45 @@ public sealed partial class ThirdPartyPrototype : IPrototype, IInheritingPrototy
 
     [DataField("partyspawn", required: true)]
     public ProtoId<PartySpawnPrototype> PartySpawn { get; private set; }
+
+    /// <summary>
+    ///     Default intro locale key shown to this party's survivors when they spawn: the short "who you are
+    ///     and what state you are in" block. Overridden per map through <see cref="Scenario"/>.
+    /// </summary>
+    [DataField]
+    public LocId? Intro { get; private set; }
+
+    /// <summary>Default story locale key (the longer "how you got here" block), overridable per map.</summary>
+    [DataField]
+    public LocId? Story { get; private set; }
+
+    /// <summary>
+    ///     Colour the intro and story are printed in. Defaults to the muted gold the survivor briefing has
+    ///     always used, so a faction only sets this when it wants its own tint.
+    /// </summary>
+    /// <remarks>
+    ///     Individual runs of text can be coloured inside the locale string with chat markup
+    ///     (<c>[color=#c83232]...</c>), which is applied on top of this base colour.
+    /// </remarks>
+    [DataField]
+    public Color BriefingColor { get; private set; } = Color.FromHex("#d8b465");
+
+    /// <summary>
+    ///     Briefing overrides keyed by the planet's survivor scenario (for example <c>crash_landing</c> or
+    ///     <c>colonial_uprising</c>), so the same faction reads differently depending on where the round
+    ///     landed. Maps that share a scenario share one entry. A scenario only has to set the parts that
+    ///     differ; the rest falls back to <see cref="Intro"/> and <see cref="Story"/>.
+    /// </summary>
+    [DataField]
+    public Dictionary<string, ThirdPartyBriefing> Scenario { get; private set; } = new();
+
+    /// <summary>
+    ///     This faction's own job icons for the survivor role picker, keyed by composition category, so a
+    ///     Dutch's Dozen role shows the freelancer icon rather than falling back to the CLF set.
+    ///     Categories left out fall back to the generic icon.
+    /// </summary>
+    [DataField]
+    public Dictionary<SurvivorRoleCategory, SpriteSpecifier> SurvivorIcons { get; private set; } = new();
 
     [DataField("announcearrival")]
     public string? AnnounceArrival { get; private set; } = "A responding force has made their entrance into the conflict.";
@@ -105,4 +167,17 @@ public sealed partial class ThirdPartyPrototype : IPrototype, IInheritingPrototy
 
     [IdDataField]
     public string ID { get; private set; } = default!;
+}
+
+/// <summary>
+///     One survivor scenario's version of a party's spawn briefing. Null fields fall back to the party's defaults.
+/// </summary>
+[DataDefinition]
+public sealed partial class ThirdPartyBriefing
+{
+    [DataField]
+    public LocId? Intro { get; private set; }
+
+    [DataField]
+    public LocId? Story { get; private set; }
 }

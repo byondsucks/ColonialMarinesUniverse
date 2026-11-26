@@ -10,16 +10,21 @@ namespace Content.Client.Lobby.UI;
 
 internal sealed class LobbyHighJobPreviewEntry
 {
-    public LobbyHighJobPreviewEntry(JobPrototype job, IReadOnlyList<string> gamemodeLabels)
+    public LobbyHighJobPreviewEntry(JobPrototype job, IReadOnlyList<string> gamemodeLabels,
+        JobPrototype? labelJob = null)
     {
         Job = job;
         GamemodeLabels = gamemodeLabels;
+        LabelJob = labelJob;
     }
 
     public JobPrototype Job { get; }
+
+    public JobPrototype? LabelJob { get; }
+
     public IReadOnlyList<string> GamemodeLabels { get; }
 
-    public string JobName => LobbyHighJobPreview.GetDisplayJobName(Job);
+    public string JobName => LobbyHighJobPreview.GetDisplayJobName(LabelJob ?? Job);
 
     public string DisplayName
     {
@@ -37,6 +42,9 @@ internal sealed class LobbyHighJobPreviewEntry
 
 internal static class LobbyHighJobPreview
 {
+    private const string StrandedThirdPartyJobId = "AU14JobStrandedThirdPartyMember";
+    private const string SurvivorJobPrefix = "CMUSurvivorJob";
+
     private static readonly string[] HiddenFactionSuffixes =
     {
         " (GOVFOR)",
@@ -54,6 +62,27 @@ internal static class LobbyHighJobPreview
         // ("Criminal", "CRI")
     };
 
+    private static IEnumerable<JobPrototype> PreviewJobsFor(JobPrototype job, IPrototypeManager prototypeManager)
+    {
+        if (job.ID != StrandedThirdPartyJobId)
+        {
+            yield return job;
+            yield break;
+        }
+
+        var expanded = false;
+        foreach (var survivor in prototypeManager.EnumeratePrototypes<JobPrototype>()
+                     .Where(survivor => survivor.ID.StartsWith(SurvivorJobPrefix, StringComparison.Ordinal))
+                     .OrderBy(survivor => survivor.ID, StringComparer.Ordinal))
+        {
+            expanded = true;
+            yield return survivor;
+        }
+
+        if (!expanded)
+            yield return job;
+    }
+
     public static string GetDisplayJobName(JobPrototype job)
     {
         var name = !string.IsNullOrWhiteSpace(job.SpawnMenuRoleName)
@@ -69,14 +98,16 @@ internal static class LobbyHighJobPreview
         var jobOrder = new List<string>();
         var jobs = new Dictionary<string, JobPrototype>();
         var gamemodeLabels = new Dictionary<string, List<string>>();
+        var labelJobs = new Dictionary<string, JobPrototype?>();
 
-        void AddHigh(JobPrototype job, string gamemodeLabel)
+        void AddHigh(JobPrototype job, string gamemodeLabel, JobPrototype? labelJob = null)
         {
             if (!jobs.ContainsKey(job.ID))
             {
                 jobOrder.Add(job.ID);
                 jobs[job.ID] = job;
                 gamemodeLabels[job.ID] = new List<string>();
+                labelJobs[job.ID] = labelJob;
             }
 
             var labels = gamemodeLabels[job.ID];
@@ -95,8 +126,11 @@ internal static class LobbyHighJobPreview
                     if (!profile.IsForceOnForceJobReachable(job))
                         continue;
 
-                    if (profile.GetForceOnForceJobPriority(job, prototypeManager) == JobPriority.High)
-                        AddHigh(job, label);
+                    if (profile.GetForceOnForceJobPriority(job, prototypeManager) != JobPriority.High)
+                        continue;
+
+                    foreach (var preview in PreviewJobsFor(job, prototypeManager))
+                        AddHigh(preview, label, preview.ID == job.ID ? null : job);
                 }
 
                 continue;
@@ -110,7 +144,8 @@ internal static class LobbyHighJobPreview
                 if (priority != JobPriority.High)
                     continue;
 
-                AddHigh(job, label);
+                foreach (var preview in PreviewJobsFor(job, prototypeManager))
+                    AddHigh(preview, label, preview.ID == job.ID ? null : job);
             }
         }
 
@@ -125,7 +160,7 @@ internal static class LobbyHighJobPreview
             if (labels.Count == Gamemodes.Length)
                 labels = new List<string>();
 
-            entries.Add(new LobbyHighJobPreviewEntry(jobs[jobId], labels));
+            entries.Add(new LobbyHighJobPreviewEntry(jobs[jobId], labels, labelJobs.GetValueOrDefault(jobId)));
         }
 
         // Nothing marked High anywhere still leaves a sprite on screen, so name whatever job the
@@ -147,8 +182,15 @@ internal static class LobbyHighJobPreview
         {
             foreach (var (jobId, priority) in priorities)
             {
-                if (priority == wanted && prototypeManager.TryIndex(jobId, out JobPrototype? job))
-                    return new LobbyHighJobPreviewEntry(job, Array.Empty<string>());
+                if (priority != wanted || !prototypeManager.TryIndex(jobId, out JobPrototype? job))
+                    continue;
+
+                var preview = PreviewJobsFor(job, prototypeManager).FirstOrDefault();
+                if (preview != null)
+                {
+                    return new LobbyHighJobPreviewEntry(preview, Array.Empty<string>(),
+                        preview.ID == job.ID ? null : job);
+                }
             }
         }
 

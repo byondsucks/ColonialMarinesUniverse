@@ -60,6 +60,14 @@
     - WEYUSurvLarge
     - WEYUSurvMedium
     - WEYUSurvSmall
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - FreeCompanyRaidersSurv
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     threats:
     - XenoThreat
     - NeomorphsThreat

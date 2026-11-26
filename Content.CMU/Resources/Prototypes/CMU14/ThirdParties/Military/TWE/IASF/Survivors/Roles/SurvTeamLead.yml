@@ -24,7 +24,7 @@
     allowMovement: true
     name: au14-job-name-tweiasf-tl
     description: au14-job-description-IASFsurv
-    job: AU14IASFSurvTeamLead
+    job: CMUSurvivorJobIASFSurvTeamLead
     rules: au14-job-rules-IASFsurv
     raffle:
       settings: short

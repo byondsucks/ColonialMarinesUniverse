@@ -475,7 +475,10 @@ public sealed partial class HumanoidProfileEditor
             yield break;
         // CMU14 hardcode Localization Begin: fix hardcode localization for forks    
         var threatJobsTitle = Loc.GetString("humanoid-profile-editor-threat-jobs-section");
-        yield return (ColonyThreatJobList, GamemodeColonyFall, "colony-threat", threatJobsTitle);
+        // CMU14: the survivor rollers only exist for the Distress Signal survivor flow, so Colony Fall does not
+        // offer them.
+        if (!IsDistressSignalOnlyJob(job))
+            yield return (ColonyThreatJobList, GamemodeColonyFall, "colony-threat", threatJobsTitle);
         yield return (DistressThreatJobList, GamemodeDistressSignal, "distress-threat", threatJobsTitle);
         // CMU14 hardcode Localization End 
     }
@@ -515,11 +518,21 @@ public sealed partial class HumanoidProfileEditor
         return department.ID == InsurgencyDepartmentId;
     }
 
+    /// <summary>
+    ///     Jobs owned by the Distress Signal survivor flow. They are only reachable when a round runs survivors
+    ///     (stranded third party members) or civilians (civilian survivors), so they are not offered in other
+    ///     gamemodes' role lists.
+    /// </summary>
+    private static bool IsDistressSignalOnlyJob(JobPrototype job)
+        => job.ID is
+            "AU14JobStrandedThirdPartyMember";
+
     private static bool IsRoundStartThreatAssignmentJob(JobPrototype job)
     {
         return job.ID is
             "AU14JobThreatLeader" or
             "AU14JobThreatMember" or
+            "AU14JobStrandedThirdPartyMember" or // CMU14: survivor rollers
             "AU14JobThirdPartyLeader" or
             "AU14JobThirdPartyMember";
     }

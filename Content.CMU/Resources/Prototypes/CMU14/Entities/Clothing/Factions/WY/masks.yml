@@ -1,0 +1,23 @@
+# W-Y PMC team leader's face protection, ported from cmss13
+# /obj/item/clothing/mask/gas/pmc/leader ("M8 pattern armored balaclava", officer variant): an armoured balaclava
+# that also works as a gas mask. Armour values are cmss13's, whose clothing scale is LOW 10 / MEDIUMHIGH 25 / HIGH 30.
+- type: entity
+  parent: CMMaskGas
+  id: CMUClothingMaskWYPMCOfficer
+  name: M8 pattern armored balaclava
+  description: An armored balaclava designed to conceal both the identity of the operator and act as an air-filter. This particular suit looks like it belongs to a high-ranking officer.
+  components:
+  - type: Sprite
+    sprite: CMU14/Clothing/WY_PMC/pmc_officer_mask.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: CMU14/Clothing/WY_PMC/pmc_officer_mask.rsi
+    slots:
+    - Mask
+    - Suitstorage
+  - type: CMArmor
+    melee: 10
+    bullet: 0
+    bio: 30
+    explosionArmor: 10

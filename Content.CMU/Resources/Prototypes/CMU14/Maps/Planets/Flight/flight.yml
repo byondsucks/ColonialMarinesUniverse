@@ -40,6 +40,14 @@
     - USArmy
     - USArmyAlt
     - USArmyAlt2
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - FreeCompanyRaidersSurv
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
    # - cultistThirdParty
     - biomorphThirdParty
     joboverrides:

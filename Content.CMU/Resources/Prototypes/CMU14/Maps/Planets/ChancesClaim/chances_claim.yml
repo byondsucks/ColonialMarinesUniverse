@@ -54,6 +54,13 @@
     - WYPMCParty
     - WYPMCPartyAlt
     - biomorphThirdParty
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     threats:
     - XenoThreat
     - NeomorphsThreat

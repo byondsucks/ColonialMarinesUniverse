@@ -1,22 +1,37 @@
 - type: partySpawn
   id: USArmySpawn
   leadersToSpawn:
-    AU14JobUSArmyCommander: 1
-    AU14JobUSArmySquadleader: 1
+    CMUSurvivorUSArmyCommander: 1
+    CMUSurvivorUSArmySquadLeader: 1
   gruntsToSpawn:
-    AU14JobUSArmySynth: 1
-    AU14JobUSArmyCET: 1
-    AU14JobUSArmyCMT: 1
-    AU14JobUSArmyHeavyGunner: 1
-    AU14JobUSArmyMarksman: 1
-    AU14JobUSArmyTrooper: 1
+    CMUSurvivorUSArmySynth: 1
+    CMUSurvivorUSArmyTechnician: 1
+    CMUSurvivorUSArmyMedic: 1
+    CMUSurvivorUSArmyHeavyGunner: 1
+    CMUSurvivorUSArmyMarksman: 1
+    CMUSurvivorUSArmyRifleman: 1
+  scalewithpop: false
+  spawnTogether: true
+
+- type: partySpawn
+  id: CMUSurvivorSpawnUSArmy
+  leadersToSpawn:
+    CMUSurvUSArmyCommander: 1
+    CMUSurvUSArmySquadLeader: 1
+  gruntsToSpawn:
+    CMUSurvUSArmySynth: 1
+    CMUSurvUSArmyTechnician: 1
+    CMUSurvUSArmyMedic: 1
+    CMUSurvUSArmyHeavyGunner: 1
+    CMUSurvUSArmyMarksman: 1
+    CMUSurvUSArmyRifleman: 1
   scalewithpop: false
   spawnTogether: true
 
 - type: thirdParty
   id: USArmy
   announceAsSurvivors: true
-  displayName: US Army Infantry (Full Squad)
+  displayName: U.S. Army
   partyspawn: USArmySpawn
   blacklistedGamemodes:
     - insurgency
@@ -32,18 +47,18 @@
 - type: partySpawn
   id: USArmySpawnAlt
   leadersToSpawn:
-    AU14JobUSArmyCommander: 1
-    AU14JobUSArmySquadleader: 1
+    CMUSurvivorUSArmyCommander: 1
+    CMUSurvivorUSArmySquadLeader: 1
   gruntsToSpawn:
-    AU14JobUSArmyCET: 1
-    AU14JobUSArmyTrooper: 1
+    CMUSurvivorUSArmyTechnician: 1
+    CMUSurvivorUSArmyRifleman: 1
   scalewithpop: false
   spawnTogether: true
 
 - type: thirdParty
   id: USArmyAlt
   announceAsSurvivors: true
-  displayName: US Army Infantry (Small Team)
+  displayName: U.S. Army
   partyspawn: USArmySpawnAlt
   blacklistedGamemodes:
     - insurgency
@@ -59,20 +74,20 @@
 - type: partySpawn
   id: USArmySpawnAlt2
   leadersToSpawn:
-    AU14JobUSArmyCommander: 1
-    AU14JobUSArmySquadleader: 1
+    CMUSurvivorUSArmyCommander: 1
+    CMUSurvivorUSArmySquadLeader: 1
   gruntsToSpawn:
-    AU14JobUSArmyCET: 1
-    AU14JobUSArmyCMT: 1
-    AU14JobUSArmyHeavyGunner: 1
-    AU14JobUSArmyMarksman: 1
+    CMUSurvivorUSArmyTechnician: 1
+    CMUSurvivorUSArmyMedic: 1
+    CMUSurvivorUSArmyHeavyGunner: 1
+    CMUSurvivorUSArmyMarksman: 1
   scalewithpop: false
   spawnTogether: true
 
 - type: thirdParty
   id: USArmyAlt2
   announceAsSurvivors: true
-  displayName: US Army Infantry (Medium Team)
+  displayName: U.S. Army
   partyspawn: USArmySpawnAlt2
   blacklistedGamemodes:
     - insurgency

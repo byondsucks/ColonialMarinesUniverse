@@ -63,6 +63,14 @@
     - MigratingCivsLarge
     - MissionariesParty
     - MissionariesPartyMedium
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - FreeCompanyRaidersSurv
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     threats:
     - XenoThreat
     - NeomorphsThreat

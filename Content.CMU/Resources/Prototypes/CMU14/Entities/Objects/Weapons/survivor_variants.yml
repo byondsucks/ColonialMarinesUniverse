@@ -1,0 +1,120 @@
+# ── Survivor weapon variants (loadout-only) ───────────────────────────────────────────────────────────
+# The CMU tactical MAR-30/MAR-40 ship with a suppressor, a two-point sling and an angled grip. The survivor
+# loadouts want the sling swapped for a reflex sight; everything else is inherited unchanged.
+
+- type: entity
+  parent: AU14WeaponRifleMAR30Tactical
+  id: CMUWeaponRifleMAR30Tactical
+  name: Tactical MAR-30 battle carbine
+  components:
+  - type: AttachableHolder
+    slots:
+      rmc-aslot-barrel:
+        startingAttachable: RMCAttachmentSuppressor
+        whitelist:
+          tags:
+          - RMCAttachmentExtendedBarrel
+          - RMCAttachmentSuppressor
+          - RMCAttachmentRecoilCompensator
+          - RMCAttachmentExtendedCompensator
+          - RMCM5Bayonet
+      rmc-aslot-rail:
+        startingAttachable: RMCAttachmentS6ReflexSight
+        whitelist:
+          tags:
+          - RMCAttachmentRailFlashlight
+          - RMCAttachmentMagneticHarness
+          - RMCAttachmentS5RedDotSight
+          - RMCAttachmentS6ReflexSight
+          - RMCAttachmentS42xTelescopicMiniscope
+          - RMCAttachmentS84xTelescopicScope
+      rmc-aslot-underbarrel:
+        startingAttachable: RMCAttachmentAngledGrip
+        whitelist:
+          tags:
+          - RMCAttachmentBipod
+          - RMCAttachmentFlashlightGrip
+          - RMCAttachmentGyroscopicStabilizer
+          - RMCAttachmentU7UnderbarrelShotgun
+          - RMCAttachmentExtinguisher
+          - RMCAttachmentBurstFireAssembly
+          - RMCAttachmentFlamer
+          - RMCAttachmentAngledGrip
+          - RMCAttachmentVerticalGrip
+          - RMCAttachmentLaserSight
+
+- type: entity
+  parent: AU14WeaponRifleMAR40Tactical
+  id: CMUWeaponRifleMAR40Tactical
+  name: Tactical MAR-40 battle rifle
+  components:
+  - type: AttachableHolder
+    slots:
+      rmc-aslot-barrel:
+        startingAttachable: RMCAttachmentSuppressor
+        whitelist:
+          tags:
+          - RMCAttachmentExtendedBarrel
+          - RMCAttachmentSuppressor
+          - RMCAttachmentRecoilCompensator
+          - RMCAttachmentExtendedCompensator
+          - RMCM5Bayonet
+      rmc-aslot-rail:
+        startingAttachable: RMCAttachmentS6ReflexSight
+        whitelist:
+          tags:
+          - RMCAttachmentRailFlashlight
+          - RMCAttachmentMagneticHarness
+          - RMCAttachmentS5RedDotSight
+          - RMCAttachmentS6ReflexSight
+          - RMCAttachmentS42xTelescopicMiniscope
+          - RMCAttachmentS84xTelescopicScope
+      rmc-aslot-underbarrel:
+        startingAttachable: RMCAttachmentAngledGrip
+        whitelist:
+          tags:
+          - RMCAttachmentBipod
+          - RMCAttachmentFlashlightGrip
+          - RMCAttachmentGyroscopicStabilizer
+          - RMCAttachmentU7UnderbarrelShotgun
+          - RMCAttachmentExtinguisher
+          - RMCAttachmentBurstFireAssembly
+          - RMCAttachmentFlamer
+          - RMCAttachmentAngledGrip
+          - RMCAttachmentVerticalGrip
+          - RMCAttachmentLaserSight
+
+# Dutch's Dozen flamer keeps his M16A1, with an underbarrel flamethrower bolted on.
+- type: entity
+  parent: AU14WeaponRifleM16A1
+  id: CMUWeaponRifleM16A1Flamer
+  name: M16A1 rifle (underbarrel flamethrower)
+  description: A well-worn M16A1 with a refillable flamethrower clamped under the barrel.
+  components:
+  - type: AttachableHolder
+    slots:
+      rmc-aslot-underbarrel:
+        startingAttachable: RMCAttachmentMiniFlamethrower
+        whitelist:
+          tags:
+          - RMCAttachmentBipod
+          - RMCAttachmentFlashlightGrip
+          - RMCAttachmentGyroscopicStabilizer
+          - RMCAttachmentU7UnderbarrelShotgun
+          - RMCAttachmentExtinguisher
+          - RMCAttachmentBurstFireAssembly
+          - RMCAttachmentFlamer
+          - RMCAttachmentAngledGrip
+          - RMCAttachmentVerticalGrip
+          - RMCAttachmentLaserSight
+
+# MK221 handed out already loaded: the base WeaponShotgunM890 spawns with an empty tube, which reads as a
+# broken weapon to a survivor who has just been issued it.
+- type: entity
+  parent: WeaponShotgunM890
+  id: CMUWeaponShotgunM890Filled
+  name: MK221 tactical shotgun
+  suffix: Filled
+  components:
+  - type: BallisticAmmoProvider
+    proto: CMShellShotgunBuckshot

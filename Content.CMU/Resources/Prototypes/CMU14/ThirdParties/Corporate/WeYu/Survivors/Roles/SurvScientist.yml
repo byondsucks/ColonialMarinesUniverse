@@ -64,7 +64,7 @@
     name: au14-job-name-civilianscientist
     description: au14-wysurv-description
     reregister: false
-    job: AU14JobWYSurvScientist
+    job: CMUSurvivorJobWYSurvScientist
     raffle:
       settings: short
     rules: au14-wysurv-description

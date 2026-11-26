@@ -49,3 +49,24 @@
   - CMAccessXeno
   hasIcon: false
   hidden: true
+
+# CMU14: the survivor roller job. Survivors used to be rolled with AU14JobThirdPartyMember, which also names
+# the role label of a real third-party call-in; this job separates the two so "Third Party Member" only ever
+# means a call-in.
+- type: job
+  parent: AUThirdPartyJobBase
+  id: AU14JobStrandedThirdPartyMember
+  name: au-job-name-stranded-third-party-member
+  description: au-job-description-stranded-third-party-member
+  setPreference: true
+  playTimeTracker: AUJobStrandedThirdPartyMember
+  hidden: false
+  supervisors: cm-job-supervisors-nobody
+  icon: "AU14JobIconThirdPartyMember"
+  jobPreviewEntity: RMCPlayerXenoQueenPreview
+  accessGroups:
+  - CMAccessXeno
+  - CMAccessXenoQueen
+
+- type: playTimeTracker
+  id: AUJobStrandedThirdPartyMember

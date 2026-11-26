@@ -1,0 +1,113 @@
+# Ol' Painless - the minigun Dutch's Dozen's minigunner carries.
+#
+# Source: local cmss13 checkout, code/modules/projectiles/guns/misc.dm (/obj/item/weapon/gun/minigun) and
+# code/modules/projectiles/magazines/misc.dm (/obj/item/ammo_magazine/minigun, 300 rounds, 7.62x51mm).
+# Art and sound extracted from the same checkout: guns_by_faction/event.dmi, machineguns_*hand.dmi and
+# sound/weapons/gun_minigun.ogg.
+#
+# It is built on the M60 LMG chassis: Ol' Painless is a plain belt/drum-fed machine gun in cmss13, not a
+# smartgun, so it must not inherit the smartgun's battery requirement (which refused to fire without power).
+#
+# Calibre note: CMU has no 7.62x51mm minigun cartridge, so the drum is loaded with the UPP 7.62x54mmR cartridge - the
+# nearest existing 7.62 rifle round (the UPP 7.62x54mmR) - rather than inventing new ballistics.
+
+- type: entity
+  parent: RMCWeaponLMGM60
+  id: CMUWeaponMinigunOlPainless
+  name: Ol' Painless
+  description: An enormous multi-barreled rotating gatling gun. This thing will no doubt pack a punch.
+  components:
+  - type: Sprite
+    sprite: CMU14/Objects/Weapons/Event/ol_painless.rsi
+    layers:
+    - state: base
+      map: [ "enum.GunVisualLayers.Base" ]
+  - type: Clothing
+    # cmss13 ships no slung art for this gun - neither carry sheet has a `painless` state, on master either - so
+    # there is deliberately no equipped-BACKPACK / equipped-SUITSTORAGE here and it is not drawn while stowed.
+    sprite: CMU14/Objects/Weapons/Event/ol_painless.rsi
+  - type: Gun
+    # RMCSelectiveFireSystem does overwrite FireRate from BaseFireRate later, but the shot loop reads
+    # FireRateModified, which SharedGunSystem.RefreshModifiers derives from FireRate at map init and does not
+    # recompute afterwards. Without this the weapon kept a stale, much lower rate - measured at 2.38 shots/s
+    # against BaseFireRate 10.
+    fireRate: 10
+    #
+    # MeleeCooldownOnShoot gates each shot on the melee cooldown, which for an LMG is far longer than a minigun's
+    # shot interval. It is off for that reason, although measurement showed the dominant throttle was the inherited
+    # bipod mentioned under AttachableHolder below, not this flag.
+    meleeCooldownOnShoot: false
+    # cmss13 starts the minigun in automatic fire (start_automatic = TRUE, start_semiauto = FALSE). Inheriting the
+    # M60's semi-auto default made it fire once per click, which reads as an extremely slow weapon.
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    - Burst
+    - SemiAuto
+    soundGunshot:
+      path: /Audio/CMU14/Weapons/Guns/Gunshots/minigun_ol_painless.ogg
+  - type: RMCSelectiveFire
+    baseFireModes:
+    - FullAuto
+    - Burst
+    - SemiAuto
+    # BaseFireRate is rounds per second: 10 matches cmss13's FIRE_DELAY_TIER_12 = 1 decisecond (0.1 s between
+    # shots). Keep this at the intended cadence - the per-shot throttle lives in Gun.meleeCooldownOnShoot above,
+    # not here.
+    baseFireRate: 10
+  - type: AttachableHolder
+    slots:
+      rmc-aslot-underbarrel:
+        # The M60 chassis ships with a bipod fitted, and a bipod carries fireDelayFlat 0.25 - a flat quarter-second
+        # added to every shot, which capped this weapon near 4 shots/s no matter what baseFireRate was set to
+        # (measured: 2.33 shots/s before, 7.50 after). The cmss13 minigun has no bipod, so the slot keeps its
+        # whitelist and starts empty.
+        startingAttachable: null
+        whitelist:
+          tags:
+          - RMCAttachmentBipod
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: CMUMagazineMinigunOlPainless
+        insertSound: /Audio/_RMC14/Weapons/Guns/Reload/gun_sg_reload.ogg
+        ejectSound: /Audio/_RMC14/Weapons/Guns/Reload/gun_sg_unload.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - CMUMagazineMinigunOlPainless
+
+- type: entity
+  parent: CMMagazineRifleBase
+  id: CMUMagazineMinigunOlPainless
+  name: rotating ammo drum (7.62x54mmR)
+  description: A huge 7.62mm ammo drum for a huge rotary machine gun. Hard to reload, but it holds three hundred rounds.
+  components:
+  - type: Tag
+    tags:
+    - CMUMagazineMinigunOlPainless
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - RuMCCartridge762x54R
+    proto: RuMCCartridge762x54R
+    capacity: 300
+  - type: Sprite
+    sprite: CMU14/Objects/Weapons/Event/ol_painless_drum.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Clothing
+    slots:
+    - suitStorage
+  - type: Item
+    size: Normal
+    # In-hand sprites are looked up in this RSI (falling back to the Sprite RSI, which only holds the world icon),
+    # and the wielded variants through Wieldable.WieldedInhandPrefix. Without it the gun had no in-hand art at all.
+    sprite: CMU14/Objects/Weapons/Event/ol_painless.rsi
+
+- type: Tag
+  id: CMUMagazineMinigunOlPainless

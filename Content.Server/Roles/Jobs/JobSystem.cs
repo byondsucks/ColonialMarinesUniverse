@@ -44,6 +44,14 @@ public sealed partial class JobSystem : SharedJobSystem
         if (args.Silent)
             return;
 
+        // CMU14: a survivor is not the ERT squad whose job the role body inherits, so the job's greeting
+        // ("you are a part of ... party") must not be delivered to them.
+        if (component.OwnedEntity is { } survivorBody
+            && HasComp<Content.Shared.CMU14.Survivors.CMUSurvivorSpawnedComponent>(survivorBody))
+        {
+            return;
+        }
+
         if (!_player.TryGetSessionById(component.UserId, out var session))
             return;
 

@@ -42,6 +42,7 @@ public sealed partial class GameTicker
             ? Loc.GetString("cmu-distress-signal-survivors-spawning", ("count", survivorCount))
             : Loc.GetString("cmu-distress-signal-no-survivors");
         _chatManager.DispatchServerAnnouncement(message);
+
         return true;
     }
 

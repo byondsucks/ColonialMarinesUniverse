@@ -1,0 +1,36 @@
+
+- type: thirdParty
+  intro: cmu-survivor-intro-unisc
+  story: cmu-survivor-story-unisc
+  id: CMUUNISCSurvivors
+  announceAsSurvivors: true
+  displayName: UNISC Squad
+  partyspawn: CMUSurvivorSpawnUnisc
+  entrymethod: ground
+  weight: 25
+  minplayers: 0
+  maxplayers: 400
+  ghostsNeeded: 0
+  roundstart: true
+  survivorIcons:
+    Commander:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_commander
+    SquadLeader:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_teamleader
+    Medic:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_medic
+    Technician:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_engi
+    WeaponSpecialist:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_smartgunner
+    Rifleman:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_rifleman
+    Support:
+      sprite: _RMC14/Interface/cm_job_icons.rsi
+      state: para_synth

@@ -77,6 +77,14 @@
     - MigratingCivsLarge
     - MissionariesParty
     - MissionariesPartyMedium
+    - CMUProdigySurvivors
+    - CMUWYPMCSurvivors
+    - CMUCLFCommandoSurvivors
+    - CMUUSArmySurvivors
+    - CMUFORECONSurvivors
+    - FreeCompanyRaidersSurv
+    - CMUUNISCSurvivors
+    - CMUDutchsDozenSurvivors
     jobScalingFof: DefaultGovforOpforScale
     jobScalingIns: DefaultInsurgencyScale
 

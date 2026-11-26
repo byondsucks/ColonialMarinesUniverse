@@ -1,0 +1,40 @@
+# U.S. Army survivor commander sidearm.
+#
+# The shared commander gear already carries a Mateba in a holster belt, but loaded with standard speed
+# loaders. Survivor commanders get the high-impact loaders instead, and the swap is scoped to the survivor
+# role so the ERT/call-in commander keeps its own kit.
+
+- type: entity
+  # The Mateba is a revolver: the pistol holster rig refuses both the revolver and its speed loaders, so the belt was
+  # issued empty. This is the revolver holster belt the other Mateba carriers use, keeping the high-impact fill.
+  parent: RMCMatebaBelt
+  id: CMUMatebaBeltHighImpact
+  name: mateba holster belt (high impact)
+  suffix: Filled
+  components:
+  - type: StorageFill
+    contents:
+    - id: RMCSpeedLoaderMatebaHighImpact
+      amount: 3
+    - id: RMCWeaponRevolverMateba
+
+- type: startingGear
+  id: CMUGearUSArmySurvCommander
+  parent: AU14GearUSArmyCommander
+  equipment:
+    belt: CMUMatebaBeltHighImpact
+    # A survivor commander carries a rifle as well as the sidearm belt, so the command pouch gives way to a magazine
+    # pouch. Its magazines are issued with the kit: the sidearm belt, medical pouch and full pack cannot take them,
+    # so leaving it to the loadout's stocking pass left the commander with no spare ammunition at all.
+    pocket1: RMCPouchMagazineLarge
+  storage:
+    pocket1:
+    - CMMagazineRifleM54C
+    - CMMagazineRifleM54C
+    - CMMagazineRifleM54C
+    - CMMagazineRifleM54C
+
+- type: job
+  parent: AU14USArmyCommander
+  id: CMUJobUSArmySurvCommander
+  startingGear: CMUGearUSArmySurvCommander

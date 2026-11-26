@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Taken from cmss13 (Ol' Painless minigun): icons/obj/items/weapons/guns/guns_by_faction/event.dmi, icons/obj/items/weapons/guns/ammo_by_faction/event.dmi, icons/mob/humans/onmob/inhands/weapons/guns/machineguns_lefthand.dmi, icons/mob/humans/onmob/inhands/weapons/guns/machineguns_righthand.dmi, icons/mob/humans/onmob/clothing/suit_storage/guns_by_type/machineguns.dmi and icons/mob/humans/onmob/clothing/back/guns_by_type/machineguns.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "base"
+    },
+    {
+      "name": "mag-1"
+    },
+    {
+      "name": "icon"
+    }
+  ]
+}

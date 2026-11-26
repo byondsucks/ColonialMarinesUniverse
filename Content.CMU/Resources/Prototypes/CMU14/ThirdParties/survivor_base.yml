@@ -1,0 +1,18 @@
+﻿# Base shared by every survivor role body.
+#
+# A survivor role is never the call-in squad its faction also fields, so its body must not inherit one: inheriting
+# an ERT/reinforcement entity dragged in that entity's ghost role, its job (and with the job the wrong faction,
+# rank and job icon), and its gear preset - which is how a CLF Spec Ops medic spawned as a W-Y PMC F2 operator
+# with no medical skills and two primaries. Survivor bodies therefore parent a species base (for appearance and
+# species) plus this one, and name their own job explicitly.
+#
+# Keep this base minimal: anything faction-specific belongs on the faction's own species base, and anything
+# role-specific belongs on the role body.
+- type: entity
+  abstract: true
+  parent: CMMobHuman
+  id: CMUSurvivorBaseHumanoid
+  components:
+  # Marks the body as a survivor for as long as it exists, which is what suppresses the inherited job's call-in
+  # greeting ("You are a part of ... party") on every survivor spawn.
+  - type: CMUSurvivorSpawned

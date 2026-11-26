@@ -71,7 +71,7 @@
     name: au14-job-name-clfcellleader
     description: au14-clfsurv-desription
     reregister: false
-    job: AU14JobCLFSurvLeader
+    job: CMUSurvivorJobCLFSurvLeader
     raffle:
       settings: short
     rules: au14-clfsurv-rules

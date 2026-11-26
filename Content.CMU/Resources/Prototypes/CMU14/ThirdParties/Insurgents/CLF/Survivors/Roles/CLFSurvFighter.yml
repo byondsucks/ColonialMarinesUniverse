@@ -59,7 +59,7 @@
     name: au14-job-name-clfguerilla
     description: au14-clfsurv-desription
     reregister: false
-    job: AU14JobCLFSurvFighter
+    job: CMUSurvivorJobCLFSurvFighter
     raffle:
       settings: short
     rules: au14-clfsurv-rules

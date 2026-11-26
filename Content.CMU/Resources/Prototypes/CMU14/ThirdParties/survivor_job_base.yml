@@ -1,0 +1,39 @@
+﻿# Base job every survivor role inherits.
+#
+# The survivor job is what carries a role's faction, rank, job icon and skills, so it must not be borrowed from the
+# call-in squad its faction also fields: parenting a call-in job handed survivors that squad's identity (a CLF Spec
+# Ops medic came out as a "pmc-f2 operator" with none of the insurgent skills). Faction-specific identity belongs on
+# the faction's own survivor job; this base only carries what every survivor shares.
+#
+# This base parents the third-party *survivor* job - the same fallback stranded survivors use - so the mandatory job
+# fields (play time tracker, supervisors, icon, preferences) come from the survivor side rather than a call-in squad.
+# A role states its own startingGear and, where it differs, its own Skills: the baseline below is the kit of an
+# insurgent fighter, which a corpsman or technician raises for their speciality.
+- type: job
+  parent: AU14JobStrandedThirdPartyMember
+  id: CMUSurvivorJobBase
+  name: au-job-name-stranded-third-party-member
+  description: au-job-description-stranded-third-party-member
+  # The stranded job's access groups date from its xeno placeholder; a survivor holds no colony access.
+  accessGroups: []
+  # Its preview entity is the xeno queen placeholder. Cleared so the roster and lobby build a normal humanoid doll
+  # from the player's own profile - with a preview entity set, the lobby skips applying that appearance entirely and
+  # the card showed a queen instead of the player's character.
+  jobPreviewEntity: null
+  # Survivors are civilians: no rank chevrons, whatever their faction's call-in squads use.
+  ranks:
+    RMCRankCivilian: []
+  roundComponents:
+  - type: Skills
+    skills:
+      RMCSkillEndurance: 1
+      RMCSkillFirearms: 2
+      RMCSkillConstruction: 1
+      RMCSkillEngineer: 1
+      RMCSkillFireman: 3
+      RMCSkillVehicles: 1
+      RMCSkillPowerLoader: 1
+      RMCSkillMeleeWeapons: 1
+      RMCSkillJtac: 2
+      RMCSkillPolice: 2
+      RMCSkillSpecialistWeapons: 1
